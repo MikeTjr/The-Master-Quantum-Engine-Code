@@ -1,1369 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Quantum Soma — Bio-Resonance Field Matrix</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Exo+2:wght@200;300;400;600&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --gold:#d4af37;--teal:#00ffc8;--red:#ff3b3b;--deep:#000205;
-  --panel:#rgba(0,2,8,0.93);--border:rgba(212,175,55,0.18);
-  --font-display:'Cinzel',serif;--font-body:'Exo 2',sans-serif;
-}
-html,body{width:100%;height:100%;overflow:hidden;background:var(--deep);cursor:crosshair}
-#canvas-container{position:fixed;inset:0;width:100%;height:100%}
-canvas{display:block;width:100%!important;height:100%!important}
-
-/* ── HUD PANEL ── */
-#hud{
-  position:fixed;top:0;left:0;width:100%;z-index:30;
-  display:flex;flex-direction:column;align-items:center;
-  padding:10px 12px 0;
-  transition:opacity 1s ease,transform 1s ease;
-}
-#hud.fade{opacity:0;pointer-events:none;transform:translateY(-6px)}
-.panel{
-  background:rgba(0,2,10,0.94);border:1px solid var(--border);
-  border-radius:14px;backdrop-filter:blur(50px);-webkit-backdrop-filter:blur(50px);
-  padding:12px 14px;width:100%;max-width:440px;
-  box-shadow:0 20px 80px rgba(0,0,0,0.98),inset 0 1px 0 rgba(212,175,55,0.07);
-  display:flex;flex-direction:column;gap:8px;
-}
-.panel-title{
-  font-family:var(--font-display);font-size:9px;letter-spacing:4px;
-  color:rgba(212,175,55,0.4);text-align:center;text-transform:uppercase;
-}
-select{
-  background:rgba(0,0,0,0.7);border:1px solid var(--border);color:var(--gold);
-  padding:8px 10px;border-radius:8px;font-family:var(--font-body);
-  font-size:12px;font-weight:600;width:100%;outline:none;letter-spacing:.4px;
-  -webkit-appearance:none;
-}
-select option{background:#03060f;color:var(--gold)}
-select optgroup{color:rgba(212,175,55,0.45);font-size:10px}
-.row{display:flex;align-items:center;gap:8px}
-.row input{
-  background:rgba(0,0,0,0.8);border:1px solid rgba(212,175,55,0.3);color:var(--teal);
-  padding:7px 10px;border-radius:8px;font-family:var(--font-body);font-size:16px;
-  font-weight:600;width:110px;text-align:center;outline:none;
-}
-.unit{font-size:10px;color:rgba(212,175,55,0.4);letter-spacing:1px;flex:1}
-
-/* State buttons row */
-.state-row{display:flex;gap:6px;width:100%}
-.state-btn{
-  flex:1;padding:7px 4px;border:1px solid var(--border);border-radius:7px;
-  background:rgba(0,0,0,0.6);color:rgba(212,175,55,0.6);
-  font-family:var(--font-display);font-size:8px;letter-spacing:1.5px;
-  cursor:pointer;transition:all .3s;text-transform:uppercase;
-}
-.state-btn:hover{border-color:var(--gold);color:var(--gold)}
-.state-btn.active-state{background:rgba(212,175,55,0.12);color:var(--gold);border-color:var(--gold)}
-.state-btn.rage-active{background:rgba(255,30,30,0.15);color:#ff5555;border-color:#ff3333}
-.state-btn.sick-active{background:rgba(100,200,50,0.1);color:#88cc44;border-color:#66aa22}
-.state-btn.gold-active{background:rgba(212,175,55,0.2);color:#ffd700;border-color:#ffd700;box-shadow:0 0 12px rgba(212,175,55,0.3)}
-
-#activateBtn{
-  background:linear-gradient(135deg,#d4af37 0%,#7a5c08 100%);
-  border:none;color:#000205;padding:11px;border-radius:8px;
-  font-family:var(--font-display);font-size:10px;font-weight:700;
-  letter-spacing:2.5px;cursor:pointer;width:100%;text-transform:uppercase;transition:all .3s;
-}
-#activateBtn.on{background:linear-gradient(135deg,#ff3b3b 0%,#6a0000 100%);color:#fff}
-
-/* ── NARRATION OVERLAY ── */
-#narration{
-  position:fixed;bottom:0;left:0;width:100%;z-index:25;
-  display:flex;flex-direction:column;align-items:center;
-  padding:0 12px 14px;
-  transition:opacity .8s ease;pointer-events:none;
-}
-#narration.fade{opacity:0}
-.narr-inner{
-  background:rgba(0,2,10,0.88);border:1px solid var(--border);
-  border-radius:12px;backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
-  padding:12px 16px;max-width:600px;width:100%;
-  box-shadow:0 -10px 40px rgba(0,0,0,0.8);
-}
-.narr-header{
-  display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;
-}
-.narr-badge{
-  font-family:var(--font-display);font-size:8px;letter-spacing:2px;
-  padding:3px 10px;border-radius:4px;text-transform:uppercase;
-}
-.narr-badge.coherent{background:rgba(0,255,200,0.1);color:var(--teal);border:1px solid rgba(0,255,200,0.3)}
-.narr-badge.disrupted{background:rgba(255,59,59,0.1);color:#ff7070;border:1px solid rgba(255,59,59,0.3)}
-.narr-badge.neutral{background:rgba(212,175,55,0.07);color:var(--gold);border:1px solid var(--border)}
-.narr-badge.pyramid{background:rgba(255,215,0,0.15);color:#ffd700;border:1px solid rgba(255,215,0,0.4);box-shadow:0 0 10px rgba(255,215,0,0.2)}
-.narr-wave{width:28px;height:14px;display:flex;align-items:center;gap:2px}
-.narr-wave span{display:block;width:3px;border-radius:2px;background:var(--teal);animation:wave .8s ease-in-out infinite}
-.narr-wave span:nth-child(2){animation-delay:.1s}
-.narr-wave span:nth-child(3){animation-delay:.2s}
-.narr-wave span:nth-child(4){animation-delay:.3s}
-.narr-wave.off span{animation:none;height:3px!important}
-@keyframes wave{0%,100%{height:3px}50%{height:12px}}
-#narr-title{font-family:var(--font-display);font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:4px}
-#narr-text{font-family:var(--font-body);font-size:12px;color:rgba(200,210,230,0.85);line-height:1.6;font-weight:300}
-#narr-science{font-family:var(--font-body);font-size:10px;color:rgba(150,170,200,0.6);line-height:1.5;margin-top:5px;font-style:italic;border-top:1px solid var(--border);padding-top:5px}
-
-/* Organ labels */
-#organ-labels{position:fixed;inset:0;pointer-events:none;z-index:20}
-.organ-label{
-  position:absolute;transform:translate(-50%,-50%);
-  font-family:var(--font-display);font-size:8px;letter-spacing:2px;
-  color:rgba(212,175,55,0.7);text-transform:uppercase;
-  transition:opacity .5s,color .5s;white-space:nowrap;
-  text-shadow:0 0 8px rgba(0,0,0,0.9);
-}
-.organ-label.active{color:var(--teal)}
-.organ-label.disrupted{color:#ff6060}
-.organ-label.pyramid-lbl{color:#ffd700}
-
-/* Hint */
-#hint{
-  position:fixed;top:50%;right:14px;transform:translateY(-50%);
-  font-family:var(--font-body);font-size:8px;letter-spacing:2px;
-  color:rgba(212,175,55,0.15);pointer-events:none;z-index:5;
-  text-transform:uppercase;writing-mode:vertical-rl;text-orientation:mixed;
-}
-
-/* Coherence meter */
-#coherence-meter{
-  position:fixed;left:14px;top:50%;transform:translateY(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  z-index:20;
-}
-.coh-bar-wrap{width:6px;height:120px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
-#coh-bar{width:100%;height:60%;background:linear-gradient(to top,#ff3333,#ffdd00,#00ffc8);border-radius:3px;transition:height .5s ease,background .5s ease;transform-origin:bottom}
-.coh-label{font-family:var(--font-display);font-size:7px;letter-spacing:1.5px;color:rgba(212,175,55,0.4);text-transform:uppercase;writing-mode:vertical-rl}
-#coh-pct{font-family:var(--font-body);font-size:9px;color:var(--teal);font-weight:600}
-
-/* Speak button */
-#speakBtn{
-  position:fixed;bottom:14px;right:14px;z-index:30;
-  background:rgba(0,2,10,0.9);border:1px solid var(--border);
-  color:var(--gold);padding:8px 12px;border-radius:8px;
-  font-family:var(--font-display);font-size:8px;letter-spacing:2px;
-  cursor:pointer;text-transform:uppercase;transition:all .3s;pointer-events:all;
-}
-#speakBtn:hover{border-color:var(--gold);background:rgba(212,175,55,0.08)}
-#speakBtn.speaking{color:var(--teal);border-color:var(--teal)}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Quantum Cymatics Visualizer</title>
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background-color: #030305; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            touch-action: none; /* Prevents native mobile scrolling so we can rotate the 3D model */
+        }
+        #ui-container { 
+            position: absolute; 
+            top: 20px; 
+            left: 20px; 
+            z-index: 10; 
+            color: #fff; 
+            background: rgba(10, 15, 30, 0.75); 
+            padding: 20px; 
+            border-radius: 16px; 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        input[type="number"] { 
+            width: 80px; 
+            padding: 10px; 
+            background: rgba(255, 255, 255, 0.05); 
+            color: #00d4ff; 
+            border: 1px solid rgba(0, 212, 255, 0.3); 
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            outline: none;
+        }
+        input[type="number"]:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+        button { 
+            padding: 12px; 
+            background: linear-gradient(135deg, #00d4ff, #0056b3); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: opacity 0.2s;
+        }
+        button:active { 
+            opacity: 0.8; 
+        }
+        #instructions {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+            pointer-events: none;
+            letter-spacing: 1px;
+        }
+    </style>
+    <!-- Three.js and OrbitControls for Mobile Touch -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
-
-<!-- ── CANVAS ── -->
-<div id="canvas-container"><canvas id="c"></canvas></div>
-
-<!-- ── HUD ── -->
-<div id="hud">
-<div class="panel">
-  <div class="panel-title">Quantum Soma · Bio-Resonance Field Matrix · v4</div>
-
-  <select id="presetSelect">
-    <option value="" disabled selected>— Select Frequency Vector —</option>
-    <optgroup label="🌐 Earth & Planetary Coherence">
-      <option value="1.0">1.0 Hz — Deep Delta Regeneration</option>
-      <option value="4.0">4.0 Hz — Theta Sub-Conscious Gate</option>
-      <option value="6.8">6.8 Hz — Ancient Planetary Infrasonic</option>
-      <option value="7.83">7.83 Hz — Schumann Primary Resonance</option>
-      <option value="14.3">14.3 Hz — Schumann Secondary Harmonic</option>
-      <option value="20.8">20.8 Hz — Third Atmospheric Tier</option>
-      <option value="32.0">32.0 Hz — Incan Megalith Acoustic</option>
-      <option value="33.8">33.8 Hz — Telluric Crustal Pulse</option>
-      <option value="136.1">136.1 Hz — Cosmic Ohm (Solar Year)</option>
-      <option value="144.0">144.0 Hz — Golden Ratio Scalar Node</option>
-      <option value="221.2">221.2 Hz — Venus Orbital Harmonic</option>
-    </optgroup>
-    <optgroup label="📐 Sacred / Ancient Chamber Frequencies">
-      <option value="111.0">111.0 Hz — Neolithic Holy Chamber</option>
-      <option value="117.0">117.0 Hz — Giza King's Chamber (Granite)</option>
-      <option value="256.0">256.0 Hz — Scientific C Prime</option>
-      <option value="432.0">432.0 Hz — Pythagorean / Water Crystalline</option>
-    </optgroup>
-    <optgroup label="🧬 Solfeggio Blueprint">
-      <option value="174.0">174.0 Hz — Foundation (Pain Relief)</option>
-      <option value="285.0">285.0 Hz — Cellular Blueprint Recall</option>
-      <option value="396.0">396.0 Hz — Root Liberation</option>
-      <option value="417.0">417.0 Hz — Sacral Cleansing</option>
-      <option value="528.0">528.0 Hz — DNA Repair (Love Frequency)</option>
-      <option value="639.0">639.0 Hz — Intercellular Harmony</option>
-      <option value="741.0">741.0 Hz — Toxin Purge</option>
-      <option value="852.0">852.0 Hz — Pineal Activation</option>
-      <option value="963.0">963.0 Hz — Crown Absolute Coherence</option>
-    </optgroup>
-    <optgroup label="⚡ Disruptive / Environmental Stress">
-      <option value="18.9">18.9 Hz — The Haunted Frequency</option>
-      <option value="50.0">50.0 Hz — European Power Grid</option>
-      <option value="60.0">60.0 Hz — North American Grid Hum</option>
-      <option value="85.0">85.0 Hz — Screen Flicker Blue-Light</option>
-      <option value="440.0">440.0 Hz — ISO Tension Standard</option>
-    </optgroup>
-    <optgroup label="📡 RF / Microwave Infrastructure">
-      <option value="2400.0">2.4 GHz — Wi-Fi Continuous Loop</option>
-      <option value="3700.0">3.7 GHz — 5G Mid-Band</option>
-      <option value="24000.0">24 GHz — 5G Millimeter Wave</option>
-      <option value="60000.0">60 GHz — Oxygen Absorption Radar</option>
-    </optgroup>
-  </select>
-
-  <div class="row">
-    <input type="number" id="freqInput" value="7.83" min="0.1" max="100000">
-    <span class="unit">Hz / Matrix Node</span>
-  </div>
-
-  <!-- State modifiers -->
-  <div class="state-row">
-    <button class="state-btn" id="btnHealthy" onclick="setState('healthy')">Healthy</button>
-    <button class="state-btn" id="btnRage"    onclick="setState('rage')">Rage</button>
-    <button class="state-btn" id="btnSick"    onclick="setState('sick')">Sick</button>
-    <button class="state-btn" id="btnPyramid" onclick="setState('pyramid')">🔺 Pyramid</button>
-  </div>
-
-  <button id="activateBtn" onclick="toggleField()">Initiate Field Resonance</button>
-</div>
-</div>
-
-<!-- ── ORGAN LABELS ── -->
-<div id="organ-labels">
-  <div class="organ-label" id="lbl-brain"   style="top:18%;left:50%">Brain / Pineal</div>
-  <div class="organ-label" id="lbl-throat"  style="top:26%;left:50%">Throat / Thyroid</div>
-  <div class="organ-label" id="lbl-heart"   style="top:36%;left:62%">Heart</div>
-  <div class="organ-label" id="lbl-lungs"   style="top:36%;left:38%">Lungs</div>
-  <div class="organ-label" id="lbl-solar"   style="top:47%;left:64%">Solar Plexus</div>
-  <div class="organ-label" id="lbl-sacral"  style="top:56%;left:38%">Sacral / Gut</div>
-  <div class="organ-label" id="lbl-root"    style="top:63%;left:62%">Root / Pelvis</div>
-</div>
-
-<!-- ── COHERENCE METER ── -->
-<div id="coherence-meter">
-  <div class="coh-label">Field Coherence</div>
-  <div class="coh-bar-wrap"><div id="coh-bar"></div></div>
-  <div id="coh-pct">50%</div>
-</div>
-
-<!-- ── NARRATION BAR ── -->
-<div id="narration">
-<div class="narr-inner">
-  <div class="narr-header">
-    <div id="narr-badge" class="narr-badge neutral">BASELINE</div>
-    <div class="narr-wave off" id="narr-wave">
-      <span></span><span></span><span></span><span></span>
+    <div id="ui-container">
+        <div class="input-group">
+            <label for="freq">FREQUENCY (Hz)</label>
+            <input type="number" id="freq" value="432" step="1" />
+        </div>
+        <button id="updateBtn">Generate Pattern</button>
     </div>
-  </div>
-  <div id="narr-title">Bio-Resonance Field at Rest</div>
-  <div id="narr-text">Your body's electromagnetic field is in its natural baseline state — oscillating gently, cells communicating via biophotons, each organ pulsing at its own coherent frequency. This is what harmony looks like before any external signal arrives.</div>
-  <div id="narr-science">Science: The human body emits ultra-weak biophoton radiation (10²–10³ photons/cm²/s) and maintains measurable bioelectric fields. Coherence describes how organized and phase-locked these oscillations are.</div>
-</div>
-</div>
-
-<button id="speakBtn" onclick="speakNarration()">🔊 Narrate</button>
-<div id="hint">Drag to distort field · Tap to restore panel</div>
-
-<!-- ── THREE.JS ── -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-// ═══════════════════════════════════════════════════════
-//  CORE STATE
-// ═══════════════════════════════════════════════════════
-let isRunning  = false;
-let bodyState  = 'healthy'; // healthy | rage | sick | pyramid
-let frequency  = 7.83;
-let coherence  = 0.5;       // 0–1
-let clock, scene, camera, renderer, composer;
-let bodyGroup, auricGroup, cymaticsGroup, pyramidGroup;
-let fieldParticles, organMeshes = {}, chakraOrbs = [];
-let stress     = {x:0,y:0,active:false};
-let audioCtx   = null, oscNodes = [], gainNode = null;
-let hudTimer   = null;
-let speaking   = false;
-let narrationData = null;
-const hud      = document.getElementById('hud');
-const narDiv   = document.getElementById('narration');
-
-// ═══════════════════════════════════════════════════════
-//  THREE.JS INIT
-// ═══════════════════════════════════════════════════════
-function initThree() {
-  const container = document.getElementById('canvas-container');
-  const W = window.innerWidth, H = window.innerHeight;
-
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x000205);
-  scene.fog = new THREE.FogExp2(0x000205, 0.008);
-
-  camera = new THREE.PerspectiveCamera(55, W/H, 0.1, 2000);
-  camera.position.set(0, 0, 5.5);
-
-  renderer = new THREE.WebGLRenderer({
-    canvas: document.getElementById('c'),
-    antialias: true,
-    alpha: false,
-    powerPreference: 'high-performance'
-  });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
-  renderer.setSize(W, H);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.4;
-
-  clock = new THREE.Clock();
-  window.addEventListener('resize', onResize);
-}
-
-function onResize() {
-  const W = window.innerWidth, H = window.innerHeight;
-  camera.aspect = W/H;
-  camera.updateProjectionMatrix();
-  renderer.setSize(W, H);
-}
-
-// ═══════════════════════════════════════════════════════
-//  BODY CONSTRUCTION
-// ═══════════════════════════════════════════════════════
-
-// Shared materials updated each frame
-let bodyMat, auricMat, organMats = {};
-
-// Custom vertex shader for the body — applies wave deformation
-const bodyVertGLSL = `
-  uniform float uTime;
-  uniform float uFreq;
-  uniform float uCoherence;
-  uniform float uIntensity;
-  uniform int   uState;   // 0=healthy,1=rage,2=sick,3=pyramid
-  varying vec3  vNormal;
-  varying vec3  vPos;
-  varying float vDisplace;
-
-  // Simplex-like noise
-  vec3 mod289(vec3 x){return x-floor(x*(1./289.))*289.;}
-  vec4 mod289(vec4 x){return x-floor(x*(1./289.))*289.;}
-  vec4 permute(vec4 x){return mod289(((x*34.)+1.)*x);}
-  float snoise(vec3 v){
-    const vec2 C=vec2(1./6.,1./3.);
-    vec3 i=floor(v+dot(v,C.yyy));
-    vec3 x0=v-i+dot(i,C.xxx);
-    vec3 g=step(x0.yzx,x0.xyz);
-    vec3 l=1.-g;
-    vec3 i1=min(g.xyz,l.zxy);
-    vec3 i2=max(g.xyz,l.zxy);
-    vec3 x1=x0-i1+C.xxx;
-    vec3 x2=x0-i2+C.yyy;
-    vec3 x3=x0-0.5;
-    i=mod289(i);
-    vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
-    vec3 ns=0.142857142857*C.yyy-C.xzx;
-    vec4 j=p-49.*floor(p*ns.z*ns.z);
-    vec4 x_=floor(j*ns.z);
-    vec4 x__=j-7.*x_+ns.yyyy;
-    vec4 xx=(x_*2.+0.5)/7.-1.;
-    vec4 yy=(x__*2.+0.5)/7.-1.;
-    vec4 h=1.-abs(xx)-abs(yy);
-    vec4 b0=vec4(xx.xy,yy.xy);
-    vec4 b1=vec4(xx.zw,yy.zw);
-    vec4 s0=floor(b0)*2.+1.;
-    vec4 s1=floor(b1)*2.+1.;
-    vec4 sh=-step(h,vec4(0.));
-    vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;
-    vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-    vec3 p0=vec3(a0.xy,h.x);
-    vec3 p1=vec3(a0.zw,h.y);
-    vec3 p2=vec3(a1.xy,h.z);
-    vec3 p3=vec3(a1.zw,h.w);
-    vec4 norm=1.79284291400159-0.85373472095314*vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3));
-    p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
-    vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);
-    m=m*m;
-    return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-  }
-
-  void main(){
-    vNormal = normalMatrix * normal;
-    vPos    = position;
-
-    float speed = uFreq < 100. ? uFreq * 0.05 : 1.0;
-    float noiseScale = uCoherence > 0.5 ? 1.2 : 2.8;
-    float n = snoise(position * noiseScale + vec3(0., uTime * speed * 0.3, 0.));
-
-    float disp = 0.0;
-    if(uState == 0){ // healthy — smooth standing wave
-      disp = sin(position.y * 4.0 - uTime * 2.0) * 0.025 * uIntensity
-           + n * 0.015 * uIntensity;
-    } else if(uState == 1){ // rage — violent chaotic burst
-      disp = n * 0.12 * uIntensity
-           + sin(position.y * 8.0 - uTime * 9.0) * 0.08 * uIntensity;
-    } else if(uState == 2){ // sick — slow drooping collapse
-      disp = n * 0.06 * uIntensity - abs(sin(uTime * 0.5)) * 0.04;
-    } else { // pyramid — perfectly coherent amplification
-      disp = sin(position.y * 3.0 - uTime * 1.5) * 0.018 * uIntensity
-           + cos(position.x * 3.0 - uTime * 1.2) * 0.018 * uIntensity;
-    }
-
-    vDisplace = disp;
-    vec3 newPos = position + normal * disp;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos, 1.0);
-  }
-`;
-
-const bodyFragGLSL = `
-  uniform float uTime;
-  uniform float uCoherence;
-  uniform int   uState;
-  varying vec3  vNormal;
-  varying vec3  vPos;
-  varying float vDisplace;
-
-  void main(){
-    vec3 n = normalize(vNormal);
-    float rim = 1.0 - abs(dot(n, vec3(0.,0.,1.)));
-    rim = pow(rim, 2.2);
-
-    vec3 cHealthy = mix(vec3(0.0,0.9,1.0), vec3(0.5,0.1,1.0), vPos.y * 0.2 + 0.5);
-    vec3 cRage    = mix(vec3(1.0,0.1,0.0), vec3(1.0,0.6,0.0), rim);
-    vec3 cSick    = mix(vec3(0.2,0.6,0.1), vec3(0.6,0.8,0.0), abs(vPos.y));
-    vec3 cPyramid = mix(vec3(0.9,0.75,0.1), vec3(1.0,0.95,0.3), rim);
-
-    vec3 col;
-    if(uState==0) col = cHealthy;
-    else if(uState==1) col = cRage;
-    else if(uState==2) col = cSick;
-    else col = cPyramid;
-
-    // Biophoton shimmer
-    float shimmer = sin(vPos.y * 20.0 + uTime * 5.0) * 0.5 + 0.5;
-    col += col * shimmer * 0.15;
-
-    // Coherence modulates brightness
-    float bright = 0.4 + uCoherence * 0.6;
-    col *= bright;
-
-    // Rim glow
-    col += col * rim * 1.5;
-
-    float alpha = 0.15 + rim * 0.5 + abs(vDisplace) * 4.0;
-    gl_FragColor = vec4(col, clamp(alpha, 0.0, 0.85));
-  }
-`;
-
-const auricVertGLSL = `
-  uniform float uTime;
-  uniform float uCoherence;
-  uniform int   uState;
-  varying vec3  vNormal;
-  varying float vFresnel;
-
-  void main(){
-    vNormal = normalMatrix * normal;
-    vec3 viewDir = normalize(-vec3(modelViewMatrix * vec4(position,1.0)));
-    vFresnel = pow(1.0 - abs(dot(normalize(vNormal), viewDir)), 3.5);
-
-    // Breathe
-    float breathe = 1.0 + sin(uTime * 1.2) * 0.02 * uCoherence;
-    float rage    = uState == 1 ? sin(uTime * 8.0) * 0.04 : 0.0;
-    vec3 pos = position * (breathe + rage);
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-  }
-`;
-
-const auricFragGLSL = `
-  uniform float uTime;
-  uniform float uCoherence;
-  uniform int   uState;
-  varying vec3  vNormal;
-  varying float vFresnel;
-
-  void main(){
-    vec3 cHealthy = vec3(0.0, 0.85, 1.0);
-    vec3 cRage    = vec3(1.0, 0.15, 0.0);
-    vec3 cSick    = vec3(0.3, 0.7,  0.1);
-    vec3 cPyramid = vec3(1.0, 0.84, 0.1);
-
-    vec3 col;
-    if(uState==0) col=cHealthy;
-    else if(uState==1) col=cRage;
-    else if(uState==2) col=cSick;
-    else col=cPyramid;
-
-    float pulse = 0.5 + 0.5 * sin(uTime * 2.0);
-    float alpha = vFresnel * (0.3 + 0.2 * pulse) * uCoherence;
-
-    // Pyramid mode: thick gold shell with biophoton entrapment
-    if(uState==3) alpha = vFresnel * (0.6 + 0.3 * pulse);
-
-    gl_FragColor = vec4(col, clamp(alpha, 0.0, 0.9));
-  }
-`;
-
-// Shared uniforms
-let bodyUniforms, auricUniforms;
-
-function buildBodyMesh() {
-  if(bodyGroup) { scene.remove(bodyGroup); bodyGroup.traverse(o=>{ if(o.geometry)o.geometry.dispose(); }); }
-  if(auricGroup){ scene.remove(auricGroup);}
-  bodyGroup  = new THREE.Group();
-  auricGroup = new THREE.Group();
-  organMeshes = {};
-
-  bodyUniforms = {
-    uTime:      {value:0},
-    uFreq:      {value:frequency},
-    uCoherence: {value:coherence},
-    uIntensity: {value:isRunning?1.0:0.3},
-    uState:     {value:0},
-  };
-  auricUniforms = {
-    uTime:      {value:0},
-    uCoherence: {value:coherence},
-    uState:     {value:0},
-  };
-
-  const bodyMat = new THREE.ShaderMaterial({
-    vertexShader:   bodyVertGLSL,
-    fragmentShader: bodyFragGLSL,
-    uniforms:       bodyUniforms,
-    transparent:    true,
-    side:           THREE.DoubleSide,
-    depthWrite:     false,
-    blending:       THREE.AdditiveBlending,
-  });
-
-  const auricMat = new THREE.ShaderMaterial({
-    vertexShader:   auricVertGLSL,
-    fragmentShader: auricFragGLSL,
-    uniforms:       auricUniforms,
-    transparent:    true,
-    side:           THREE.BackSide,
-    depthWrite:     false,
-    blending:       THREE.AdditiveBlending,
-  });
-
-  // ── Build organs as sub-meshes ──
-  const organs = [
-    // [name, geometry, x, y, z]
-    ['head',   new THREE.SphereGeometry(0.38,32,32),    0,  1.62, 0],
-    ['neck',   new THREE.CylinderGeometry(0.14,0.16,0.25,16), 0, 1.22, 0],
-    ['chest',  new THREE.SphereGeometry(0.5,32,24),     0,  0.7,  0],
-    ['heart',  new THREE.SphereGeometry(0.16,16,16),   -0.12, 0.78, 0.18],
-    ['lungL',  new THREE.SphereGeometry(0.22,16,16),   -0.28, 0.72, 0],
-    ['lungR',  new THREE.SphereGeometry(0.22,16,16),    0.28, 0.72, 0],
-    ['abdomen',new THREE.SphereGeometry(0.42,32,24),    0,  0.15, 0],
-    ['sacral', new THREE.SphereGeometry(0.34,24,20),    0, -0.28, 0],
-    ['pelvis', new THREE.SphereGeometry(0.3,24,20),     0, -0.62, 0],
-    // Limbs
-    ['armL_u', new THREE.CapsuleGeometry(0.1,0.55,8,12),-0.78, 0.55, 0],
-    ['armL_l', new THREE.CapsuleGeometry(0.09,0.5,8,12),-0.96, 0.05, 0],
-    ['armR_u', new THREE.CapsuleGeometry(0.1,0.55,8,12), 0.78, 0.55, 0],
-    ['armR_l', new THREE.CapsuleGeometry(0.09,0.5,8,12), 0.96, 0.05, 0],
-    ['handL',  new THREE.SphereGeometry(0.1,12,12),    -1.0, -0.25, 0],
-    ['handR',  new THREE.SphereGeometry(0.1,12,12),     1.0, -0.25, 0],
-    ['legL_u', new THREE.CapsuleGeometry(0.14,0.7,8,12),-0.28,-1.12, 0],
-    ['legL_l', new THREE.CapsuleGeometry(0.11,0.65,8,12),-0.28,-1.85,0],
-    ['legR_u', new THREE.CapsuleGeometry(0.14,0.7,8,12), 0.28,-1.12, 0],
-    ['legR_l', new THREE.CapsuleGeometry(0.11,0.65,8,12), 0.28,-1.85,0],
-    ['footL',  new THREE.BoxGeometry(0.2,0.08,0.35),   -0.28,-2.2,  0.08],
-    ['footR',  new THREE.BoxGeometry(0.2,0.08,0.35),    0.28,-2.2,  0.08],
-    // Spine
-    ['spine',  new THREE.CylinderGeometry(0.035,0.05,2.6,8), 0, 0.0, -0.22],
-  ];
-
-  organs.forEach(([name,geo,x,y,z])=>{
-    const m = new THREE.Mesh(geo, bodyMat.clone());
-    m.position.set(x,y,z);
-    m.userData.name = name;
-    bodyGroup.add(m);
-    organMeshes[name] = m;
-  });
-
-  // Auric shell — ellipsoid around the whole body
-  const auricGeo = new THREE.SphereGeometry(1.1, 64, 64);
-  auricGeo.scale(1, 2.1, 0.7);
-  const auricMesh = new THREE.Mesh(auricGeo, auricMat);
-  auricGroup.add(auricMesh);
-
-  // Larger outer aura
-  const outerGeo = new THREE.SphereGeometry(1.35,48,48);
-  outerGeo.scale(1,2.3,0.75);
-  const outerMat = auricMat.clone();
-  outerMat.uniforms.uCoherence = auricUniforms.uCoherence;
-  outerMat.uniforms.uTime      = auricUniforms.uTime;
-  outerMat.uniforms.uState     = auricUniforms.uState;
-  const outerMesh = new THREE.Mesh(outerGeo, outerMat);
-  auricGroup.add(outerMesh);
-
-  scene.add(bodyGroup);
-  scene.add(auricGroup);
-
-  buildChakras();
-  buildCymaticsField();
-  buildFieldParticles();
-  buildPyramidMode();
-  buildLighting();
-}
-
-// ═══════════════════════════════════════════════════════
-//  CHAKRA ORBS
-// ═══════════════════════════════════════════════════════
-const CHAKRA_DEF = [
-  {name:'Crown',     y: 1.85, color:0x9b59ff, size:0.055},
-  {name:'ThirdEye',  y: 1.58, color:0x4a9fff, size:0.045},
-  {name:'Throat',    y: 1.22, color:0x00c8ff, size:0.05},
-  {name:'Heart',     y: 0.72, color:0x00e87a, size:0.065},
-  {name:'Solar',     y: 0.18, color:0xffdd00, size:0.055},
-  {name:'Sacral',    y:-0.28, color:0xff8c00, size:0.05},
-  {name:'Root',      y:-0.62, color:0xff3333, size:0.06},
-];
-
-function buildChakras() {
-  chakraOrbs.forEach(g=>scene.remove(g));
-  chakraOrbs = [];
-  CHAKRA_DEF.forEach(ch=>{
-    const geo  = new THREE.SphereGeometry(ch.size, 16,16);
-    const mat  = new THREE.MeshBasicMaterial({color:ch.color, transparent:true, opacity:0.9});
-    const core = new THREE.Mesh(geo, mat);
-    core.position.set(0, ch.y, 0.24);
-
-    // Glow sprite
-    const glowGeo = new THREE.SphereGeometry(ch.size*4, 12,12);
-    const glowMat = new THREE.MeshBasicMaterial({
-      color:ch.color, transparent:true, opacity:0.12,
-      side:THREE.BackSide, depthWrite:false, blending:THREE.AdditiveBlending
-    });
-    const glow = new THREE.Mesh(glowGeo, glowMat);
-    glow.position.copy(core.position);
-
-    core.userData.chakra = ch;
-    glow.userData.chakra = ch;
-    chakraOrbs.push(core, glow);
-    scene.add(core); scene.add(glow);
-  });
-}
-
-// ═══════════════════════════════════════════════════════
-//  CYMATICS FIELD PLANE
-// ═══════════════════════════════════════════════════════
-const cymaticsVertGLSL = `
-  uniform float uTime;
-  uniform float uFreq;
-  uniform float uCoherence;
-  uniform int   uState;
-  varying vec2  vUv;
-  varying float vDisplace;
-
-  float pattern(vec2 p, float f, float t){
-    float r = length(p);
-    float theta = atan(p.y, p.x);
-    // Cymatic standing wave: radial + angular modes
-    float k = f * 0.012;
-    int modes = 3 + int(f * 0.01);
-    float v = sin(r * k - t * 2.0) * cos(float(modes) * theta);
-    v += sin(r * k * 1.618 - t * 1.5) * 0.5;
-    return v;
-  }
-
-  void main(){
-    vUv = uv;
-    vec2 centered = (uv - 0.5) * 8.0;
-    float d = pattern(centered, uFreq, uTime);
-    float amp = uCoherence * 0.18;
-    if(uState==1) amp *= 2.5;
-    if(uState==2) amp *= 0.4;
-    if(uState==3) amp *= 0.9;
-    vDisplace = d * amp;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x, position.y + d * amp, position.z, 1.0);
-  }
-`;
-
-const cymaticsFragGLSL = `
-  uniform float uTime;
-  uniform float uCoherence;
-  uniform int   uState;
-  varying vec2  vUv;
-  varying float vDisplace;
-
-  void main(){
-    float v = abs(vDisplace) * 6.0;
-    vec3 coh  = vec3(0.0, 0.7, 1.0);
-    vec3 dcoh = vec3(1.0, 0.2, 0.0);
-    vec3 pyra = vec3(1.0, 0.84, 0.1);
-
-    vec3 col;
-    if(uState==3) col = mix(pyra * 0.3, pyra, v);
-    else          col = mix(coh * 0.2 * uCoherence, dcoh, (1.0 - uCoherence) * v);
-
-    float alpha = clamp(v * 0.6, 0.0, 0.45);
-    gl_FragColor = vec4(col, alpha);
-  }
-`;
-
-let cymaticsUniforms;
-
-function buildCymaticsField() {
-  if(cymaticsGroup){ scene.remove(cymaticsGroup); }
-  cymaticsGroup = new THREE.Group();
-
-  cymaticsUniforms = {
-    uTime:      {value:0},
-    uFreq:      {value:frequency},
-    uCoherence: {value:coherence},
-    uState:     {value:0},
-  };
-
-  const geo = new THREE.PlaneGeometry(9, 9, 200, 200);
-  const mat = new THREE.ShaderMaterial({
-    vertexShader:   cymaticsVertGLSL,
-    fragmentShader: cymaticsFragGLSL,
-    uniforms:       cymaticsUniforms,
-    transparent:    true,
-    side:           THREE.DoubleSide,
-    depthWrite:     false,
-    blending:       THREE.AdditiveBlending,
-    wireframe:      false,
-  });
-
-  const plane = new THREE.Mesh(geo, mat);
-  plane.rotation.x = -Math.PI/2;
-  plane.position.y = -2.35;
-  cymaticsGroup.add(plane);
-
-  // Vertical cymatics slice
-  const vGeo = new THREE.PlaneGeometry(9, 6, 200, 150);
-  const vMat = mat.clone();
-  vMat.uniforms = { ...cymaticsUniforms };
-  const vPlane = new THREE.Mesh(vGeo, vMat);
-  vPlane.position.z = -3.5;
-  vPlane.position.y = -0.5;
-  cymaticsGroup.add(vPlane);
-
-  scene.add(cymaticsGroup);
-}
-
-// ═══════════════════════════════════════════════════════
-//  FIELD PARTICLES (biophoton cloud)
-// ═══════════════════════════════════════════════════════
-const particleVertGLSL = `
-  uniform float uTime;
-  uniform float uCoherence;
-  uniform int   uState;
-  attribute float aPhase;
-  attribute float aRadius;
-  attribute float aSpeed;
-  varying float vAlpha;
-
-  void main(){
-    // Spiral toroidal orbit around body
-    float t = uTime * aSpeed + aPhase;
-    float majorR = aRadius;
-    float minorR = 0.15 + aRadius * 0.1;
-    float theta  = t;
-    float phi    = t * 2.3;
-
-    float cx = majorR * cos(theta);
-    float cy = position.y + sin(phi * 1.5) * 1.8;
-    float cz = majorR * sin(theta);
-
-    vec3 pos = vec3(cx, cy, cz);
-
-    if(uState == 1){ // rage — scatter outward
-      pos += normalize(pos) * sin(uTime * 5.0 + aPhase) * 0.4;
-    } else if(uState == 2){ // sick — sag downward
-      pos.y -= abs(sin(uTime * 0.3 + aPhase)) * 0.5;
-    } else if(uState == 3){ // pyramid — tight spiral inward, recycled
-      pos *= 0.7 + sin(uTime * 2.0 + aPhase) * 0.15;
-    }
-
-    vAlpha = (0.3 + uCoherence * 0.5) * (0.5 + 0.5 * sin(uTime * 2.0 + aPhase));
-
-    vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
-    gl_PointSize = (2.5 + aRadius * 1.5) * (300.0 / -mvPos.z);
-    gl_Position  = projectionMatrix * mvPos;
-  }
-`;
-
-const particleFragGLSL = `
-  uniform int   uState;
-  uniform float uCoherence;
-  varying float vAlpha;
-
-  void main(){
-    vec2 uv = gl_PointCoord - 0.5;
-    float r = length(uv);
-    if(r > 0.5) discard;
-    float core = 1.0 - smoothstep(0.0, 0.5, r);
-
-    vec3 cHealthy = vec3(0.0, 0.95, 1.0);
-    vec3 cRage    = vec3(1.0, 0.25, 0.0);
-    vec3 cSick    = vec3(0.35, 0.8, 0.1);
-    vec3 cPyramid = vec3(1.0, 0.88, 0.2);
-
-    vec3 col;
-    if(uState==0) col=cHealthy;
-    else if(uState==1) col=cRage;
-    else if(uState==2) col=cSick;
-    else col=cPyramid;
-
-    gl_FragColor = vec4(col, vAlpha * core);
-  }
-`;
-
-let particleUniforms;
-
-function buildFieldParticles() {
-  if(fieldParticles){ scene.remove(fieldParticles); }
-
-  const N = 3200;
-  const positions = new Float32Array(N * 3);
-  const phases    = new Float32Array(N);
-  const radii     = new Float32Array(N);
-  const speeds    = new Float32Array(N);
-
-  for(let i=0;i<N;i++){
-    positions[i*3]   = (Math.random()-0.5)*3;
-    positions[i*3+1] = (Math.random()-0.5)*4.5 + 0;
-    positions[i*3+2] = (Math.random()-0.5)*3;
-    phases[i]  = Math.random()*Math.PI*2;
-    radii[i]   = 0.8 + Math.random()*1.2;
-    speeds[i]  = 0.3 + Math.random()*0.7;
-  }
-
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geo.setAttribute('aPhase',   new THREE.BufferAttribute(phases, 1));
-  geo.setAttribute('aRadius',  new THREE.BufferAttribute(radii, 1));
-  geo.setAttribute('aSpeed',   new THREE.BufferAttribute(speeds, 1));
-
-  particleUniforms = {
-    uTime:      {value:0},
-    uCoherence: {value:coherence},
-    uState:     {value:0},
-  };
-
-  const mat = new THREE.ShaderMaterial({
-    vertexShader:   particleVertGLSL,
-    fragmentShader: particleFragGLSL,
-    uniforms:       particleUniforms,
-    transparent:    true,
-    depthWrite:     false,
-    blending:       THREE.AdditiveBlending,
-  });
-
-  fieldParticles = new THREE.Points(geo, mat);
-  scene.add(fieldParticles);
-}
-
-// ═══════════════════════════════════════════════════════
-//  PYRAMID MODE
-// ═══════════════════════════════════════════════════════
-function buildPyramidMode() {
-  if(pyramidGroup){ scene.remove(pyramidGroup); }
-  pyramidGroup = new THREE.Group();
-
-  // Gold wireframe pyramid
-  const pyGeo = new THREE.ConeGeometry(4.5, 7, 4, 1, true);
-  const pyMat = new THREE.MeshBasicMaterial({
-    color:0xffd700, wireframe:true, transparent:true, opacity:0.08,
-    blending:THREE.AdditiveBlending, depthWrite:false,
-  });
-  const pyramid = new THREE.Mesh(pyGeo, pyMat);
-  pyramid.position.y = -2.35 + 3.5;
-  pyramid.rotation.y = Math.PI/4;
-  pyramidGroup.add(pyramid);
-
-  // Gold shell around body
-  const shellGeo = new THREE.SphereGeometry(1.55, 64, 64);
-  shellGeo.scale(1,2.4,0.8);
-  const shellMat = new THREE.MeshBasicMaterial({
-    color:0xffd700, transparent:true, opacity:0.05,
-    side:THREE.DoubleSide, depthWrite:false,
-    blending:THREE.AdditiveBlending,
-    wireframe:false,
-  });
-  const shell = new THREE.Mesh(shellGeo, shellMat);
-  pyramidGroup.add(shell);
-
-  // Gold torus rings (sarcophagus resonance)
-  for(let i=0;i<7;i++){
-    const y = -0.62 + i*0.4;
-    const r = 0.6 + Math.abs(i-3)*0.08;
-    const torGeo = new THREE.TorusGeometry(r, 0.012, 8, 64);
-    const torMat = new THREE.MeshBasicMaterial({
-      color:0xffd700, transparent:true, opacity:0.18,
-      blending:THREE.AdditiveBlending, depthWrite:false,
-    });
-    const tor = new THREE.Mesh(torGeo, torMat);
-    tor.position.y = y;
-    tor.userData.ringIdx = i;
-    pyramidGroup.add(tor);
-  }
-
-  pyramidGroup.visible = false;
-  scene.add(pyramidGroup);
-}
-
-// ═══════════════════════════════════════════════════════
-//  LIGHTING
-// ═══════════════════════════════════════════════════════
-function buildLighting() {
-  scene.children.filter(c=>c.isLight).forEach(l=>scene.remove(l));
-
-  const ambient = new THREE.AmbientLight(0x0a0a1a, 0.5);
-  scene.add(ambient);
-
-  const keyLight = new THREE.PointLight(0x00c8ff, 1.5, 20);
-  keyLight.position.set(3, 4, 5);
-  scene.add(keyLight);
-
-  const fillLight = new THREE.PointLight(0x9b59ff, 0.8, 15);
-  fillLight.position.set(-3, 0, 3);
-  scene.add(fillLight);
-
-  const rimLight = new THREE.PointLight(0xd4af37, 0.6, 12);
-  rimLight.position.set(0, -4, -4);
-  scene.add(rimLight);
-}
-
-// ═══════════════════════════════════════════════════════
-//  COHERENCE CALCULATION
-// ═══════════════════════════════════════════════════════
-const COHERENCE_MAP = {
-  '1.0':1.0,'4.0':0.92,'6.8':0.9,'7.83':1.0,'14.3':0.95,'20.8':0.88,
-  '32.0':0.9,'33.8':0.87,'136.1':0.93,'144.0':0.91,'221.2':0.88,
-  '111.0':0.95,'117.0':0.97,'256.0':0.9,'432.0':0.98,
-  '174.0':0.93,'285.0':0.92,'396.0':0.91,'417.0':0.9,
-  '528.0':0.99,'639.0':0.93,'741.0':0.9,'852.0':0.94,'963.0':1.0,
-  '18.9':0.12,'50.0':0.35,'60.0':0.32,'85.0':0.28,'440.0':0.45,
-  '2400.0':0.18,'3700.0':0.14,'24000.0':0.08,'60000.0':0.04,
-};
-
-function calcCoherence(f) {
-  const key = String(f);
-  let base = COHERENCE_MAP[key] ?? (f >= 450 ? 0.15 : 0.6);
-  if(bodyState==='rage')    base *= 0.3;
-  if(bodyState==='sick')    base *= 0.45;
-  if(bodyState==='pyramid') base = Math.min(base * 1.25, 1.0);
-  return base;
-}
-
-function updateCoherenceMeter(c) {
-  const pct = Math.round(c * 100);
-  document.getElementById('coh-bar').style.height = pct + '%';
-  document.getElementById('coh-pct').textContent  = pct + '%';
-  const bar = document.getElementById('coh-bar');
-  if(c > 0.75)     bar.style.background = 'linear-gradient(to top,#00ffc8,#00aaff)';
-  else if(c > 0.4) bar.style.background = 'linear-gradient(to top,#ffdd00,#ff8800)';
-  else             bar.style.background = 'linear-gradient(to top,#ff3333,#ff6600)';
-}
-
-// ═══════════════════════════════════════════════════════
-//  ORGAN LABEL CONTROL
-// ═══════════════════════════════════════════════════════
-const ORGAN_LABELS = {
-  brain:   {el:'lbl-brain',  affectedBy:['852.0','963.0','111.0','18.9','85.0']},
-  throat:  {el:'lbl-throat', affectedBy:['639.0','741.0','111.0']},
-  heart:   {el:'lbl-heart',  affectedBy:['528.0','639.0','7.83','60.0']},
-  lungs:   {el:'lbl-lungs',  affectedBy:['174.0','60000.0','50.0','60.0']},
-  solar:   {el:'lbl-solar',  affectedBy:['396.0','417.0','285.0']},
-  sacral:  {el:'lbl-sacral', affectedBy:['417.0','285.0','396.0','60.0']},
-  root:    {el:'lbl-root',   affectedBy:['174.0','7.83','396.0','18.9']},
-};
-
-function updateOrganLabels(f) {
-  const key = String(f);
-  Object.entries(ORGAN_LABELS).forEach(([organ,def])=>{
-    const el = document.getElementById(def.el);
-    if(!el) return;
-    if(!isRunning){ el.className='organ-label'; return; }
-    const affected = def.affectedBy.includes(key);
-    const isCoherent = (COHERENCE_MAP[key] ?? 0.5) > 0.6;
-    if(bodyState==='pyramid') el.className='organ-label pyramid-lbl';
-    else if(affected && isCoherent) el.className='organ-label active';
-    else if(affected && !isCoherent) el.className='organ-label disrupted';
-    else el.className='organ-label';
-  });
-}
-
-// ═══════════════════════════════════════════════════════
-//  NARRATIVE DATABASE
-// ═══════════════════════════════════════════════════════
-const NARRATIVES = {
-  'baseline':{
-    badge:'BASELINE',type:'neutral',
-    title:'Bio-Field at Rest',
-    text:'Your body\'s electromagnetic field is in its natural baseline state — gently oscillating, cells communicating via biophotons, each organ pulsing at its own coherent frequency. This is what harmony looks like before any external signal arrives.',
-    science:'The human body emits ultra-weak biophoton radiation (10²–10³ photons/cm²/s) and maintains measurable bioelectric fields. Coherence describes how organized and phase-locked these oscillations are.',
-  },
-  '7.83':{
-    badge:'OPTIMAL COHERENCE',type:'coherent',
-    title:'Schumann Resonance — Earth\'s Heartbeat',
-    text:'The planet itself pulses at 7.83 Hz — the same frequency as your resting alpha brainwave. When you stand barefoot on the earth, your nervous system begins to sync with this pulse. Watch the field lines align and the body glow settle into smooth, organized waves. This is entrainment: your biology finding its natural home frequency.',
-    science:'The Schumann resonance is a global electromagnetic resonance formed between Earth\'s surface and ionosphere. Human EEG alpha rhythms (8–13 Hz) show strong correlations with this frequency, suggesting evolutionary entrainment.',
-  },
-  '432.0':{
-    badge:'STRUCTURAL ALIGNMENT',type:'coherent',
-    title:'432 Hz — Water Crystalline Geometry',
-    text:'At 432 Hz, the cymatics field below your body forms perfect geometric patterns — the same shapes Dr. Masaru Emoto observed when water exposed to this frequency was flash-frozen. Your cells are 70% water. Watch each organ region brighten as the field locks into the Pythagorean harmonic grid.',
-    science:'Cymatics (Dr. Hans Jenny) demonstrates that 432 Hz creates particularly symmetrical geometric standing wave patterns in water. Biological water structuring and piezoelectric cell membranes respond to acoustic frequencies.',
-  },
-  '528.0':{
-    badge:'BIOPHOTONIC REPAIR',type:'coherent',
-    title:'528 Hz — The Love Frequency',
-    text:'Called the "love frequency" and "miracle tone," 528 Hz is the exact frequency used by genetic biochemists to repair broken DNA. Notice how every chakra center pulses in synchronized rhythm — this is biological coherence at its maximum. The green-gold light spreading through the body represents biophoton re-emission as cells begin coherent communication.',
-    science:'528 Hz sits within the frequency range used in DNA repair protocols. Research by Dr. Leonard Horowitz and later by the Biochemical Research Institute suggests this frequency correlates with solfège MI (mi-ra gestorum) and shows effects on oxidative stress markers.',
-  },
-  '963.0':{
-    badge:'ABSOLUTE COHERENCE',type:'coherent',
-    title:'963 Hz — Crown Integration',
-    text:'The highest solfeggio frequency activates the pineal gland and crown chakra. Watch the entire body field unify into a single pulsing geometric form — every particle, every organ, every wave moving in perfect phase. The ancient meditators described this as "the sound of the universe returning to oneness."',
-    science:'The pineal gland produces melatonin and trace amounts of DMT. Its calcite microcrystals exhibit piezoelectric properties, generating electrical charge under mechanical stress — a possible mechanism for resonance transduction.',
-  },
-  '117.0':{
-    badge:'CHAMBER RESONANCE',type:'coherent',
-    title:'117 Hz — Giza King\'s Chamber',
-    text:'The granite walls of the King\'s Chamber in the Great Pyramid of Giza resonate at 117 Hz. This frequency was not accidental — granite is piezoelectric, converting pressure into electricity. The sarcophagus dimensions create a resonant cavity tuned precisely to the human body. Priests chanting here were inside the world\'s largest acoustic amplifier.',
-    science:'Acoustic analysis by researchers including John Reid confirms the King\'s Chamber resonates at 117 Hz. The granite contains approximately 55% silicate compounds with piezoelectric properties. Sound pressure levels reached inside can entrain brainwave states.',
-  },
-  '18.9':{
-    badge:'ACUTE DISRUPTION',type:'disrupted',
-    title:'18.9 Hz — The Haunted Frequency',
-    text:'This frequency matches the resonant frequency of the human eyeball (18–19 Hz). When present, your eyes vibrate at their own natural frequency, producing visual artifacts at the edge of vision — "ghost sightings." The body field fragments, particles scatter, and the nervous system triggers an unexplained primal fear response with no visible cause.',
-    science:'Acoustician Vic Tandy discovered this mechanism at 18.98 Hz. At this frequency, the human eye vibrates at its resonant frequency, causing peripheral vision distortions. Infrasound at these levels also induces feelings of awe, unease, and presence of "something" in the room.',
-  },
-  '60.0':{
-    badge:'SYSTEMIC FRICTION',type:'disrupted',
-    title:'60 Hz — Inside the Grid',
-    text:'The walls of every North American home hum at 60 Hz. The body field can\'t distinguish this from its own signals — it tries to sync, but 60 Hz has no biological correlate. Watch the organ regions lose coherence one by one, the particles lose orbit, and the cymatics field below becomes chaotic. Over years, this disrupts melatonin production and deep sleep repair.',
-    science:'Power line electromagnetic fields (60 Hz ELF) have been studied in relation to melatonin suppression (Burch et al., 1998) and disruption of circadian rhythms. The WHO classifies 50/60 Hz magnetic fields as "possibly carcinogenic" (Class 2B).',
-  },
-  '2400.0':{
-    badge:'CELLULAR DEGRADATION',type:'disrupted',
-    title:'2.4 GHz — Wi-Fi Microwave',
-    text:'Your home Wi-Fi operates in the microwave band — the same frequency that heats food in your microwave oven, just at far lower power. But power matters less than duration: 24 hours a day, 365 days a year. Watch the body field fracture into noise — this is calcium ion channel disruption, the mechanism most rigorously documented in the literature.',
-    science:'Martin Pall\'s research (2013–2020) identifies voltage-gated calcium channels (VGCCs) as primary targets of non-thermal microwave radiation. VGCC activation triggers excess intracellular calcium, producing nitric oxide, peroxynitrite, and subsequent oxidative DNA damage.',
-  },
-  '60000.0':{
-    badge:'CRITICAL BREAKDOWN',type:'disrupted',
-    title:'60 GHz — Oxygen Absorption Band',
-    text:'At 60 GHz, electromagnetic radiation is absorbed directly by molecular oxygen — the same oxygen entering your lungs. This frequency literally disrupts the electron spin resonance of O₂ molecules, affecting their ability to bind to hemoglobin. The body field collapses entirely — this is why this band is used in military "active denial" systems.',
-    science:'The 60 GHz band overlaps with the oxygen absorption band (O₂ molecular resonance at 60.3 GHz). Millimeter waves at this frequency penetrate only 1–2mm of skin but achieve high absorption density. This is distinct from ionizing radiation but mechanistically significant.',
-  },
-  'rage':{
-    badge:'FIELD DISRUPTION — RAGE',type:'disrupted',
-    title:'Rage State — Adrenal Electromagnetic Storm',
-    text:'Intense emotional states produce measurable changes in the body\'s electromagnetic output. Rage floods the system with cortisol and adrenaline, spiking bioelectric activity in the amygdala and adrenal cortex. The heart\'s HRV (heart rate variability) collapses. The body field becomes erratic, chaotic — particles scatter, the aura fragments. This is what uncontrolled anger looks like at the electromagnetic level.',
-    science:'HeartMath Institute research demonstrates that emotional states directly affect heart rate variability and heart electromagnetic coherence. Anger and frustration create disordered HRV patterns; appreciation and love create highly ordered, coherent patterns measurable up to 3 feet from the body.',
-  },
-  'sick':{
-    badge:'FIELD COLLAPSE — ILLNESS',type:'disrupted',
-    title:'Biological Field in Illness',
-    text:'Illness isn\'t just chemistry — it\'s an electromagnetic event. When cells lose coherence, biophoton emission becomes disordered: instead of the organized, directional light of a laser, it becomes the scattered light of a dim bulb. Watch the body field sag and dim. The organs lose their individual coherent glow. Recovery means returning to order — re-establishing electromagnetic coherence.',
-    science:'Fritz-Albert Popp\'s biophoton research (1970s–2010s) shows that healthy cells emit highly coherent, low-intensity light, while cancer cells and diseased tissue show chaotic, high-intensity biophoton emission — loss of the ordering principle.',
-  },
-  'pyramid':{
-    badge:'PYRAMID RESONANCE — GOLD AMPLIFICATION',type:'pyramid',
-    title:'The Living Gold Chamber — Biophoton Amplification',
-    text:'Imagine being sealed inside the King\'s Chamber, skin covered in gold leaf, the granite walls focusing 117 Hz acoustic waves through your body. Gold is one of the most biologically compatible conductors — it reflects biophotons back inward, amplifying them in a feedback loop. The Egyptians believed this produced communion with the divine. What they may have actually experienced: extreme biophotonic coherence, maximized pineal activation, and a resonance state the modern world has no name for.',
-    science:'Gold nanoparticles are actively researched in biophotonics for their surface plasmon resonance, which amplifies nearby photon fields. The sarcophagus dimensions of the King\'s Chamber match human body proportions within 3%, and its resonant frequency of 117 Hz corresponds to biophoton coherence windows documented in Popp\'s research.',
-  },
-};
-
-function getNarrative(f, state) {
-  if(state==='rage')    return NARRATIVES['rage'];
-  if(state==='sick')    return NARRATIVES['sick'];
-  if(state==='pyramid') return NARRATIVES['pyramid'];
-  return NARRATIVES[String(f)] || {
-    badge:'FIELD ACTIVE',type:'coherent',
-    title:`${f} Hz Resonance Active`,
-    text:`The body field is responding to ${f} Hz. Observe the cymatics pattern below and the auric field response. The coherence meter on the left reflects the biological impact of this frequency on cellular organization.`,
-    science:`Frequency ${f} Hz interacts with biological systems through electromagnetic coupling, acoustic entrainment, and resonance with specific molecular structures.`,
-  };
-}
-
-function displayNarrative(data) {
-  document.getElementById('narr-badge').textContent  = data.badge;
-  document.getElementById('narr-badge').className    = 'narr-badge ' + (data.type||'neutral');
-  document.getElementById('narr-title').textContent  = data.title;
-  document.getElementById('narr-text').textContent   = data.text;
-  document.getElementById('narr-science').textContent= data.science;
-  narrationData = data;
-}
-
-// ═══════════════════════════════════════════════════════
-//  WEB SPEECH NARRATION
-// ═══════════════════════════════════════════════════════
-function speakNarration() {
-  if(!narrationData) return;
-  if(!window.speechSynthesis) return;
-
-  window.speechSynthesis.cancel();
-  speaking = !speaking;
-
-  const speakBtn = document.getElementById('speakBtn');
-  const waveEl   = document.getElementById('narr-wave');
-
-  if(speaking) {
-    const utter = new SpeechSynthesisUtterance(
-      narrationData.title + '. ' + narrationData.text + ' ' + narrationData.science
-    );
-    utter.rate  = 0.88;
-    utter.pitch = 0.95;
-    utter.volume = 0.9;
-
-    // Prefer a deep, clear voice
-    const voices = window.speechSynthesis.getVoices();
-    const pref = voices.find(v=>v.name.includes('Daniel')||v.name.includes('Alex')||v.name.includes('Google UK')||v.lang==='en-GB');
-    if(pref) utter.voice = pref;
-
-    utter.onend  = ()=>{ speaking=false; speakBtn.textContent='🔊 Narrate'; speakBtn.classList.remove('speaking'); waveEl.classList.add('off'); };
-    utter.onerror= ()=>{ speaking=false; };
-
-    speakBtn.textContent = '⏹ Stop';
-    speakBtn.classList.add('speaking');
-    waveEl.classList.remove('off');
-    window.speechSynthesis.speak(utter);
-  } else {
-    window.speechSynthesis.cancel();
-    speakBtn.textContent = '🔊 Narrate';
-    speakBtn.classList.remove('speaking');
-    waveEl.classList.add('off');
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-//  AUDIO ENGINE
-// ═══════════════════════════════════════════════════════
-function startAudio(f) {
-  if(!audioCtx) audioCtx = new(window.AudioContext||window.webkitAudioContext)();
-  gainNode = audioCtx.createGain();
-  gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-  gainNode.gain.linearRampToValueAtTime(0.06, audioCtx.currentTime + 1.2);
-  gainNode.connect(audioCtx.destination);
-
-  oscNodes = [];
-  if(f >= 450) {
-    const o = audioCtx.createOscillator(); o.type='square'; o.frequency.value=110;
-    const mod = audioCtx.createOscillator(); mod.type='sawtooth'; mod.frequency.value=16;
-    const mg = audioCtx.createGain(); mg.gain.value=60;
-    mod.connect(mg); mg.connect(o.frequency); o.connect(gainNode);
-    mod.start(); o.start();
-    oscNodes.push(o,mod);
-  } else {
-    const playF = f<=20 ? f*4 : f;
-    const o1 = audioCtx.createOscillator(); o1.type='sine'; o1.frequency.value=playF;
-    const o2 = audioCtx.createOscillator(); o2.type='sine'; o2.frequency.value=playF*0.5;
-    o1.connect(gainNode); o2.connect(gainNode);
-    o1.start(); o2.start();
-    oscNodes.push(o1,o2);
-  }
-}
-
-function stopAudio() {
-  if(!gainNode) return;
-  try {
-    gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
-    setTimeout(()=>{ oscNodes.forEach(o=>{try{o.stop();o.disconnect();}catch(e){}}); oscNodes=[]; }, 600);
-  } catch(e){}
-}
-
-// ═══════════════════════════════════════════════════════
-//  STATE MANAGEMENT
-// ═══════════════════════════════════════════════════════
-function setState(s) {
-  bodyState = s;
-  ['btnHealthy','btnRage','btnSick','btnPyramid'].forEach(id=>{
-    const el = document.getElementById(id);
-    el.className='state-btn';
-    if(id==='btn'+s.charAt(0).toUpperCase()+s.slice(1)){
-      if(s==='rage')    el.classList.add('rage-active');
-      else if(s==='sick')    el.classList.add('sick-active');
-      else if(s==='pyramid') el.classList.add('gold-active');
-      else el.classList.add('active-state');
-    }
-  });
-  pyramidGroup.visible = (s==='pyramid');
-  updateAll();
-}
-
-function toggleField() {
-  if(audioCtx && audioCtx.state==='suspended') audioCtx.resume();
-  isRunning = !isRunning;
-  const btn = document.getElementById('activateBtn');
-  btn.textContent = isRunning ? 'Disconnect Field Resonance' : 'Initiate Field Resonance';
-  btn.className   = isRunning ? 'on' : '';
-  if(isRunning){ startAudio(frequency); scheduleHudFade(); }
-  else { stopAudio(); clearTimeout(hudTimer); showHud(); resetNarrative(); }
-  updateAll();
-}
-
-function updateAll() {
-  coherence = calcCoherence(frequency);
-  updateCoherenceMeter(coherence);
-  updateOrganLabels(frequency);
-  const stateInt = {healthy:0,rage:1,sick:2,pyramid:3}[bodyState]||0;
-  if(bodyUniforms){
-    bodyUniforms.uState.value     = stateInt;
-    bodyUniforms.uCoherence.value = coherence;
-    bodyUniforms.uFreq.value      = frequency;
-    bodyUniforms.uIntensity.value = isRunning ? 1.0 : 0.3;
-  }
-  if(auricUniforms){
-    auricUniforms.uState.value     = stateInt;
-    auricUniforms.uCoherence.value = coherence;
-  }
-  if(cymaticsUniforms){
-    cymaticsUniforms.uState.value     = stateInt;
-    cymaticsUniforms.uCoherence.value = coherence;
-    cymaticsUniforms.uFreq.value      = frequency;
-  }
-  if(particleUniforms){
-    particleUniforms.uState.value     = stateInt;
-    particleUniforms.uCoherence.value = coherence;
-  }
-  // Update each organ mesh material
-  Object.values(organMeshes).forEach(m=>{
-    if(m.material && m.material.uniforms){
-      m.material.uniforms.uState.value     = stateInt;
-      m.material.uniforms.uCoherence.value = coherence;
-      m.material.uniforms.uFreq.value      = frequency;
-      m.material.uniforms.uIntensity.value = isRunning?1.0:0.3;
-    }
-  });
-  if(isRunning || bodyState!=='healthy'){
-    displayNarrative(getNarrative(frequency, bodyState));
-    narDiv.classList.remove('fade');
-  }
-}
-
-function resetNarrative() {
-  displayNarrative(NARRATIVES['baseline']);
-  narDiv.classList.remove('fade');
-}
-
-// ═══════════════════════════════════════════════════════
-//  HUD FADE
-// ═══════════════════════════════════════════════════════
-function scheduleHudFade(){
-  clearTimeout(hudTimer);
-  hud.classList.remove('fade');
-  if(isRunning) hudTimer = setTimeout(()=>hud.classList.add('fade'), 4500);
-}
-function showHud(){
-  hud.classList.remove('fade');
-  clearTimeout(hudTimer);
-  if(isRunning) scheduleHudFade();
-}
-
-// ═══════════════════════════════════════════════════════
-//  MAIN ANIMATION LOOP
-// ═══════════════════════════════════════════════════════
-let autoRotY = 0;
-
-function animate() {
-  requestAnimationFrame(animate);
-  const dt = clock.getDelta();
-  const elapsed = clock.getElapsedTime();
-
-  autoRotY += dt * 0.18;
-
-  // Smoothly update coherence target
-  const targetCoh = isRunning ? calcCoherence(frequency) : 0.5;
-  coherence += (targetCoh - coherence) * dt * 0.8;
-  updateCoherenceMeter(coherence);
-
-  // Update shader uniforms
-  const stateInt = {healthy:0,rage:1,sick:2,pyramid:3}[bodyState]||0;
-  [bodyUniforms, auricUniforms, cymaticsUniforms, particleUniforms].forEach(u=>{
-    if(!u) return;
-    if(u.uTime)      u.uTime.value      = elapsed;
-    if(u.uCoherence) u.uCoherence.value = coherence;
-    if(u.uState)     u.uState.value     = stateInt;
-    if(u.uIntensity) u.uIntensity.value = isRunning ? 1.0 : 0.3;
-  });
-
-  // Update each organ's material
-  Object.values(organMeshes).forEach(m=>{
-    if(m.material && m.material.uniforms){
-      m.material.uniforms.uTime.value      = elapsed;
-      m.material.uniforms.uCoherence.value = coherence;
-      m.material.uniforms.uState.value     = stateInt;
-      m.material.uniforms.uIntensity.value = isRunning?1.0:0.3;
-    }
-  });
-
-  // Chakra pulse
-  chakraOrbs.forEach((orb,i)=>{
-    if(!orb.userData.chakra) return;
-    const pulse = isRunning ? 0.7 + 0.3*Math.sin(elapsed*3 + i*0.8) : 0.4;
-    if(orb.material.opacity !== undefined) orb.material.opacity = pulse * (orb.material.side===THREE.BackSide ? 0.1 : 0.9);
-    orb.scale.setScalar(pulse * (bodyState==='rage' ? 1.3 : 1.0));
-  });
-
-  // Pyramid ring rotation
-  if(pyramidGroup && pyramidGroup.visible){
-    pyramidGroup.children.forEach(c=>{
-      if(c.userData.ringIdx !== undefined){
-        c.rotation.y = elapsed * (0.4 + c.userData.ringIdx * 0.1);
-        c.rotation.z = Math.sin(elapsed * 0.7 + c.userData.ringIdx) * 0.1;
-        c.material.opacity = 0.12 + 0.08*Math.sin(elapsed*2+c.userData.ringIdx);
-      }
-    });
-    pyramidGroup.rotation.y = elapsed * 0.05;
-  }
-
-  // Body slow auto-rotate
-  if(bodyGroup)  bodyGroup.rotation.y  = autoRotY;
-  if(auricGroup) auricGroup.rotation.y = autoRotY * 0.7;
-
-  // Camera gentle drift
-  camera.position.x = Math.sin(elapsed*0.08) * 0.25;
-  camera.position.y = Math.cos(elapsed*0.06) * 0.15;
-  camera.lookAt(0, 0, 0);
-
-  renderer.render(scene, camera);
-}
-
-// ═══════════════════════════════════════════════════════
-//  INPUT
-// ═══════════════════════════════════════════════════════
-document.getElementById('presetSelect').addEventListener('change', e=>{
-  frequency = parseFloat(e.target.value);
-  document.getElementById('freqInput').value = frequency;
-  updateAll();
-  if(isRunning){ stopAudio(); startAudio(frequency); }
-  scheduleHudFade();
-});
-
-document.getElementById('freqInput').addEventListener('change', e=>{
-  frequency = parseFloat(e.target.value)||432;
-  updateAll();
-  if(isRunning){ stopAudio(); startAudio(frequency); }
-});
-
-window.addEventListener('click', e=>{
-  const hEl = document.getElementById('hud');
-  if(!hEl.contains(e.target)) showHud();
-});
-
-window.addEventListener('touchstart', e=>{
-  const hEl = document.getElementById('hud');
-  if(!hEl.contains(e.target)) showHud();
-},{passive:true});
-
-window.addEventListener('resize', onResize);
-
-// ═══════════════════════════════════════════════════════
-//  BOOT
-// ═══════════════════════════════════════════════════════
-initThree();
-buildBodyMesh();
-setState('healthy');
-resetNarrative();
-animate();
-
-// Load voices for speech
-window.speechSynthesis.onvoiceschanged = ()=>{ window.speechSynthesis.getVoices(); };
-</script>
+    
+    <div id="instructions">DRAG TO ROTATE • PINCH TO ZOOM</div>
+
+    <script>
+        // 1. Setup Scene, Camera, and Renderer
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x030305, 0.02);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, -25, 20);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Optimized for mobile
+        document.body.appendChild(renderer.domElement);
+
+        // Add Touch Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.maxDistance = 60;
+        controls.minDistance = 5;
+
+        // 2. Lighting (Studio Setup)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.2); 
+        scene.add(ambientLight);
+
+        const topLight = new THREE.DirectionalLight(0xffffff, 1);
+        topLight.position.set(0, 0, 20);
+        scene.add(topLight);
+
+        const blueLight = new THREE.PointLight(0x0044ff, 2, 50);
+        blueLight.position.set(-15, -15, 10);
+        scene.add(blueLight);
+
+        const purpleLight = new THREE.PointLight(0xff00cc, 2, 50);
+        purpleLight.position.set(15, 15, 10);
+        scene.add(purpleLight);
+
+        // 3. Geometry & Material (Upgraded for Vertex Colors)
+        const size = 40;
+        const segments = 200; // High resolution for fluid waves
+        const geometry = new THREE.PlaneGeometry(size, size, segments, segments); 
+        
+        // Setup empty color array for dynamic vertex coloring
+        const colors = new Float32Array(geometry.attributes.position.count * 3);
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const material = new THREE.MeshStandardMaterial({
+            vertexColors: true,
+            roughness: 0.1,
+            metalness: 0.6,
+            side: THREE.DoubleSide,
+            wireframe: false
+        });
+        
+        const plane = new THREE.Mesh(geometry, material);
+        // Tilt it slightly to face the camera better on load
+        plane.rotation.x = -Math.PI / 12;
+        scene.add(plane);
+
+        // Store original positions for math calculations
+        const positionAttribute = geometry.attributes.position;
+        const colorAttribute = geometry.attributes.color;
+        const originalPositions = new Float32Array(positionAttribute.count * 3);
+        for (let i = 0; i < positionAttribute.count * 3; i++) {
+            originalPositions[i] = positionAttribute.array[i];
+        }
+
+        let time = 0;
+        let currentFreq = 432; 
+        const L = size / 2; // Half-length of the plate for the formula
+
+        // Helper Color Object
+        const color = new THREE.Color();
+
+        // 4. UI Listener
+        document.getElementById('updateBtn').addEventListener('click', () => {
+            currentFreq = parseFloat(document.getElementById('freq').value) || 432;
+        });
+
+        // 5. The Core Cymatics Math (Chladni Plate Simulation)
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.08;
+
+            // Map the raw frequency to the 'm' and 'n' modal lines of a square plate
+            // Using non-integers creates complex, shifting interference patterns
+            const m = 1 + (currentFreq / 50);
+            const n = 2 + (currentFreq / 80);
+            
+            // The amplitude of the physical vibration
+            const vibrationPhase = Math.sin(time * 2.0); 
+
+            for (let i = 0; i < positionAttribute.count; i++) {
+                const x = originalPositions[i * 3];
+                const y = originalPositions[i * 3 + 1];
+
+                // Chladni 2D standing wave equation
+                const term1 = Math.cos(n * Math.PI * x / L) * Math.cos(m * Math.PI * y / L);
+                const term2 = Math.cos(m * Math.PI * x / L) * Math.cos(n * Math.PI * y / L);
+                const chladniValue = term1 - term2;
+
+                // Apply the vibration to the standing wave
+                const z = chladniValue * 2.5 * vibrationPhase;
+                positionAttribute.setZ(i, z);
+
+                // Color calculation: Nodes (areas of zero movement where sand gathers) glow bright
+                // Antinodes (areas of high movement) become dark blue/purple
+                const absZ = Math.abs(z);
+                const nodeIntensity = Math.max(0, 1.0 - (absZ * 0.8)); // 1.0 at z=0 (node), drops off as z increases
+
+                if (nodeIntensity > 0.8) {
+                    // Bright Cyan/White for the nodal lines ("Sand")
+                    color.setRGB(nodeIntensity * 0.5, nodeIntensity * 0.9, nodeIntensity);
+                } else {
+                    // Deep space colors for the vibrating troughs/peaks
+                    const depth = Math.max(0, 1.0 - absZ * 0.3);
+                    color.setRGB(0.05, 0.05, 0.15 + (depth * 0.2));
+                }
+
+                colorAttribute.setXYZ(i, color.r, color.g, color.b);
+            }
+
+            positionAttribute.needsUpdate = true;
+            colorAttribute.needsUpdate = true;
+            geometry.computeVertexNormals(); // Required for light to bounce correctly off the new peaks
+
+            controls.update(); // Required for damping
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // 6. Responsive Window Resizing
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
 </body>
 </html>
