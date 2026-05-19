@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quantum Bio-Field & Cymatics Resonator</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #030305;
+            color: #d4af37;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        #ui-container {
+            position: absolute;
+            top: 20px;
+            z-index: 10;
+            background: rgba(5, 5, 8, 0.9);
+            padding: 15px 20px;
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 255, 200, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            width: 85%;
+            max-width: 340px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        input[type="number"] {
+            background: #111116;
+            border: 1px solid #d4af37;
+            color: #00ffc8;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 18px;
+            width: 90px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: inset 0 0 8px rgba(0, 255, 200, 0.2);
+        }
+
+        select {
+            background: #111116;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 100%;
+            font-weight: bold;
+            outline: none;
+            text-align: center;
+        }
+
+        #meta-display {
+            font-size: 11px;
+            color: #00ffc8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            line-height: 1.4;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            padding-top: 8px;
+            margin-top: 4px;
+            width: 100%;
+        }
+
+        button {
+            background: linear-gradient(135deg, #d4af37, #aa7c11);
+            border: none;
+            color: #030305;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 8px;
+            font-size: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        canvas {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ui-container">
+        <select id="presetSelect">
+            <option value="" disabled selected>Select Quantum Resonance Vector</option>
+            <option value="7.83">7.83 Hz — Schumann Earth Heartbeat</option>
+            <option value="117">117.0 Hz — Giza King's Chamber Acoustic Node</option>
+            <option value="432">432.0 Hz — Cosmic Geometric Grid / Natural A</option>
+            <option value="528">528.0 Hz — Solfeggio Transformation Matrix</option>
+            <option value="2400">2.4 GHz (Type 2400) — Home Wi-Fi Interference Mesh</option>
+            <option value="5000">5.0 GHz (Type 5000) — Fiber Router Pulse Saturation</option>
+        </select>
+
+        <div class="input-group">
+            <input type="number" id="freqInput" value="432" min="1" max="10000">
+            <span style="font-weight: bold; font-size: 18px;">Hz</span>
+        </div>
+        
+        <button id="quantumToggle">Initiate Field</button>
+        <div id="meta-display">Field Status: High Resistance Static</div>
+    </div>
+
+    <canvas id="quantumCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('quantumCanvas');
+        const ctx = canvas.getContext('2d');
+        const freqInput = document.getElementById('freqInput');
+        const presetSelect = document.getElementById('presetSelect');
+        const toggleBtn = document.getElementById('quantumToggle');
+        const metaDisplay = document.getElementById('meta-display');
+
+        let audioCtx = null;
+        let oscillator = null;
+        let isRunning = false;
+        let animId = null;
+        let time = 0;
+        let particles = [];
+        const maxParticles = 1200; 
+
+        function resize() {
+            const dpr = window.devicePixelRatio || 2;
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            ctx.scale(dpr, dpr);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class QuantumParticle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * window.innerWidth;
+                this.y = Math.random() * window.innerHeight;
+                this.speed = Math.random() * 1 + 0.5;
+                this.angle = Math.random() * Math.PI * 2;
+            }
+            update(freq, centerX, centerY) {
+                if (isRunning) {
+                    const dx = this.x - centerX;
+                    const dy = this.y - centerY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // Modulate velocity and patterns drastically for microwave representations
+                    if (freq >= 2400) {
+                        // High-resistance jitter simulation
+                        this.x += (Math.random() - 0.5) * 6 + Math.cos(this.angle) * 0.5;
+                        this.y += (Math.random() - 0.5) * 6 + Math.sin(this.angle) * 0.5;
+                    } else {
+                        // Coherent Cymatic Chladni patterns
+                        const k = freq * 0.005; 
+                        const force = Math.sin(dist * k - time * 2) * Math.cos(Math.atan2(dy, dx) * Math.max(2, Math.floor(freq / 40)));
+                        this.x += (dx / dist) * force * 2.5 + Math.cos(this.angle) * 0.3;
+                        this.y += (dy / dist) * force * 2.5 + Math.sin(this.angle) * 0.3;
+                    }
+                } else {
+                    this.x += Math.cos(this.angle) * this.speed * 1.2;
+                    this.y += Math.sin(this.angle) * this.speed * 1.2;
+                    if (this.x < 0 || this.x > window.innerWidth || this.y < 0 || this.y > window.innerHeight) {
+                        this.reset();
+                    }
+                }
+            }
+            draw(freq) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 1.2, 0, Math.PI * 2);
+                if (!isRunning) {
+                    ctx.fillStyle = 'rgba(140, 140, 150, 0.3)';
+                } else if (freq >= 2400) {
+                    ctx.fillStyle = 'rgba(255, 68, 68, 0.5)'; // High resistance red friction
+                } else {
+                    ctx.fillStyle = 'rgba(0, 255, 200, 0.6)'; // Coherent quantum biophoton
+                }
+                ctx.fill();
+            }
+        }
+
+        for(let i=0; i<maxParticles; i++) particles.push(new QuantumParticle());
+
+        function render() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const cx = w / 2;
+            const cy = h / 2;
+            const freq = parseFloat(freqInput.value) || 432;
+
+            ctx.fillStyle = 'rgba(3, 3, 5, 0.07)';
+            ctx.fillRect(0, 0, w, h);
+            time += 0.02;
+
+            for(let p of particles) {
+                p.update(freq, cx, cy);
+                p.draw(freq);
+            }
+
+            if (isRunning) {
+                const maxRadius = Math.min(w, h) * 0.5;
+                
+                if (freq >= 2400) {
+                    // Visual Representation of Digital Microwave Jamming / Saturated Fields
+                    ctx.beginPath();
+                    ctx.strokeStyle = 'rgba(255, 68, 85, 0.15)';
+                    ctx.lineWidth = 1;
+                    for (let r = 10; r < maxRadius * 1.5; r += 8) {
+                        ctx.strokeRect(cx - r, cy - r, r * 2, r * 2); // Boxy, non-organic digital grids
+                    }
+                } else {
+                    // Organic Geometric Toroidal Field Vectors
+                    const waveCount = Math.max(4, Math.floor(freq / 15));
+                    for (let r = 25; r < maxRadius; r += 20) {
+                        ctx.beginPath();
+                        const progress = r / maxRadius;
+                        const alpha = (1 - progress) * 0.6;
+                        
+                        ctx.strokeStyle = (Math.floor(r/20) % 2 === 0) 
+                            ? `rgba(212, 175, 55, ${alpha})` // Gold zero-resistance vector
+                            : `rgba(0, 195, 255, ${alpha * 0.6})`; // Toroidal magnetic flux
+                        
+                        ctx.lineWidth = 1.5;
+
+                        for (let theta = 0; theta <= Math.PI * 2; theta += 0.03) {
+                            const radialHarmonic = Math.sin(r * 0.05 - time * (freq * 0.015)) * 14;
+                            const angularHarmonic = Math.cos(theta * waveCount) * (12 * progress);
+                            const dynamicRadius = r + radialHarmonic + angularHarmonic;
+
+                            const x = cx + dynamicRadius * Math.cos(theta);
+                            const y = cy + dynamicRadius * Math.sin(theta);
+
+                            if (theta === 0) ctx.moveTo(x, y);
+                            else ctx.lineTo(x, y);
+                        }
+                        ctx.closePath();
+                        ctx.stroke();
+                    }
+                }
+            }
+            animId = requestAnimationFrame(render);
+        }
+
+        render();
+
+        function startQuantumAudio(frequency) {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            oscillator = audioCtx.createOscillator();
+            
+            // If microwave preset, generate a phase-chopped static tone to simulate pulse modulation noise
+            if (frequency >= 2400) {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(120, audioCtx.currentTime); // Low-frequency pulse noise artifact
+            } else {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+            }
+            
+            const gainNode = audioCtx.createGain();
+            gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime); 
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+        }
+
+        function stopQuantumAudio() {
+            if (oscillator) {
+                oscillator.stop();
+                oscillator.disconnect();
+            }
+        }
+
+        function updateMeta(freq) {
+            if (freq === 7.83) return "Schumann Resonance: Earth's electromagnetic heartbeat. Entrains human alpha/theta brainwaves, removing biological resistance.";
+            if (freq === 117) return "Pyramid Acoustic Node: Resonance profile of the granite King's Chamber sarcophagus. Acts as a macro-telluric capacitor.";
+            if (freq === 432) return "Cosmic Harmonic: Aligns biophotonic particle field into highly coherent geometric symmetry. Lowers cellular friction.";
+            if (freq === 528) return "Transformation Vector: Core Solfeggio scale blueprint. Resonates directly with biological memory systems and tissue repair.";
+            if (freq === 2400) return "2.4 GHz Microwave Blockade: Artificial home Wi-Fi carrier loop. Generates dense chaotic tracking noise across calcium gates.";
+            if (freq === 5000) return "5.0 GHz Pulse Saturation: High-speed fiber translation beam. Saturates ambient space with micro-packet signal interference.";
+            return `Custom Resonant Matrix: Projecting dynamic field geometry at ${freq}Hz.`;
+        }
+
+        // Drop-down handler
+        presetSelect.addEventListener('change', (e) => {
+            freqInput.value = e.target.value;
+            if (isRunning) {
+                // Instantly cycle the system context if changed while live
+                stopQuantumAudio();
+                startQuantumAudio(parseFloat(e.target.value));
+                metaDisplay.textContent = updateMeta(parseFloat(e.target.value));
+            }
+        });
+
+        toggleBtn.addEventListener('click', () => {
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            if (!isRunning) {
+                const freq = parseFloat(freqInput.value) || 432;
+                startQuantumAudio(freq);
+                metaDisplay.textContent = updateMeta(freq);
+                metaDisplay.style.color = (freq >= 2400) ? "#ff4455" : "#00ffc8";
+                toggleBtn.textContent = "Disconnect Field";
+                toggleBtn.style.background = "linear-gradient(135deg, #ff4455, #aa1122)";
+                isRunning = true;
+            } else {
+                stopQuantumAudio();
+                metaDisplay.textContent = "Field Status: High Resistance Static";
+                metaDisplay.style.color = "#9696a0";
+                toggleBtn.textContent = "Initiate Field";
+                toggleBtn.style.background = "linear-gradient(135deg, #d4af37, #aa7c11)";
+                isRunning = false;
+            }
+        });
+    </script>
+</body>
+</html>
