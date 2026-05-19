@@ -1,1447 +1,855 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
-/>
-<title>Quantum Field Interface V3</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Quantum Soma — Bio-Resonance Field Matrix</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Exo+2:wght@200;300;400;600&display=swap" rel="stylesheet">
 <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#050816;
-  --panel:#0b1224;
-  --panel2:#11192f;
-  --text:#eef4ff;
-  --soft:#9fb7ff;
-  --cyan:#4ffcff;
-  --blue:#59a8ff;
-  --purple:#9c6bff;
-  --pink:#ff57d2;
-  --green:#7effd4;
-  --gold:#ffd977;
-  --danger:#ff7a7a;
-  --border:rgba(255,255,255,.08);
+  --gold:#d4af37;--teal:#00ffc8;--red:#ff3b3b;--deep:#000205;
+  --panel:rgba(0,2,8,0.93);--border:rgba(212,175,55,0.18);
+  --font-display:'Cinzel',serif;--font-body:'Exo 2',sans-serif;
 }
+html,body{width:100%;height:100%;overflow:hidden;background:var(--deep);cursor:crosshair;-webkit-user-select:none;user-select:none}
+#canvas-container{position:fixed;inset:0;width:100%;height:100%}
+canvas{display:block;width:100%!important;height:100%!important}
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+/* ── HUD PANEL ── */
+#hud{
+  position:fixed;top:0;left:0;width:100%;z-index:30;
+  display:flex;flex-direction:column;align-items:center;
+  padding:10px 12px 0;
+  transition:opacity 0.5s ease,transform 0.5s ease;
 }
-
-html,body{
-  width:100%;
-  min-height:100%;
-  background:
-    radial-gradient(circle at top left,#10214d 0%,transparent 25%),
-    radial-gradient(circle at top right,#23123f 0%,transparent 30%),
-    radial-gradient(circle at bottom,#04111f 0%,#050816 60%);
-  color:var(--text);
-  font-family:'Inter',sans-serif;
-  overflow-x:hidden;
-}
-
-body{
-  padding-bottom:120px;
-}
-
-canvas{
-  display:block;
-}
-
-#bg{
-  position:fixed;
-  inset:0;
-  z-index:-3;
-}
-
-.grid{
-  position:fixed;
-  inset:0;
-  background:
-    linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
-  background-size:40px 40px;
-  z-index:-2;
-  mask-image:radial-gradient(circle at center,black 20%,transparent 90%);
-}
-
-.orb{
-  position:fixed;
-  border-radius:50%;
-  filter:blur(120px);
-  opacity:.22;
-  z-index:-1;
-}
-
-.orb1{
-  width:400px;
-  height:400px;
-  background:#2e7dff;
-  top:-80px;
-  left:-100px;
-  animation:float1 18s infinite alternate ease-in-out;
-}
-
-.orb2{
-  width:350px;
-  height:350px;
-  background:#ff3fd8;
-  right:-100px;
-  bottom:0;
-  animation:float2 20s infinite alternate ease-in-out;
-}
-
-@keyframes float1{
-  from{transform:translateY(0) translateX(0);}
-  to{transform:translateY(120px) translateX(80px);}
-}
-
-@keyframes float2{
-  from{transform:translateY(0) translateX(0);}
-  to{transform:translateY(-140px) translateX(-60px);}
-}
-
-.app{
-  width:min(1600px,94%);
-  margin:auto;
-  padding-top:30px;
-}
-
-.hero{
-  border:1px solid var(--border);
-  background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
-  backdrop-filter:blur(16px);
-  border-radius:32px;
-  padding:32px;
-  position:relative;
-  overflow:hidden;
-  box-shadow:0 0 60px rgba(0,0,0,.5);
-}
-
-.heroGlow{
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at 20% 20%,rgba(79,252,255,.15),transparent 30%),
-    radial-gradient(circle at 80% 20%,rgba(255,87,210,.18),transparent 30%),
-    radial-gradient(circle at 50% 80%,rgba(156,107,255,.16),transparent 30%);
-  pointer-events:none;
-}
-
-.title{
-  font-size:clamp(2.2rem,6vw,5rem);
-  font-weight:900;
-  line-height:1;
-  letter-spacing:-2px;
-  background:linear-gradient(90deg,#fff,#7ad8ff,#f7a4ff);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-.subtitle{
-  margin-top:18px;
-  color:var(--soft);
-  max-width:900px;
-  line-height:1.8;
-  font-size:1rem;
-}
-
-.topBar{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-top:28px;
-}
-
-.btn{
-  border:none;
-  cursor:pointer;
-  transition:.25s;
-  border-radius:18px;
-  padding:14px 18px;
-  color:white;
-  font-weight:700;
-  letter-spacing:.5px;
-  background:linear-gradient(135deg,#1e2d55,#223b70);
-  border:1px solid rgba(255,255,255,.1);
-  box-shadow:0 8px 25px rgba(0,0,0,.35);
-}
-
-.btn:hover{
-  transform:translateY(-2px) scale(1.02);
-  box-shadow:0 0 25px rgba(79,252,255,.4);
-}
-
-.btn.active{
-  background:linear-gradient(135deg,#1cb7ff,#7d4dff);
-}
-
-.layout{
-  margin-top:26px;
-  display:grid;
-  grid-template-columns:1.2fr .8fr;
-  gap:24px;
-}
-
-@media(max-width:1100px){
-  .layout{
-    grid-template-columns:1fr;
-  }
-}
-
+#hud.fade{opacity:0.1;transform:translateY(-10px)}
 .panel{
-  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));
-  border:1px solid var(--border);
-  border-radius:28px;
-  overflow:hidden;
-  position:relative;
-  backdrop-filter:blur(18px);
+  background:rgba(0,2,10,0.94);border:1px solid var(--border);
+  border-radius:14px;backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  padding:12px 14px;width:100%;max-width:440px;
+  box-shadow:0 20px 80px rgba(0,0,0,0.98),inset 0 1px 0 rgba(212,175,55,0.07);
+  display:flex;flex-direction:column;gap:8px;
 }
+.panel-title{
+  font-family:var(--font-display);font-size:9px;letter-spacing:3px;
+  color:rgba(212,175,55,0.5);text-align:center;text-transform:uppercase;
+}
+select{
+  background:rgba(0,0,0,0.7);border:1px solid var(--border);color:var(--gold);
+  padding:8px 10px;border-radius:8px;font-family:var(--font-body);
+  font-size:12px;font-weight:600;width:100%;outline:none;letter-spacing:.4px;
+  -webkit-appearance:none;
+}
+select option{background:#03060f;color:var(--gold)}
+select optgroup{color:rgba(212,175,55,0.45);font-size:10px}
+.row{display:flex;align-items:center;gap:8px;width:100%}
+.row input[type="number"]{
+  background:rgba(0,0,0,0.8);border:1px solid rgba(212,175,55,0.3);color:var(--teal);
+  padding:7px 10px;border-radius:8px;font-family:var(--font-body);font-size:15px;
+  font-weight:600;width:95px;text-align:center;outline:none;
+}
+.unit{font-size:10px;color:rgba(212,175,55,0.4);letter-spacing:1px;flex:1}
 
-.panelHeader{
-  padding:22px 24px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+/* Harmonics Control Styling */
+.harmonics-wrap{
+  background:rgba(0,0,0,0.4);border:1px solid rgba(212,175,55,0.08);
+  border-radius:8px;padding:6px 10px;display:flex;flex-direction:column;gap:4px;
 }
+.harmonics-label{
+  display:flex;justify-content:between;font-family:var(--font-body);
+  font-size:9px;color:rgba(212,175,55,0.5);text-transform:uppercase;letter-spacing:1px;
+}
+.harmonics-slider{
+  -webkit-appearance:none;width:100%;height:4px;background:rgba(255,255,255,0.08);
+  border-radius:2px;outline:none;
+}
+.harmonics-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--gold);cursor:pointer}
 
-.panelHeader h2{
-  font-size:1.2rem;
+/* State buttons row */
+.state-row{display:flex;gap:6px;width:100%}
+.state-btn{
+  flex:1;padding:7px 4px;border:1px solid var(--border);border-radius:7px;
+  background:rgba(0,0,0,0.6);color:rgba(212,175,55,0.6);
+  font-family:var(--font-display);font-size:8px;letter-spacing:1.5px;
+  cursor:pointer;transition:all .3s;text-transform:uppercase;
 }
+.state-btn:hover{border-color:var(--gold);color:var(--gold)}
+.state-btn.active-state{background:rgba(212,175,55,0.12);color:var(--gold);border-color:var(--gold)}
+.state-btn.rage-active{background:rgba(255,30,30,0.15);color:#ff5555;border-color:#ff3333}
+.state-btn.sick-active{background:rgba(100,200,50,0.1);color:#88cc44;border-color:#66aa22}
+.state-btn.gold-active{background:rgba(212,175,55,0.2);color:#ffd700;border-color:#ffd700;box-shadow:0 0 12px rgba(212,175,55,0.3)}
 
-.panelBody{
-  padding:22px;
+#activateBtn{
+  background:linear-gradient(135deg,#d4af37 0%,#7a5c08 100%);
+  border:none;color:#000205;padding:11px;border-radius:8px;
+  font-family:var(--font-display);font-size:10px;font-weight:700;
+  letter-spacing:2.5px;cursor:pointer;width:100%;text-transform:uppercase;transition:all .3s;
 }
+#activateBtn.on{background:linear-gradient(135deg,#ff3b3b 0%,#6a0000 100%);color:#fff}
 
-#humanCanvas{
-  width:100%;
-  height:720px;
-  background:
-    radial-gradient(circle at center,rgba(76,132,255,.08),transparent 50%),
-    linear-gradient(180deg,#050916,#0b1224);
+/* ── NARRATION OVERLAY ── */
+#narration{
+  position:fixed;bottom:0;left:0;width:100%;z-index:25;
+  display:flex;flex-direction:column;align-items:center;
+  padding:0 12px 14px;
+  transition:opacity .5s ease;pointer-events:none;
 }
+.narr-inner{
+  background:rgba(0,2,10,0.88);border:1px solid var(--border);
+  border-radius:12px;backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+  padding:12px 16px;max-width:600px;width:100%;pointer-events:auto;
+  box-shadow:0 -10px 40px rgba(0,0,0,0.8);
+}
+.narr-header{display:flex;align-items:center;justify-content:between;margin-bottom:6px}
+.narr-badge{font-family:var(--font-display);font-size:8px;letter-spacing:2px;padding:3px 10px;border-radius:4px;text-transform:uppercase}
+.narr-badge.coherent{background:rgba(0,255,200,0.1);color:var(--teal);border:1px solid rgba(0,255,200,0.3)}
+.narr-badge.disrupted{background:rgba(255,59,59,0.1);color:#ff7070;border:1px solid rgba(255,59,59,0.3)}
+.narr-badge.neutral{background:rgba(212,175,55,0.07);color:var(--gold);border:1px solid var(--border)}
+.narr-badge.pyramid{background:rgba(255,215,0,0.15);color:#ffd700;border:1px solid rgba(255,215,0,0.4);box-shadow:0 0 10px rgba(255,215,0,0.2)}
+.narr-wave{width:28px;height:14px;display:flex;align-items:center;gap:2px}
+.narr-wave span{display:block;width:3px;border-radius:2px;background:var(--teal);animation:wave .8s ease-in-out infinite}
+.narr-wave span:nth-child(2){animation-delay:.1s}
+.narr-wave span:nth-child(3){animation-delay:.2s}
+.narr-wave span:nth-child(4){animation-delay:.3s}
+.narr-wave.off span{animation:none;height:3px!important}
+@keyframes wave{0%,100%{height:3px}50%{height:12px}}
+#narr-title{font-family:var(--font-display);font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:4px}
+#narr-text{font-family:var(--font-body);font-size:11px;color:rgba(200,210,230,0.85);line-height:1.5;font-weight:300}
+#narr-science{font-family:var(--font-body);font-size:9px;color:rgba(150,170,200,0.6);line-height:1.4;margin-top:5px;font-style:italic;border-top:1px solid var(--border);padding-top:5px}
 
-.metrics{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:16px;
+/* Organ labels */
+#organ-labels{position:fixed;inset:0;pointer-events:none;z-index:20;transition:opacity 0.4s}
+.organ-label{
+  position:absolute;transform:translate(-50%,-50%);
+  font-family:var(--font-display);font-size:8px;letter-spacing:2px;
+  color:rgba(212,175,55,0.7);text-transform:uppercase;
+  transition:opacity .5s,color .5s;white-space:nowrap;
+  text-shadow:0 0 8px rgba(0,0,0,0.9);
 }
+.organ-label.active{color:var(--teal)}
+.organ-label.disrupted{color:#ff6060}
+.organ-label.pyramid-lbl{color:#ffd700}
 
-.metric{
-  padding:18px;
-  border-radius:22px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
+/* Hint & Meters */
+#hint{
+  position:fixed;top:50%;right:14px;transform:translateY(-50%);
+  font-family:var(--font-body);font-size:8px;letter-spacing:2px;
+  color:rgba(212,175,55,0.2);pointer-events:none;z-index:5;
+  text-transform:uppercase;writing-mode:vertical-rl;text-orientation:mixed;
 }
+#coherence-meter{position:fixed;left:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;z-index:20}
+.coh-bar-wrap{width:6px;height:120px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
+#coh-bar{width:100%;height:50%;background:linear-gradient(to top,#ff3333,#ffdd00,#00ffc8);border-radius:3px;transition:height .4s ease;transform-origin:bottom}
+.coh-label{font-family:var(--font-display);font-size:7px;letter-spacing:1.5px;color:rgba(212,175,55,0.4);text-transform:uppercase;writing-mode:vertical-rl}
+#coh-pct{font-family:var(--font-body);font-size:9px;color:var(--teal);font-weight:600}
 
-.metric h4{
-  color:var(--soft);
-  font-size:.85rem;
-  margin-bottom:8px;
+#speakBtn{
+  position:fixed;bottom:14px;right:14px;z-index:30;
+  background:rgba(0,2,10,0.9);border:1px solid var(--border);
+  color:var(--gold);padding:8px 12px;border-radius:8px;
+  font-family:var(--font-display);font-size:8px;letter-spacing:2px;
+  cursor:pointer;text-transform:uppercase;transition:all .3s;
 }
-
-.metricValue{
-  font-size:1.6rem;
-  font-weight:900;
-}
-
-.freqList{
-  display:grid;
-  gap:14px;
-}
-
-.freqCard{
-  padding:18px;
-  border-radius:24px;
-  background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
-  border:1px solid rgba(255,255,255,.08);
-  cursor:pointer;
-  transition:.25s;
-  position:relative;
-  overflow:hidden;
-}
-
-.freqCard:hover{
-  transform:translateY(-3px);
-  border-color:rgba(79,252,255,.4);
-}
-
-.freqCard.active{
-  border-color:rgba(79,252,255,.7);
-  box-shadow:0 0 30px rgba(79,252,255,.2);
-}
-
-.freqTitle{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.freqName{
-  font-weight:800;
-  font-size:1rem;
-}
-
-.freqHz{
-  color:var(--cyan);
-  font-weight:700;
-}
-
-.freqDesc{
-  margin-top:10px;
-  color:var(--soft);
-  line-height:1.6;
-  font-size:.92rem;
-}
-
-.wave{
-  margin-top:14px;
-  height:60px;
-  border-radius:14px;
-  overflow:hidden;
-  background:#09111f;
-}
-
-.tabs{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.tab{
-  padding:10px 16px;
-  border-radius:14px;
-  background:rgba(255,255,255,.04);
-  cursor:pointer;
-  border:1px solid rgba(255,255,255,.08);
-  font-weight:700;
-}
-
-.tab.active{
-  background:linear-gradient(135deg,#2788ff,#8c5cff);
-}
-
-.section{
-  margin-top:24px;
-}
-
-.journal{
-  width:100%;
-  min-height:180px;
-  border:none;
-  resize:vertical;
-  border-radius:20px;
-  padding:18px;
-  background:#09111f;
-  color:white;
-  font-size:1rem;
-}
-
-.sliderWrap{
-  margin-top:20px;
-}
-
-.sliderWrap label{
-  display:block;
-  margin-bottom:8px;
-  color:var(--soft);
-}
-
-input[type=range]{
-  width:100%;
-}
-
-.breathCircle{
-  width:220px;
-  height:220px;
-  border-radius:50%;
-  margin:28px auto;
-  background:
-    radial-gradient(circle at center,rgba(255,255,255,.6),rgba(79,252,255,.2),transparent 70%);
-  border:2px solid rgba(255,255,255,.15);
-  animation:breathe 8s infinite ease-in-out;
-  box-shadow:0 0 40px rgba(79,252,255,.35);
-}
-
-@keyframes breathe{
-  0%{transform:scale(.75);}
-  50%{transform:scale(1);}
-  100%{transform:scale(.75);}
-}
-
-.infoGrid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:18px;
-}
-
-.infoCard{
-  border-radius:24px;
-  padding:22px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-}
-
-.infoCard h3{
-  margin-bottom:12px;
-}
-
-.infoCard p{
-  color:var(--soft);
-  line-height:1.7;
-}
-
-.footer{
-  margin-top:30px;
-  text-align:center;
-  color:var(--soft);
-  opacity:.8;
-  padding:20px;
-}
-
-.small{
-  font-size:.85rem;
-  line-height:1.6;
-}
-
-.toggle{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.switch{
-  width:60px;
-  height:32px;
-  border-radius:999px;
-  background:#172341;
-  position:relative;
-  cursor:pointer;
-}
-
-.switch::after{
-  content:'';
-  position:absolute;
-  top:4px;
-  left:4px;
-  width:24px;
-  height:24px;
-  border-radius:50%;
-  background:white;
-  transition:.25s;
-}
-
-.switch.active::after{
-  left:32px;
-}
-
-.videoWrap{
-  margin-top:18px;
-  border-radius:24px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.08);
-}
-
-iframe{
-  width:100%;
-  height:320px;
-  border:none;
-}
-
-.glowLine{
-  width:100%;
-  height:1px;
-  margin:20px 0;
-  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
-}
-
-.hidden{
-  display:none;
-}
+#speakBtn.speaking{color:var(--teal);border-color:var(--teal)}
 </style>
 </head>
-
 <body>
 
-<canvas id="bg"></canvas>
-<div class="grid"></div>
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
+<div id="canvas-container"><canvas id="c"></canvas></div>
 
-<div class="app">
+<!-- ── HUD PANEL ── -->
+<div id="hud">
+  <div class="panel">
+    <div class="panel-title">Quantum Soma · Field Matrix v4</div>
 
-  <section class="hero">
-    <div class="heroGlow"></div>
+    <select id="presetSelect" onchange="applyPreset(this.value)">
+      <option value="" disabled selected>— Select Frequency Vector —</option>
+      <optgroup label="🌐 Earth Coherence">
+        <option value="1.0">1.0 Hz — Deep Delta Regeneration</option>
+        <option value="4.0">4.0 Hz — Theta Sub-Conscious Gate</option>
+        <option value="7.83">7.83 Hz — Schumann Primary Resonance</option>
+        <option value="14.3">14.3 Hz — Schumann Secondary Harmonic</option>
+        <option value="136.1">136.1 Hz — Cosmic Ohm Matrix</option>
+      </optgroup>
+      <optgroup label="📐 Sacred Chamber Geometry">
+        <option value="111.0">111.0 Hz — Neolithic Holy Chamber</option>
+        <option value="117.0">117.0 Hz — Giza King's Chamber</option>
+        <option value="432.0">432.0 Hz — Pythagorean Harmonic Water</option>
+      </optgroup>
+      <optgroup label="🧬 Solfeggio Matrix">
+        <option value="285.0">285.0 Hz — Quantum Blueprint Recall</option>
+        <option value="528.0">528.0 Hz — DNA Repair Blueprint</option>
+        <option value="852.0">852.0 Hz — Pineal Portal Realignment</option>
+        <option value="963.0">963.0 Hz — Crown Absolute Coherence</option>
+      </optgroup>
+      <optgroup label="⚡ Environmental Vector Stress">
+        <option value="60.0">60.0 Hz — North American Grid Hum</option>
+        <option value="440.0">440.0 Hz — ISO Standard Tension</option>
+      </optgroup>
+    </select>
 
-    <h1 class="title">
-      Quantum Field Interface
-    </h1>
-
-    <p class="subtitle">
-      A visual cymatics-inspired interface exploring frequencies, environmental
-      signals, resonance patterns, body awareness, electromagnetic visualization,
-      and daily recalibration practices through immersive interactive design.
-      This experience is educational, artistic, observational, and reflective.
-    </p>
-
-    <div class="topBar">
-      <button class="btn active" onclick="switchTab('field')">
-        Field View
-      </button>
-
-      <button class="btn" onclick="switchTab('cymatics')">
-        Cymatics
-      </button>
-
-      <button class="btn" onclick="switchTab('ancient')">
-        Geometry & Ancient Structures
-      </button>
-
-      <button class="btn" onclick="switchTab('ritual')">
-        Ritual Mode
-      </button>
-
-      <button class="btn" onclick="switchTab('journal')">
-        Journal
-      </button>
-
-      <button class="btn" onclick="toggleDark()">
-        Dark / Cosmic
-      </button>
-    </div>
-  </section>
-
-  <!-- FIELD VIEW -->
-  <div id="field" class="tabPage">
-
-    <div class="layout">
-
-      <div class="panel">
-
-        <div class="panelHeader">
-          <h2>Human Electromagnetic Visualization</h2>
-
-          <div class="toggle">
-            <span class="small">Live Resonance</span>
-            <div class="switch active" id="liveSwitch"></div>
-          </div>
-        </div>
-
-        <div class="panelBody">
-          <canvas id="humanCanvas"></canvas>
-
-          <div class="glowLine"></div>
-
-          <div class="metrics">
-            <div class="metric">
-              <h4>Dominant Frequency</h4>
-              <div class="metricValue" id="metricFreq">432 Hz</div>
-            </div>
-
-            <div class="metric">
-              <h4>Field Coherence</h4>
-              <div class="metricValue" id="metricCoherence">82%</div>
-            </div>
-
-            <div class="metric">
-              <h4>Environmental Density</h4>
-              <div class="metricValue" id="metricDensity">Moderate</div>
-            </div>
-
-            <div class="metric">
-              <h4>Recommended State</h4>
-              <div class="metricValue" id="metricState">Grounding</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-
-        <div class="panelHeader">
-          <h2>Frequency Library</h2>
-        </div>
-
-        <div class="panelBody">
-
-          <div class="freqList">
-
-            <div class="freqCard active"
-              onclick="activateFrequency(432,'Grounding resonance patterns and harmonic relaxation fields.','432 Hz')">
-
-              <div class="freqTitle">
-                <div class="freqName">Earth Resonance</div>
-                <div class="freqHz">432 Hz</div>
-              </div>
-
-              <div class="freqDesc">
-                Visualizes calming harmonic geometry and environmental balance.
-              </div>
-
-              <canvas class="wave"></canvas>
-            </div>
-
-            <div class="freqCard"
-              onclick="activateFrequency(528,'Transformational waveform dynamics and emotional uplift fields.','528 Hz')">
-
-              <div class="freqTitle">
-                <div class="freqName">Transformation Field</div>
-                <div class="freqHz">528 Hz</div>
-              </div>
-
-              <div class="freqDesc">
-                Displays flowing interference patterns and expanding coherence.
-              </div>
-
-              <canvas class="wave"></canvas>
-            </div>
-
-            <div class="freqCard"
-              onclick="activateFrequency(741,'Mental clarity resonance and focus calibration mapping.','741 Hz')">
-
-              <div class="freqTitle">
-                <div class="freqName">Clarity Field</div>
-                <div class="freqHz">741 Hz</div>
-              </div>
-
-              <div class="freqDesc">
-                Sharp geometric harmonics with neural-inspired movement.
-              </div>
-
-              <canvas class="wave"></canvas>
-            </div>
-
-            <div class="freqCard"
-              onclick="activateFrequency(963,'High coherence geometry and expansive field visualization.','963 Hz')">
-
-              <div class="freqTitle">
-                <div class="freqName">Cosmic Coherence</div>
-                <div class="freqHz">963 Hz</div>
-              </div>
-
-              <div class="freqDesc">
-                Multi-layer sacred geometry and advanced cymatic fields.
-              </div>
-
-              <canvas class="wave"></canvas>
-            </div>
-
-          </div>
-
-          <div class="sliderWrap">
-            <label>Custom Frequency</label>
-            <input type="range" min="100" max="1200" value="432"
-              id="freqSlider" oninput="customFrequency(this.value)">
-          </div>
-
-          <div class="sliderWrap">
-            <label>Environmental Intensity</label>
-            <input type="range" min="1" max="100" value="50"
-              id="envSlider">
-          </div>
-
-          <div class="section">
-            <button class="btn" onclick="playTone()">
-              Play Tone
-            </button>
-
-            <button class="btn" onclick="stopTone()">
-              Stop Tone
-            </button>
-          </div>
-
-        </div>
-      </div>
-
+    <div class="row">
+      <input type="number" id="freqInput" value="7.83" step="0.01" min="0.1" max="20000" oninput="updateFrequency(this.value)">
+      <span class="unit">Hz Matrix Node</span>
     </div>
 
-    <div class="section panel">
-
-      <div class="panelHeader">
-        <h2>Environmental Signal Interpretation</h2>
+    <!-- Harmonics Field Generator Slider -->
+    <div class="harmonics-wrap">
+      <div class="harmonics-label">
+        <span>Harmonics Multiplier</span>
+        <span id="harmonicsVal">1.0x</span>
       </div>
-
-      <div class="panelBody">
-        <div class="infoGrid">
-
-          <div class="infoCard">
-            <h3>Blue Light Exposure</h3>
-            <p>
-              Long-duration screen exposure may contribute to eye strain,
-              sleep disruption, and overstimulation. Visualize recalibration
-              through darkness exposure, warm light, and rhythm balancing.
-            </p>
-          </div>
-
-          <div class="infoCard">
-            <h3>Urban Signal Saturation</h3>
-            <p>
-              Dense technological environments can create sensory overload.
-              The interface visualizes environmental complexity as layered
-              wave interference around the human field.
-            </p>
-          </div>
-
-          <div class="infoCard">
-            <h3>Grounding Practices</h3>
-            <p>
-              Nature immersion, quiet environments, mindful breathing,
-              stretching, hydration, and reduced digital overload can support
-              regulation and focus.
-            </p>
-          </div>
-
-          <div class="infoCard">
-            <h3>Wave Geometry</h3>
-            <p>
-              Cymatic-inspired geometry demonstrates how vibration can create
-              visible structure in matter and fluid mediums.
-            </p>
-          </div>
-
-        </div>
-      </div>
-
+      <input type="range" id="harmonicSlider" class="harmonics-slider" min="1.0" max="8.0" step="1.0" value="1.0" oninput="updateHarmonics(this.value)">
     </div>
 
+    <div class="state-row">
+      <button class="state-btn active-state" id="btnHealthy" onclick="setState('healthy')">Healthy</button>
+      <button class="state-btn" id="btnRage" onclick="setState('rage')">Rage</button>
+      <button class="state-btn" id="btnSick" onclick="setState('sick')">Sick</button>
+      <button class="state-btn" id="btnPyramid" onclick="setState('pyramid')">🔺 Pyramid</button>
+    </div>
+
+    <button id="activateBtn" onclick="toggleField()">Initiate Field Resonance</button>
   </div>
-
-  <!-- CYMATICS -->
-  <div id="cymatics" class="tabPage hidden">
-
-    <div class="panel">
-      <div class="panelHeader">
-        <h2>Cymatics Visualization Engine</h2>
-      </div>
-
-      <div class="panelBody">
-
-        <canvas id="cymaticsCanvas" style="width:100%;height:700px;background:#040913;border-radius:24px;"></canvas>
-
-        <div class="section">
-          <div class="tabs">
-            <div class="tab active">Toroidal</div>
-            <div class="tab">Flower Geometry</div>
-            <div class="tab">Resonance Rings</div>
-            <div class="tab">Interference Fields</div>
-            <div class="tab">Wave Nodes</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ANCIENT -->
-  <div id="ancient" class="tabPage hidden">
-
-    <div class="panel">
-      <div class="panelHeader">
-        <h2>Ancient Geometry & Structural Resonance</h2>
-      </div>
-
-      <div class="panelBody">
-
-        <div class="infoGrid">
-
-          <div class="infoCard">
-            <h3>Pyramidal Structures</h3>
-            <p>
-              Ancient pyramidal forms appear throughout global civilizations.
-              This module explores geometric symmetry, orientation, structural
-              harmonics, and architectural symbolism through immersive visuals.
-            </p>
-          </div>
-
-          <div class="infoCard">
-            <h3>Sacred Geometry</h3>
-            <p>
-              Repeating mathematical structures appear throughout biology,
-              astronomy, crystals, fluid dynamics, and natural growth systems.
-            </p>
-          </div>
-
-          <div class="infoCard">
-            <h3>Observer & Environment</h3>
-            <p>
-              The interface frames the user as an observer interacting with
-              layered environmental frequencies, patterns, and fields.
-            </p>
-          </div>
-
-          <div class="infoCard">
-            <h3>Human-Centered Design</h3>
-            <p>
-              The focus remains the body, awareness, and environmental
-              interaction — not worship, ideology, or mysticism.
-            </p>
-          </div>
-
-        </div>
-
-        <div class="videoWrap">
-          <iframe
-            src="https://www.youtube.com/embed/4xQyL4mJafQ"
-            allowfullscreen>
-          </iframe>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-
-  <!-- RITUAL -->
-  <div id="ritual" class="tabPage hidden">
-
-    <div class="layout">
-
-      <div class="panel">
-
-        <div class="panelHeader">
-          <h2>Breath & Rhythm Calibration</h2>
-        </div>
-
-        <div class="panelBody">
-
-          <div class="breathCircle"></div>
-
-          <p class="subtitle">
-            Use the visual pulse as a pacing guide for breath awareness,
-            nervous system regulation, grounding, and mental reset.
-          </p>
-
-        </div>
-
-      </div>
-
-      <div class="panel">
-
-        <div class="panelHeader">
-          <h2>Dream & Reflection Log</h2>
-        </div>
-
-        <div class="panelBody">
-
-          <textarea class="journal"
-            placeholder="Record thoughts, dreams, emotional observations, environmental notes, or resonance experiences..."
-            id="dreamInput"></textarea>
-
-          <div class="section">
-            <button class="btn" onclick="saveDream()">
-              Save Entry
-            </button>
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- JOURNAL -->
-  <div id="journal" class="tabPage hidden">
-
-    <div class="panel">
-
-      <div class="panelHeader">
-        <h2>Field Journal & Progress Tracking</h2>
-      </div>
-
-      <div class="panelBody">
-
-        <textarea class="journal"
-          id="journalInput"
-          placeholder="Track frequencies explored, environmental conditions, reflections, observations, and recalibration practices..."></textarea>
-
-        <div class="section">
-          <button class="btn" onclick="saveJournal()">
-            Save Journal
-          </button>
-
-          <button class="btn" onclick="exportJournal()">
-            Export
-          </button>
-        </div>
-
-        <div class="section">
-          <h3>Saved Entries</h3>
-          <div id="entries"></div>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-  <div class="footer">
-    Quantum Field Interface V3 — Educational cymatics-inspired visualization
-    experience for awareness, resonance exploration, and environmental reflection.
-  </div>
-
 </div>
 
+<!-- ── BIOMETRIC LABELS ── -->
+<div id="organ-labels">
+  <div class="organ-label" id="lbl-brain" style="top:18%;left:50%">Brain / Pineal</div>
+  <div class="organ-label" id="lbl-throat" style="top:26%;left:50%">Throat / Thyroid</div>
+  <div class="organ-label" id="lbl-heart" style="top:36%;left:64%">Heart Matrix</div>
+  <div class="organ-label" id="lbl-lungs" style="top:36%;left:36%">Lungs</div>
+  <div class="organ-label" id="lbl-solar" style="top:47%;left:65%">Solar Plexus</div>
+  <div class="organ-label" id="lbl-sacral" style="top:56%;left:35%">Sacral / Gut</div>
+  <div class="organ-label" id="lbl-root" style="top:63%;left:64%">Root / Pelvis</div>
+</div>
+
+<div id="coherence-meter">
+  <div class="coh-label">Field Coherence</div>
+  <div class="coh-bar-wrap"><div id="coh-bar"></div></div>
+  <div id="coh-pct">50%</div>
+</div>
+
+<!-- ── NARRATION ANALYSIS ── -->
+<div id="narration">
+  <div class="narr-inner">
+    <div class="narr-header">
+      <div id="narr-badge" class="narr-badge neutral">BASELINE</div>
+      <div class="narr-wave off" id="narr-wave"><span></span><span></span><span></span><span></span></div>
+    </div>
+    <div id="narr-title">Bio-Resonance Field At Rest</div>
+    <div id="narr-text">System initialization complete. The biological envelope stands in a state of local baseline potential, ready to absorb targeted frequency inputs.</div>
+    <div id="narr-science">Biophysics: Standard biophoton emission tracks inside baseline parameters. Phase coordination can be established via systemic acoustic inputs.</div>
+  </div>
+</div>
+
+<button id="speakBtn" onclick="speakNarration()">🔊 Narrate</button>
+<div id="hint">Drag backdrop to rotate grid · Tap clear space to toggle HUD</div>
+
+<!-- ── THREE.JS ENGINE ── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-/* =========================
-BACKGROUND PARTICLES
-========================= */
+// ═══════════════════════════════════════════════════════
+//  APPLICATION ARCHITECTURE DATA
+// ═══════════════════════════════════════════════════════
+let isRunning = false, bodyState = 'healthy', frequency = 7.83, harmonicOrder = 1.0, coherence = 0.5;
+let clock, scene, camera, renderer, bodyGroup, auricGroup, cymaticsGroup, pyramidMesh;
+let fieldParticles, particleUniforms, bodyUniforms, auricUniforms, cymaticsUniforms;
+let organMeshes = {}, chakraOrbs = [];
+let audioCtx = null, fundamentalOsc = null, harmonicOscs = [], structuralGain = null;
+let targetRotationY = 0, currentRotationY = 0, pointerIsDown = false, previousPointerX = 0;
 
-const bg = document.getElementById('bg');
-const bgCtx = bg.getContext('2d');
-
-function resizeBG(){
-  bg.width = innerWidth;
-  bg.height = innerHeight;
-}
-resizeBG();
-addEventListener('resize', resizeBG);
-
-const stars = Array.from({length:140},()=>({
-  x:Math.random()*innerWidth,
-  y:Math.random()*innerHeight,
-  r:Math.random()*2,
-  v:Math.random()*0.3+0.1
-}));
-
-function animateBG(){
-  bgCtx.clearRect(0,0,bg.width,bg.height);
-
-  stars.forEach(s=>{
-    s.y += s.v;
-    if(s.y > innerHeight) s.y = 0;
-
-    bgCtx.beginPath();
-    bgCtx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    bgCtx.fillStyle='rgba(255,255,255,.8)';
-    bgCtx.fill();
-  });
-
-  requestAnimationFrame(animateBG);
-}
-animateBG();
-
-/* =========================
-TAB SYSTEM
-========================= */
-
-function switchTab(id){
-
-  document.querySelectorAll('.tabPage')
-    .forEach(el=>el.classList.add('hidden'));
-
-  document.getElementById(id)
-    .classList.remove('hidden');
-
-  document.querySelectorAll('.topBar .btn')
-    .forEach(b=>b.classList.remove('active'));
-
-  event.target.classList.add('active');
-}
-
-/* =========================
-DARK MODE
-========================= */
-
-let cosmic = true;
-
-function toggleDark(){
-  cosmic = !cosmic;
-
-  if(!cosmic){
-    document.body.style.background = '#eef2ff';
-    document.body.style.color = '#111';
-  }else{
-    location.reload();
+const NARRATION_DIRECTORY = {
+  "healthy": {
+    badge: "COHERENT", class: "coherent", title: "Harmonic Optimization Vector",
+    text: "The structural envelope demonstrates high phase-locking across all biofield coordinates. Cellular structures demonstrate optimized energetic output.",
+    science: "Resonant entrainment coordinates localized biophoton streams into structured cellular arrays, reducing energetic impedance."
+  },
+  "rage": {
+    badge: "DISRUPTED", class: "disrupted", title: "Hyper-Chaotic Vector",
+    text: "The field manifests severe amplitude fragmentation. High-frequency structural shockwaves decouple coherent structural fields.",
+    science: "Chaotic voltage spikes disrupt regular electromagnetic phase-locking, mimicking nervous system stress cycles."
+  },
+  "sick": {
+    badge: "CRITICAL COLLAPSE", class: "disrupted", title: "Hypo-Resonant Envelope",
+    text: "The auric boundary experiences immediate structural collapse, losing geometric definition and drawing inward toward core elements.",
+    science: "Depleted cellular charge maps directly to attenuated field profiles, suppressing standard bioelectric output ranges."
+  },
+  "pyramid": {
+    badge: "🔺 GEOMETRIC ANCHOR", class: "pyramid", title: "Pyramidal Compression Field",
+    text: "The localized field anchors into an immutable geometric torus. Energetic vectors accumulate at the core matrices.",
+    science: "Sacred architectural vectors organize sub-atomic wave patterns into self-sustaining standing wave geometries."
   }
-}
+};
 
-/* =========================
-HUMAN FIELD VISUALIZATION
-========================= */
+// ═══════════════════════════════════════════════════════
+//  CUSTOM COMPLEX SHADER CONSTANTS
+// ═══════════════════════════════════════════════════════
+const particleVertGLSL = `
+  uniform float uTime;
+  uniform float uCoherence;
+  uniform int uState;
+  uniform float uFreq;
+  uniform float uHarmonic;
+  attribute float aPhase;
+  attribute float aRadius;
+  attribute float aSpeed;
+  varying float vAlpha;
+  varying vec3 vColor;
 
-const humanCanvas = document.getElementById('humanCanvas');
-const hctx = humanCanvas.getContext('2d');
+  void main(){
+    float t = uTime * aSpeed * 0.4 + aPhase;
+    float currentFreq = uFreq * uHarmonic;
+    
+    // Core Cymatic Torus Wave Equations
+    float radialMode = sin(aRadius * (currentFreq * 0.05) - uTime * 2.0);
+    float angularMode = cos(4.0 * t);
+    float cymaticMod = radialMode * angularMode * (0.15 * uCoherence);
+    
+    float majorR = aRadius + cymaticMod;
+    vec3 pos = vec3(majorR * cos(t), position.y + sin(t * 1.5) * 1.6, majorR * sin(t));
 
-function resizeHuman(){
-  humanCanvas.width = humanCanvas.offsetWidth;
-  humanCanvas.height = humanCanvas.offsetHeight;
-}
-resizeHuman();
-addEventListener('resize', resizeHuman);
-
-let currentFreq = 432;
-let fieldIntensity = 50;
-
-function drawHuman(){
-
-  hctx.clearRect(0,0,humanCanvas.width,humanCanvas.height);
-
-  const w = humanCanvas.width;
-  const h = humanCanvas.height;
-
-  const cx = w/2;
-  const cy = h/2;
-
-  /* FIELD WAVES */
-
-  for(let i=0;i<12;i++){
-
-    const radius = 90 + i*26 + Math.sin(Date.now()/900+i)*10;
-
-    hctx.beginPath();
-    hctx.arc(cx,cy,radius,0,Math.PI*2);
-
-    hctx.strokeStyle =
-      `hsla(${200+i*12},100%,70%,${0.18-i*0.01})`;
-
-    hctx.lineWidth = 2;
-    hctx.stroke();
-  }
-
-  /* SACRED GEOMETRY */
-
-  for(let i=0;i<6;i++){
-
-    const r = 150 + i*25;
-
-    hctx.beginPath();
-
-    for(let a=0;a<Math.PI*2;a+=Math.PI/3){
-
-      const x = cx + Math.cos(a+Date.now()/4000)*r;
-      const y = cy + Math.sin(a+Date.now()/4000)*r;
-
-      if(a===0) hctx.moveTo(x,y);
-      else hctx.lineTo(x,y);
+    if(uState == 1) {
+      pos += normalize(pos) * sin(uTime * 12.0 + aPhase) * 0.5;
+    } else if(uState == 2) {
+      pos.y -= abs(sin(uTime * 0.4 + aPhase)) * 0.6;
+      pos.xz *= 0.5;
+    } else if(uState == 3) {
+      float pHeight = (pos.y + 2.0) / 4.0;
+      pos.xz *= (1.0 - clamp(pHeight, 0.0, 0.95));
+      pos.xz *= 1.1 + sin(uTime * 4.0 + pos.y * 3.0) * 0.05;
     }
 
-    hctx.closePath();
+    vAlpha = (0.25 + uCoherence * 0.6) * (0.4 + 0.6 * sin(uTime * 3.0 + aPhase));
+    
+    // High performance dynamic spectral shifts
+    if(uState == 0) vColor = mix(vec3(0.0, 0.9, 1.0), vec3(0.4, 0.0, 0.9), position.y * 0.2 + 0.5);
+    else if(uState == 1) vColor = mix(vec3(1.0, 0.1, 0.0), vec3(1.0, 0.5, 0.0), sin(t));
+    else if(uState == 2) vColor = vec3(0.3, 0.65, 0.1);
+    else vColor = mix(vec3(1.0, 0.85, 0.1), vec3(1.0, 0.5, 0.0), pHeight);
 
-    hctx.strokeStyle =
-      `hsla(${280+i*8},100%,70%,0.14)`;
+    vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
+    gl_PointSize = (2.2 + aRadius * 1.4) * (320.0 / -mvPos.z);
+    gl_Position = projectionMatrix * mvPos;
+  }
+`;
 
-    hctx.stroke();
+const particleFragGLSL = `
+  varying float vAlpha;
+  varying vec3 vColor;
+  void main(){
+    vec2 uv = gl_PointCoord - 0.5;
+    if(length(uv) > 0.5) discard;
+    float intensity = 1.0 - smoothstep(0.0, 0.5, length(uv));
+    gl_FragColor = vec4(vColor, vAlpha * intensity);
+  }
+`;
+
+// ═══════════════════════════════════════════════════════
+//  ENGINE CORE ENGINE VALIDATION
+// ═══════════════════════════════════════════════════════
+window.onload = function() {
+  initThree();
+  buildSystemMatrix();
+  setupTouchInteractions();
+  computeCoherence();
+  animatePipeline();
+};
+
+function initThree() {
+  const container = document.getElementById('canvas-container');
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x000205);
+  scene.fog = new THREE.FogExp2(0x000205, 0.012);
+
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.set(0, 0.2, 5.2);
+
+  renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('c'), antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.3;
+
+  clock = new THREE.Clock();
+  window.addEventListener('resize', onWindowResize);
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+// ═══════════════════════════════════════════════════════
+//  BIOMETRIC SYSTEM CONSTRUCTION
+// ═══════════════════════════════════════════════════════
+function buildSystemMatrix() {
+  bodyGroup = new THREE.Group();
+  auricGroup = new THREE.Group();
+  scene.add(bodyGroup);
+  scene.add(auricGroup);
+
+  // Core uniform registration structures
+  bodyUniforms = { uTime: {value:0}, uFreq: {value:7.83}, uHarmonic: {value:1.0}, uCoherence: {value:0.5}, uIntensity: {value:0.3}, uState: {value:0} };
+  auricUniforms = { uTime: {value:0}, uCoherence: {value:0.5}, uState: {value:0} };
+
+  const bodyMat = new THREE.ShaderMaterial({
+    vertexShader: `
+      uniform float uTime; uniform float uFreq; uniform float uHarmonic; uniform float uCoherence; uniform float uIntensity; uniform int uState;
+      varying vec3 vNormal; varying vec3 vPos;
+      void main(){
+        vNormal = normalMatrix * normal; vPos = position;
+        float wave = sin(position.y * (uFreq * 0.08) * uHarmonic - uTime * 4.0) * 0.03 * uIntensity * uCoherence;
+        if(uState == 1) wave = sin(position.y * 15.0 - uTime * 10.0) * 0.09 * uIntensity;
+        if(uState == 2) wave = sin(uTime * 1.5) * 0.02 * uIntensity - 0.04;
+        vec3 newPos = position + normal * wave;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float uTime; uniform float uCoherence; uniform int uState;
+      varying vec3 vNormal; varying vec3 vPos;
+      void main(){
+        vec3 n = normalize(vNormal); float rim = pow(1.0 - abs(dot(n, vec3(0.0,0.0,1.0))), 2.5);
+        vec3 col = mix(vec3(0.0, 0.8, 1.0), vec3(0.4, 0.1, 0.9), vPos.y * 0.2 + 0.5);
+        if(uState == 1) col = vec3(1.0, 0.1, 0.0);
+        if(uState == 2) col = vec3(0.25, 0.55, 0.1);
+        if(uState == 3) col = vec3(1.0, 0.84, 0.1);
+        gl_FragColor = vec4(col + col * rim * 2.0, 0.2 + rim * 0.6);
+      }
+    `,
+    uniforms: bodyUniforms, transparent: true, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending
+  });
+
+  // Construct precise anatomical coordinates
+  const structures = [
+    ['head', new THREE.SphereGeometry(0.32, 24, 24), 0, 1.45, 0],
+    ['neck', new THREE.CylinderGeometry(0.12, 0.14, 0.2, 16), 0, 1.15, 0],
+    ['chest', new THREE.SphereGeometry(0.45, 24, 20), 0, 0.65, 0],
+    ['abdomen', new THREE.SphereGeometry(0.38, 24, 20), 0, 0.1, 0],
+    ['pelvis', new THREE.SphereGeometry(0.32, 24, 20), 0, -0.4, 0],
+    ['armL_u', new THREE.CapsuleGeometry(0.08, 0.4, 4, 8), -0.65, 0.55, 0],
+    ['armL_l', new THREE.CapsuleGeometry(0.07, 0.4, 4, 8), -0.8, 0.05, 0],
+    ['armR_u', new THREE.CapsuleGeometry(0.08, 0.4, 4, 8), 0.65, 0.55, 0],
+    ['armR_l', new THREE.CapsuleGeometry(0.07, 0.4, 4, 8), 0.8, 0.05, 0],
+    ['legL_u', new THREE.CapsuleGeometry(0.12, 0.6, 4, 8), -0.22, -0.85, 0],
+    ['legL_l', new THREE.CapsuleGeometry(0.09, 0.6, 4, 8), -0.22, -1.45, 0],
+    ['legR_u', new THREE.CapsuleGeometry(0.12, 0.6, 4, 8), 0.22, -0.85, 0],
+    ['legR_l', new THREE.CapsuleGeometry(0.09, 0.6, 4, 8), 0.22, -1.45, 0]
+  ];
+
+  structures.forEach(([name, geo, x, y, z]) => {
+    const mesh = new THREE.Mesh(geo, bodyMat);
+    mesh.position.set(x, y, z);
+    bodyGroup.add(mesh);
+    organMeshes[name] = mesh;
+  });
+
+  // Toroidal Auric Field Boundaries
+  const auricMat = new THREE.ShaderMaterial({
+    vertexShader: `
+      uniform float uTime; uniform float uCoherence; uniform int uState; varying float vFresnel;
+      void main(){
+        vec3 vNormal = normalMatrix * normal;
+        vec3 viewDir = normalize(-vec3(modelViewMatrix * vec4(position,1.0)));
+        vFresnel = pow(1.0 - abs(dot(normalize(vNormal), viewDir)), 3.0);
+        float pulse = 1.0 + sin(uTime * 2.0) * 0.03 * uCoherence;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position * pulse, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform int uState; uniform float uCoherence; varying float vFresnel;
+      void main(){
+        vec3 c = vec3(0.0, 0.8, 1.0);
+        if(uState == 1) c = vec3(1.0, 0.1, 0.0);
+        if(uState == 2) c = vec3(0.2, 0.6, 0.1);
+        if(uState == 3) c = vec3(1.0, 0.8, 0.1);
+        gl_FragColor = vec4(c, vFresnel * 0.35 * uCoherence);
+      }
+    `,
+    uniforms: auricUniforms, transparent: true, side: THREE.BackSide, depthWrite: false, blending: THREE.AdditiveBlending
+  });
+
+  const auricGeo = new THREE.SphereGeometry(1.0, 32, 32);
+  auricGeo.scale(1.2, 2.0, 1.0);
+  auricGroup.add(new THREE.Mesh(auricGeo, auricMat));
+
+  buildSystemChakras();
+  buildCymaticsGrid();
+  buildSystemParticles();
+  buildPyramidGeometry();
+  
+  // Ambient Lighting Infrastructure
+  const dLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  dLight.position.set(5, 10, 7);
+  scene.add(dLight);
+  scene.add(new THREE.AmbientLight(0x0a1530));
+}
+
+function buildSystemChakras() {
+  const CHAKRAS = [
+    {y: 1.6, c: 0x9b59ff}, {y: 1.4, c: 0x4a9fff}, {y: 1.15, c: 0x00c8ff},
+    {y: 0.7, c: 0x00e87a}, {y: 0.3, c: 0xffdd00}, {y: -0.05, c: 0xff8c00}, {y: -0.4, c: 0xff3333}
+  ];
+  CHAKRAS.forEach(ch => {
+    const orb = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 16), new THREE.MeshBasicMaterial({ color: ch.c, transparent: true, opacity: 0.8 }));
+    orb.position.set(0, ch.y, 0.1);
+    bodyGroup.add(orb);
+    chakraOrbs.push(orb);
+  });
+}
+
+function buildCymaticsGrid() {
+  cymaticsGroup = new THREE.Group();
+  scene.add(cymaticsGroup);
+
+  cymaticsUniforms = { uTime: {value:0}, uFreq: {value:7.83}, uHarmonic: {value:1.0}, uCoherence: {value:0.5}, uState: {value:0} };
+  
+  const planeGeo = new THREE.PlaneGeometry(8, 8, 128, 128);
+  const planeMat = new THREE.ShaderMaterial({
+    vertexShader: `
+      uniform float uTime; uniform float uFreq; uniform float uHarmonic; uniform float uCoherence; uniform int uState;
+      varying vec2 vUv; varying float vHeight;
+      void main(){
+        vUv = uv;
+        vec2 p = (uv - 0.5) * 6.0;
+        float r = length(p); float theta = atan(p.y, p.x);
+        float currentFreq = uFreq * uHarmonic;
+        
+        // Pure analytical standing wave node calculation
+        float d = sin(r * (currentFreq * 0.12) - uTime * 3.0) * cos(5.0 * theta);
+        d += sin(r * (currentFreq * 0.05) - uTime * 1.5);
+        float amp = 0.18 * uCoherence;
+        if(uState == 1) amp *= 2.5;
+        if(uState == 2) amp *= 0.2;
+        
+        vHeight = d * amp;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x, position.y + d * amp, position.z, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float uCoherence; uniform int uState; varying float vHeight;
+      void main(){
+        float h = abs(vHeight) * 5.0;
+        vec3 c = mix(vec3(0.0, 0.4, 0.8), vec3(0.0, 1.0, 0.8), h);
+        if(uState == 1) c = mix(vec3(0.5, 0.0, 0.0), vec3(1.0, 0.2, 0.0), h);
+        if(uState == 2) c = vec3(0.15, 0.35, 0.08);
+        if(uState == 3) c = mix(vec3(0.4, 0.3, 0.0), vec3(1.0, 0.85, 0.1), h);
+        gl_FragColor = vec4(c, clamp(0.1 + h * 0.4, 0.0, 0.7));
+      }
+    `,
+    uniforms: cymaticsUniforms, transparent: true, side: THREE.DoubleSide, depthWrite: false, wireframe: true
+  });
+
+  const mesh = new THREE.Mesh(planeGeo, planeMat);
+  mesh.rotation.x = -Math.PI / 2;
+  mesh.position.y = -1.9;
+  cymaticsGroup.add(mesh);
+}
+
+function buildSystemParticles() {
+  const count = 2800;
+  const positions = new Float32Array(count * 3);
+  const phases = new Float32Array(count);
+  const radii = new Float32Array(count);
+  const speeds = new Float32Array(count);
+
+  for(let i = 0; i < count; i++) {
+    positions[i*3] = (Math.random() - 0.5) * 2.0;
+    positions[i*3+1] = (Math.random() - 0.5) * 4.0;
+    positions[i*3+2] = (Math.random() - 0.5) * 2.0;
+    phases[i] = Math.random() * Math.PI * 2;
+    radii[i] = 0.6 + Math.random() * 1.1;
+    speeds[i] = 0.4 + Math.random() * 1.2;
   }
 
-  /* BODY */
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('aPhase', new THREE.BufferAttribute(phases, 1));
+  geo.setAttribute('aRadius', new THREE.BufferAttribute(radii, 1));
+  geo.setAttribute('aSpeed', new THREE.BufferAttribute(speeds, 1));
 
-  const pulse =
-    Math.sin(Date.now()/500)*8;
+  particleUniforms = { uTime: {value:0}, uCoherence: {value:0.5}, uState: {value:0}, uFreq: {value:7.83}, uHarmonic: {value:1.0} };
 
-  hctx.save();
-  hctx.translate(cx,cy-40);
+  const mat = new THREE.ShaderMaterial({
+    vertexShader: particleVertGLSL,
+    fragmentShader: particleFragGLSL,
+    uniforms: particleUniforms, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+  });
 
-  /* head */
-  const grad =
-    hctx.createRadialGradient(0,-210,20,0,-210,90);
+  fieldParticles = new THREE.Points(geo, mat);
+  scene.add(fieldParticles);
+}
 
-  grad.addColorStop(0,'#fff4d9');
-  grad.addColorStop(.3,'#f1c7b1');
-  grad.addColorStop(1,'rgba(255,220,190,.2)');
+function buildPyramidGeometry() {
+  const geo = new THREE.ConeGeometry(1.6, 2.6, 4);
+  const mat = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true, transparent: true, opacity: 0.0 });
+  pyramidMesh = new THREE.Mesh(geo, mat);
+  pyramidMesh.position.y = 0.2;
+  scene.add(pyramidMesh);
+}
 
-  hctx.fillStyle = grad;
+// ═══════════════════════════════════════════════════════
+//  INTERACTION & TOUCH CONTROLS
+// ═══════════════════════════════════════════════════════
+function setupTouchInteractions() {
+  const container = document.getElementById('canvas-container');
+  
+  container.addEventListener('pointerdown', (e) => {
+    pointerIsDown = true;
+    previousPointerX = e.clientX;
+  });
 
-  hctx.beginPath();
-  hctx.arc(0,-220,58+pulse*.1,0,Math.PI*2);
-  hctx.fill();
+  window.addEventListener('pointermove', (e) => {
+    if (!pointerIsDown) return;
+    const deltaX = e.clientX - previousPointerX;
+    targetRotationY += deltaX * 0.007;
+    previousPointerX = e.clientX;
+  });
 
-  /* torso glow */
-  const bodyGrad =
-    hctx.createLinearGradient(0,-100,0,250);
+  window.addEventListener('pointerup', () => { pointerIsDown = false; });
 
-  bodyGrad.addColorStop(0,'rgba(255,210,190,.95)');
-  bodyGrad.addColorStop(1,'rgba(255,170,150,.35)');
+  // Mobile clean tap handling to minimize HUD clutter
+  container.addEventListener('click', (e) => {
+    if (e.target.tagName !== 'CANVAS') return;
+    document.getElementById('hud').classList.toggle('fade');
+  });
+}
 
-  hctx.fillStyle = bodyGrad;
-
-  hctx.beginPath();
-  hctx.moveTo(-70,-130);
-  hctx.quadraticCurveTo(-120,20,-70,180);
-  hctx.lineTo(70,180);
-  hctx.quadraticCurveTo(120,20,70,-130);
-  hctx.closePath();
-  hctx.fill();
-
-  /* arms */
-  hctx.strokeStyle='rgba(255,210,190,.8)';
-  hctx.lineWidth=24;
-  hctx.lineCap='round';
-
-  hctx.beginPath();
-  hctx.moveTo(-60,-70);
-  hctx.lineTo(-130,80);
-
-  hctx.moveTo(60,-70);
-  hctx.lineTo(130,80);
-  hctx.stroke();
-
-  /* legs */
-  hctx.beginPath();
-  hctx.moveTo(-30,180);
-  hctx.lineTo(-60,320);
-
-  hctx.moveTo(30,180);
-  hctx.lineTo(60,320);
-  hctx.stroke();
-
-  /* internal energy */
-
-  for(let i=0;i<7;i++){
-
-    const yy = -140 + i*55;
-
-    hctx.beginPath();
-    hctx.arc(
-      0,
-      yy,
-      14 + Math.sin(Date.now()/500+i)*4,
-      0,
-      Math.PI*2
-    );
-
-    hctx.fillStyle =
-      `hsla(${180+i*35},100%,70%,.85)`;
-
-    hctx.shadowBlur = 25;
-    hctx.shadowColor = 'cyan';
-
-    hctx.fill();
+// ═══════════════════════════════════════════════════════
+//  DYNAMIC COHERENCE STATE MATRIX
+// ═══════════════════════════════════════════════════════
+function computeCoherence() {
+  if (bodyState === 'healthy') {
+    if (frequency >= 7.0 && frequency <= 9.0) coherence = 0.92;
+    else if (frequency > 50.0) coherence = 0.42;
+    else coherence = 0.65;
+  } else if (bodyState === 'rage') {
+    coherence = 0.15;
+  } else if (bodyState === 'sick') {
+    coherence = 0.28;
+  } else if (bodyState === 'pyramid') {
+    coherence = 1.0;
   }
 
-  hctx.restore();
-
-  requestAnimationFrame(drawHuman);
-}
-drawHuman();
-
-/* =========================
-CYMATICS
-========================= */
-
-const cymCanvas =
-  document.getElementById('cymaticsCanvas');
-
-const cctx = cymCanvas.getContext('2d');
-
-function resizeCym(){
-  cymCanvas.width = cymCanvas.offsetWidth;
-  cymCanvas.height = cymCanvas.offsetHeight;
-}
-resizeCym();
-addEventListener('resize', resizeCym);
-
-function animateCymatics(){
-
-  cctx.clearRect(0,0,cymCanvas.width,cymCanvas.height);
-
-  const cx = cymCanvas.width/2;
-  const cy = cymCanvas.height/2;
-
-  for(let i=0;i<180;i++){
-
-    const angle = i*.18 + Date.now()/3000;
-
-    const radius =
-      40 +
-      i*2 +
-      Math.sin(Date.now()/500+i*.3)*20;
-
-    const x =
-      cx + Math.cos(angle)*radius;
-
-    const y =
-      cy + Math.sin(angle)*radius;
-
-    cctx.beginPath();
-    cctx.arc(x,y,2.2,0,Math.PI*2);
-
-    cctx.fillStyle =
-      `hsla(${i*2},100%,70%,.75)`;
-
-    cctx.fill();
+  // Update UI Elements safely
+  document.getElementById('coh-bar').style.height = `${coherence * 100}%`;
+  document.getElementById('coh-pct').innerText = `${Math.round(coherence * 100)}%`;
+  
+  // Direct pipeline injection
+  if (bodyUniforms) {
+    bodyUniforms.uCoherence.value = coherence;
+    auricUniforms.uCoherence.value = coherence;
+    cymaticsUniforms.uCoherence.value = coherence;
+    particleUniforms.uCoherence.value = coherence;
   }
 
-  for(let i=0;i<10;i++){
+  updateNarrationDisplay();
+}
 
-    cctx.beginPath();
-
-    cctx.arc(
-      cx,
-      cy,
-      70+i*35+
-      Math.sin(Date.now()/1000+i)*10,
-      0,
-      Math.PI*2
-    );
-
-    cctx.strokeStyle =
-      `hsla(${180+i*15},100%,70%,.14)`;
-
-    cctx.stroke();
+function updateFrequency(val) {
+  const f = parseFloat(val);
+  if (isNaN(f) || f <= 0) return;
+  frequency = f;
+  
+  if (bodyUniforms) {
+    bodyUniforms.uFreq.value = frequency;
+    cymaticsUniforms.uFreq.value = frequency;
+    particleUniforms.uFreq.value = frequency;
   }
-
-  requestAnimationFrame(animateCymatics);
-}
-animateCymatics();
-
-/* =========================
-FREQUENCIES
-========================= */
-
-function activateFrequency(freq,desc,label){
-
-  currentFreq = freq;
-
-  document.getElementById('metricFreq')
-    .innerText = label;
-
-  document.getElementById('metricCoherence')
-    .innerText =
-      Math.floor(60+Math.random()*40)+'%';
-
-  document.getElementById('metricDensity')
-    .innerText =
-      ['Low','Moderate','High']
-      [Math.floor(Math.random()*3)];
-
-  document.getElementById('metricState')
-    .innerText =
-      ['Grounding','Focus','Expansion','Calm']
-      [Math.floor(Math.random()*4)];
-
-  document.querySelectorAll('.freqCard')
-    .forEach(c=>c.classList.remove('active'));
-
-  event.currentTarget.classList.add('active');
+  computeCoherence();
+  if (isRunning) syncAudioEngine();
 }
 
-function customFrequency(v){
+function updateHarmonics(val) {
+  const h = parseFloat(val);
+  harmonicOrder = h;
+  document.getElementById('harmonicsVal').innerText = `${h.toFixed(1)}x`;
 
-  currentFreq = v;
-
-  document.getElementById('metricFreq')
-    .innerText = v + ' Hz';
+  if (bodyUniforms) {
+    bodyUniforms.uHarmonic.value = harmonicOrder;
+    cymaticsUniforms.uHarmonic.value = harmonicOrder;
+    particleUniforms.uHarmonic.value = harmonicOrder;
+  }
+  if (isRunning) syncAudioEngine();
 }
 
-/* =========================
-AUDIO
-========================= */
-
-let audioCtx;
-let oscillator;
-
-function playTone(){
-
-  audioCtx =
-    new(window.AudioContext||window.webkitAudioContext)();
-
-  oscillator = audioCtx.createOscillator();
-
-  oscillator.type='sine';
-  oscillator.frequency.value=currentFreq;
-
-  oscillator.connect(audioCtx.destination);
-  oscillator.start();
+function applyPreset(val) {
+  const f = parseFloat(val);
+  document.getElementById('freqInput').value = f;
+  updateFrequency(f);
 }
 
-function stopTone(){
+function setState(state) {
+  bodyState = state;
+  const btns = document.querySelectorAll('.state-btn');
+  btns.forEach(b => b.classList.remove('active-state', 'rage-active', 'sick-active', 'gold-active'));
 
-  if(oscillator){
-    oscillator.stop();
+  const activeBtn = document.getElementById(`btn${state.charAt(0).toUpperCase() + state.slice(1)}`);
+  if (state === 'healthy') activeBtn.classList.add('active-state');
+  if (state === 'rage') activeBtn.classList.add('rage-active');
+  if (state === 'sick') activeBtn.classList.add('sick-active');
+  if (state === 'pyramid') activeBtn.classList.add('gold-active');
+
+  const stateMap = { healthy: 0, rage: 1, sick: 2, pyramid: 3 };
+  const stateCode = stateMap[state];
+
+  bodyUniforms.uState.value = stateCode;
+  auricUniforms.uState.value = stateCode;
+  cymaticsUniforms.uState.value = stateCode;
+  particleUniforms.uState.value = stateCode;
+
+  // Modify structural visibilities based on state parameters
+  pyramidMesh.material.opacity = (state === 'pyramid') ? 0.25 : 0.0;
+
+  computeCoherence();
+}
+
+function updateNarrationDisplay() {
+  const dataset = NARRATION_DIRECTORY[bodyState];
+  const badge = document.getElementById('narr-badge');
+  
+  badge.className = `narr-badge ${dataset.class}`;
+  badge.innerText = dataset.badge;
+  
+  document.getElementById('narr-title').innerText = dataset.title;
+  document.getElementById('narr-text').innerText = dataset.text;
+  document.getElementById('narr-science').innerText = dataset.science;
+}
+
+// ═══════════════════════════════════════════════════════
+//  HIGH-END AUDIO SYNTHESIS ENGINE (MONITOR GRADE)
+// ═══════════════════════════════════════════════════════
+function initAudioEngine() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  structuralGain = audioCtx.createGain();
+  structuralGain.gain.setValueAtTime(0.0, audioCtx.currentTime);
+  structuralGain.connect(audioCtx.destination);
+
+  fundamentalOsc = audioCtx.createOscillator();
+  fundamentalOsc.type = 'sine';
+  fundamentalOsc.connect(structuralGain);
+  fundamentalOsc.start();
+
+  // Pre-allocate discrete mathematical harmonic tracks
+  for(let i = 0; i < 3; i++) {
+    const hOsc = audioCtx.createOscillator();
+    hOsc.type = 'sine';
+    const hGain = audioCtx.createGain();
+    hGain.gain.setValueAtTime(0.0, audioCtx.currentTime);
+    hOsc.connect(hGain);
+    hGain.connect(structuralGain);
+    hOsc.start();
+    harmonicOscs.push({ osc: hOsc, gain: hGain, orderMultiplier: i + 2 });
   }
 }
 
-/* =========================
-WAVES
-========================= */
+function syncAudioEngine() {
+  if (!audioCtx) return;
+  const t = audioCtx.currentTime;
+  
+  // Safe downscaling for tracking frequencies on low-end hardware
+  let baseFreq = frequency;
+  if (baseFreq > 800) baseFreq = 440 + (baseFreq % 360);
 
-document.querySelectorAll('.wave').forEach((canvas,index)=>{
+  fundamentalOsc.frequency.setTargetAtTime(baseFreq, t, 0.1);
 
-  const ctx = canvas.getContext('2d');
+  harmonicOscs.forEach(h => {
+    const multiFreq = baseFreq * h.orderMultiplier * (harmonicOrder * 0.5);
+    h.osc.frequency.setTargetAtTime(Math.min(multiFreq, 18000), t, 0.1);
+    
+    // Smooth dynamic fade layers based on harmonic parameters
+    const targetHarmonicVolume = (0.06 / h.orderMultiplier) * (harmonicOrder / 4.0);
+    h.gain.gain.setTargetAtTime(isRunning ? targetHarmonicVolume : 0.0, t, 0.2);
+  });
+}
 
-  function render(){
+function toggleField() {
+  const btn = document.getElementById('activateBtn');
+  const wave = document.getElementById('narr-wave');
+  
+  if (!audioCtx) initAudioEngine();
 
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+  if (!isRunning) {
+    isRunning = true;
+    btn.innerText = "Terminate Resonance Field";
+    btn.classList.add('on');
+    wave.classList.remove('off');
+    
+    bodyUniforms.uIntensity.value = 1.0;
+    
+    audioCtx.resume();
+    structuralGain.gain.setTargetAtTime(0.18, audioCtx.currentTime, 0.3);
+    syncAudioEngine();
+  } else {
+    isRunning = false;
+    btn.innerText = "Initiate Field Resonance";
+    btn.classList.remove('on');
+    wave.classList.add('off');
+    
+    bodyUniforms.uIntensity.value = 0.3;
+    
+    structuralGain.gain.setTargetAtTime(0.0, audioCtx.currentTime, 0.2);
+    harmonicOscs.forEach(h => h.gain.gain.setTargetAtTime(0.0, audioCtx.currentTime, 0.1));
+  }
+}
 
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    ctx.beginPath();
-
-    for(let x=0;x<canvas.width;x++){
-
-      const y =
-        canvas.height/2 +
-        Math.sin(
-          x*.03 +
-          Date.now()/400 +
-          index
-        ) * 12;
-
-      if(x===0) ctx.moveTo(x,y);
-      else ctx.lineTo(x,y);
+// ═══════════════════════════════════════════════════════
+//  SPEECH SYNTHESIS ENGINE
+// ═══════════════════════════════════════════════════════
+function speakNarration() {
+  const btn = document.getElementById('speakBtn');
+  if ('speechSynthesis' in window) {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      btn.classList.remove('speaking');
+      return;
     }
+    const txt = document.getElementById('narr-text').innerText;
+    const utterance = new SpeechSynthesisUtterance(txt);
+    utterance.rate = 0.95;
+    utterance.pitch = 1.0;
+    
+    utterance.onend = () => { btn.classList.remove('speaking'); };
+    btn.classList.add('speaking');
+    window.speechSynthesis.speak(utterance);
+  }
+}
 
-    ctx.strokeStyle='#61dfff';
-    ctx.lineWidth=3;
-    ctx.stroke();
+// ═══════════════════════════════════════════════════════
+//  HIGH-PERFORMANCE EXECUTION LOOP
+// ═══════════════════════════════════════════════════════
+function animatePipeline() {
+  requestAnimationFrame(animatePipeline);
+  
+  const elapsed = clock.getElapsedTime();
 
-    requestAnimationFrame(render);
+  // Inject standard running clocks into shader stages
+  if (bodyUniforms) bodyUniforms.uTime.value = elapsed;
+  if (auricUniforms) auricUniforms.uTime.value = elapsed;
+  if (cymaticsUniforms) cymaticsUniforms.uTime.value = elapsed;
+  if (particleUniforms) particleUniforms.uTime.value = elapsed;
+
+  // Smooth rotation decay for mobile touch events
+  currentRotationY += (targetRotationY - currentRotationY) * 0.08;
+  
+  if (bodyGroup) bodyGroup.rotation.y = currentRotationY;
+  if (auricGroup) auricGroup.rotation.y = currentRotationY;
+  if (fieldParticles) fieldParticles.rotation.y = currentRotationY * 0.5;
+  if (pyramidMesh) pyramidMesh.rotation.y = currentRotationY;
+
+  // Soft dynamic breathing cycles for baseline states
+  if (bodyState === 'healthy' && chakraOrbs.length > 0) {
+    chakraOrbs.forEach((orb, index) => {
+      const scale = 1.0 + Math.sin(elapsed * 2.5 + index) * 0.08;
+      orb.scale.set(scale, scale, scale);
+    });
   }
 
-  render();
-});
-
-/* =========================
-JOURNAL
-========================= */
-
-function saveJournal(){
-
-  const text =
-    document.getElementById('journalInput').value;
-
-  if(!text) return;
-
-  const entries =
-    JSON.parse(localStorage.getItem('entries')||'[]');
-
-  entries.unshift({
-    text,
-    date:new Date().toLocaleString()
-  });
-
-  localStorage.setItem(
-    'entries',
-    JSON.stringify(entries)
-  );
-
-  loadEntries();
-
-  document.getElementById('journalInput').value='';
-}
-
-function loadEntries(){
-
-  const wrap =
-    document.getElementById('entries');
-
-  wrap.innerHTML='';
-
-  const entries =
-    JSON.parse(localStorage.getItem('entries')||'[]');
-
-  entries.forEach(e=>{
-
-    const div = document.createElement('div');
-
-    div.className='infoCard';
-    div.style.marginTop='14px';
-
-    div.innerHTML=`
-      <h3>${e.date}</h3>
-      <p>${e.text}</p>
-    `;
-
-    wrap.appendChild(div);
-  });
-}
-
-loadEntries();
-
-function exportJournal(){
-
-  const entries =
-    localStorage.getItem('entries') || '[]';
-
-  const blob =
-    new Blob([entries],{type:'application/json'});
-
-  const a =
-    document.createElement('a');
-
-  a.href = URL.createObjectURL(blob);
-  a.download='quantum-journal.json';
-  a.click();
-}
-
-/* =========================
-DREAM LOG
-========================= */
-
-function saveDream(){
-
-  const text =
-    document.getElementById('dreamInput').value;
-
-  localStorage.setItem('dreamLog',text);
-
-  alert('Dream entry saved locally.');
-}
-
-/* =========================
-TOUCH GESTURES
-========================= */
-
-let touchStartX = 0;
-
-document.addEventListener('touchstart',e=>{
-  touchStartX = e.changedTouches[0].screenX;
-});
-
-document.addEventListener('touchend',e=>{
-
-  const diff =
-    e.changedTouches[0].screenX - touchStartX;
-
-  const pages =
-    [...document.querySelectorAll('.tabPage')];
-
-  const current =
-    pages.findIndex(p=>!p.classList.contains('hidden'));
-
-  if(diff < -60 && current < pages.length-1){
-
-    pages[current].classList.add('hidden');
-    pages[current+1].classList.remove('hidden');
-
-  }else if(diff > 60 && current > 0){
-
-    pages[current].classList.add('hidden');
-    pages[current-1].classList.remove('hidden');
-  }
-});
-
-/* =========================
-OFFLINE
-========================= */
-
-if('serviceWorker' in navigator){
-
-  navigator.serviceWorker.register(
-    URL.createObjectURL(
-      new Blob([`
-        self.addEventListener('install',e=>{
-          self.skipWaiting();
-        });
-
-        self.addEventListener('fetch',()=>{});
-      `],{type:'text/javascript'})
-    )
-  );
+  renderer.render(scene, camera);
 }
 </script>
-
 </body>
 </html>
