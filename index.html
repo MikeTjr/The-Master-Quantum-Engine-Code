@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Quantum Bio-Field & Cymatics Resonator</title>
+    <title>Bio-Atomic Stress Map & Electromagnetic Field Simulator</title>
     <style>
         body {
             margin: 0;
-            background-color: #030305;
+            background-color: #010103;
             color: #d4af37;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -22,21 +22,30 @@
 
         #ui-container {
             position: absolute;
-            top: 20px;
+            top: 15px;
             z-index: 10;
-            background: rgba(5, 5, 8, 0.9);
+            background: rgba(3, 3, 5, 0.95);
             padding: 15px 20px;
             border-radius: 16px;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            box-shadow: 0 8px 32px rgba(0, 255, 200, 0.15);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
             display: flex;
             flex-direction: column;
             gap: 10px;
             align-items: center;
-            width: 85%;
-            max-width: 340px;
+            width: 88%;
+            max-width: 370px;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #ui-container.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
         }
 
         .input-group {
@@ -48,57 +57,61 @@
         }
 
         input[type="number"] {
-            background: #111116;
+            background: #060609;
             border: 1px solid #d4af37;
             color: #00ffc8;
             padding: 8px;
             border-radius: 8px;
             font-size: 18px;
-            width: 90px;
+            width: 95px;
             text-align: center;
             font-weight: bold;
-            box-shadow: inset 0 0 8px rgba(0, 255, 200, 0.2);
         }
 
         select {
-            background: #111116;
+            background: #060609;
             border: 1px solid #d4af37;
             color: #d4af37;
-            padding: 8px;
+            padding: 10px;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             width: 100%;
             font-weight: bold;
             outline: none;
-            text-align: center;
         }
 
         #meta-display {
             font-size: 11px;
-            color: #00ffc8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: #9696a0;
             text-align: center;
-            line-height: 1.4;
+            line-height: 1.45;
             border-top: 1px solid rgba(212, 175, 55, 0.2);
             padding-top: 8px;
-            margin-top: 4px;
             width: 100%;
+            max-height: 155px;
+            overflow-y: auto;
+        }
+
+        .level-title {
+            font-weight: bold;
+            color: #d4af37;
+            margin-top: 5px;
+            text-transform: uppercase;
+            font-size: 9px;
+            letter-spacing: 1px;
         }
 
         button {
             background: linear-gradient(135deg, #d4af37, #aa7c11);
             border: none;
-            color: #030305;
-            padding: 10px 20px;
+            color: #010103;
+            padding: 12px 20px;
             font-weight: bold;
             border-radius: 8px;
-            font-size: 15px;
-            letter-spacing: 1px;
+            font-size: 13px;
             text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-            transition: all 0.3s ease;
             width: 100%;
         }
 
@@ -107,30 +120,56 @@
             height: 100vh;
             display: block;
         }
+
+        #hint-overlay {
+            position: absolute;
+            bottom: 15px;
+            color: rgba(212, 175, 55, 0.3);
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 1;
+            text-align: center;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
 
     <div id="ui-container">
         <select id="presetSelect">
-            <option value="" disabled selected>Select Quantum Resonance Vector</option>
-            <option value="7.83">7.83 Hz — Schumann Earth Heartbeat</option>
-            <option value="117">117.0 Hz — Giza King's Chamber Acoustic Node</option>
-            <option value="432">432.0 Hz — Cosmic Geometric Grid / Natural A</option>
-            <option value="528">528.0 Hz — Solfeggio Transformation Matrix</option>
-            <option value="2400">2.4 GHz (Type 2400) — Home Wi-Fi Interference Mesh</option>
-            <option value="5000">5.0 GHz (Type 5000) — Fiber Router Pulse Saturation</option>
+            <option value="" disabled selected>Select Electromagnetic Environment</option>
+            <optgroup label="🔋 Biological Phase Coherence (Restorative)">
+                <option value="7.83">7.83 Hz — Schumann Cavity (Biomagnetic Grounding)</option>
+                <option value="117.0">117.0 Hz — Granite Sarcophagus Resonant Mode</option>
+                <option value="432.0">432.0 Hz — Geometric Coherence (Low Structural Friction)</option>
+                <option value="528.0">528.0 Hz — Solfeggio Repair Harmonic (DNA Conduction)</option>
+            </optgroup>
+            <optgroup label="⚠️ Biological Phase Disruption (Stressed)">
+                <option value="18.9">18.9 Hz — Infrasound Inversion (Horror Movie Dread Cue)</option>
+                <option value="60.0">60.0 Hz — Alternating AC Grid Hum (Mains Leakage)</option>
+                <option value="85.0">85.0 Hz — Fast-Paced Screen Refresh Blue-Light Noise</option>
+                <option value="2400.0">2.4 GHz — Continuous Smart-Home Wi-Fi RF Loop</option>
+                <option value="30000.0">30.0 GHz — 5G Targeted Transmotive Carrier Beam</option>
+            </optgroup>
         </select>
 
         <div class="input-group">
-            <input type="number" id="freqInput" value="432" min="1" max="10000">
-            <span style="font-weight: bold; font-size: 18px;">Hz</span>
+            <input type="number" id="freqInput" value="432" min="1" max="100000">
+            <span style="font-weight: bold; font-size: 16px;">Hz</span>
         </div>
         
-        <button id="quantumToggle">Initiate Field</button>
-        <div id="meta-display">Field Status: High Resistance Static</div>
+        <button id="quantumToggle">Initiate Field Analysis</button>
+        <div id="meta-display">
+            <div class="level-title">3rd Grade Observation</div>
+            <div id="grade3-text">Everything inside us is made of tiny bouncing dots. When things are quiet, they dance smoothly together.</div>
+            <div class="level-title">Atomic Biophysics Vector</div>
+            <div id="phys-text">System Status: Ambient baseline. Cellular membranes maintain unaligned polarization gradients in thermodynamic equilibrium.</div>
+        </div>
     </div>
 
+    <div id="hint-overlay">Tap background canvas to restore interface panel — Drag to project external environmental stress vectors</div>
     <canvas id="quantumCanvas"></canvas>
 
     <script>
@@ -139,15 +178,18 @@
         const freqInput = document.getElementById('freqInput');
         const presetSelect = document.getElementById('presetSelect');
         const toggleBtn = document.getElementById('quantumToggle');
-        const metaDisplay = document.getElementById('meta-display');
+        const uiContainer = document.getElementById('ui-container');
+        const g3Text = document.getElementById('grade3-text');
+        const physText = document.getElementById('phys-text');
 
-        let audioCtx = null;
-        let oscillator = null;
-        let isRunning = false;
-        let animId = null;
-        let time = 0;
-        let particles = [];
-        const maxParticles = 1200; 
+        let audioCtx = null, subOsc = null, leadOsc = null, noiseNode = null, mainGain = null;
+        let isRunning = false, animId = null, time = 0, uiTimer = null;
+        let ambientParticles = [];
+        let bodyNodes = [];
+        const maxAmbient = 1000;
+
+        // Environmental Stress Vector Input (Simulating media, tension, blue-light spikes)
+        let stressVector = { x: -1000, y: -1000, active: false, radius: 100, amplitude: 0 };
 
         function resize() {
             const dpr = window.devicePixelRatio || 2;
@@ -158,190 +200,390 @@
         window.addEventListener('resize', resize);
         resize();
 
-        class QuantumParticle {
-            constructor() {
-                this.reset();
+        // Establish the physical cellular structure coordinates representing the human body map
+        function generateBodyLattice() {
+            bodyNodes = [];
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const cx = w / 2;
+            const cy = h * 0.52;
+            const size = h * 0.55;
+
+            // Generate structured node layers representing head, spine, nervous system boundaries, organs
+            // Head Node Cluster
+            for(let i=0; i<40; i++) {
+                const r = Math.random() * (size * 0.09);
+                const ang = Math.random() * Math.PI * 2;
+                bodyNodes.push({ bx: cx + r * Math.cos(ang), by: cy - size * 0.38 + r * Math.sin(ang), type: 'neural', baseAng: ang });
             }
+            // Spinal Column / Nervous Grid Trunk
+            for(let y = -size*0.28; y <= size*0.1; y += 8) {
+                bodyNodes.push({ bx: cx, by: cy + y, type: 'spine', baseAng: 0 });
+                bodyNodes.push({ bx: cx - 12, by: cy + y, type: 'autonomic', baseAng: Math.PI });
+                bodyNodes.push({ bx: cx + 12, by: cy + y, type: 'autonomic', baseAng: 0 });
+            }
+            // Torso / Visceral Mass Wall
+            for(let k=0; k<120; k++) {
+                const rW = (Math.random() - 0.5) * (size * 0.22);
+                const rH = (Math.random() - 0.5) * (size * 0.35);
+                if (Math.abs(rW) < (size*0.15) - (rH*0.2)) {
+                    bodyNodes.push({ bx: cx + rW, by: cy - size*0.08 + rH, type: 'visceral', baseAng: Math.random()*Math.PI });
+                }
+            }
+            // Peripheral Extremities (Limb Channels)
+            for(let l = 0; l < size * 0.4; l += 10) {
+                bodyNodes.push({ bx: cx - size*0.05 - l*0.3, by: cy + l, type: 'peripheral', baseAng: 1 }); // Left leg
+                bodyNodes.push({ bx: cx + size*0.05 + l*0.3, by: cy + l, type: 'peripheral', baseAng: 2 }); // Right leg
+                bodyNodes.push({ bx: cx - size*0.08 - l*0.4, by: cy - size*0.2 + l*0.2, type: 'peripheral', baseAng: 3 }); // Left arm
+                bodyNodes.push({ bx: cx + size*0.08 + l*0.4, by: cy - size*0.2 + l*0.2, type: 'peripheral', baseAng: 4 }); // Right arm
+            }
+        }
+        generateBodyLattice();
+
+        // Field Particle Architecture
+        class FieldParticle {
+            constructor() { this.reset(); }
             reset() {
                 this.x = Math.random() * window.innerWidth;
                 this.y = Math.random() * window.innerHeight;
-                this.speed = Math.random() * 1 + 0.5;
+                this.speed = Math.random() * 0.8 + 0.3;
                 this.angle = Math.random() * Math.PI * 2;
             }
-            update(freq, centerX, centerY) {
+            update(freq, cx, cy) {
                 if (isRunning) {
-                    const dx = this.x - centerX;
-                    const dy = this.y - centerY;
+                    const dx = this.x - cx;
+                    const dy = this.y - cy;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    
-                    // Modulate velocity and patterns drastically for microwave representations
-                    if (freq >= 2400) {
-                        // High-resistance jitter simulation
-                        this.x += (Math.random() - 0.5) * 6 + Math.cos(this.angle) * 0.5;
-                        this.y += (Math.random() - 0.5) * 6 + Math.sin(this.angle) * 0.5;
+
+                    if (freq >= 18.9 && freq <= 85) {
+                        // Infrasound / ELF phase distortion waves
+                        const waveCount = Math.floor(freq / 5) || 2;
+                        const force = Math.sin(dist * 0.02 - time * 4) * Math.cos(Math.atan2(dy, dx) * waveCount);
+                        this.x += (dx / dist) * force * 1.5;
+                        this.y += (dy / dist) * force * 1.5;
+                    } else if (freq >= 2400) {
+                        // High-frequency Microwave scattering (Thermal dispersion noise)
+                        this.x += (Math.random() - 0.5) * 4.5;
+                        this.y += (Math.random() - 0.5) * 4.5;
                     } else {
-                        // Coherent Cymatic Chladni patterns
-                        const k = freq * 0.005; 
-                        const force = Math.sin(dist * k - time * 2) * Math.cos(Math.atan2(dy, dx) * Math.max(2, Math.floor(freq / 40)));
-                        this.x += (dx / dist) * force * 2.5 + Math.cos(this.angle) * 0.3;
-                        this.y += (dy / dist) * force * 2.5 + Math.sin(this.angle) * 0.3;
+                        // Coherent Cymatic Structuring (Low friction geometries)
+                        const k = freq * 0.005;
+                        const geo = Math.sin(dist * k - time * 2) * Math.cos(Math.atan2(dy, dx) * Math.max(3, Math.floor(freq/30)));
+                        this.x += (dx / dist) * geo * 2.2;
+                        this.y += (dy / dist) * geo * 2.2;
                     }
                 } else {
-                    this.x += Math.cos(this.angle) * this.speed * 1.2;
-                    this.y += Math.sin(this.angle) * this.speed * 1.2;
-                    if (this.x < 0 || this.x > window.innerWidth || this.y < 0 || this.y > window.innerHeight) {
-                        this.reset();
+                    this.x += Math.cos(this.angle) * this.speed;
+                    this.y += Math.sin(this.angle) * this.speed;
+                    if (this.x < 0 || this.x > window.innerWidth || this.y < 0 || this.y > window.innerHeight) this.reset();
+                }
+
+                // Apply External Environmental Stress Vector (Dragging interactions)
+                if (stressVector.active) {
+                    const sdx = this.x - stressVector.x;
+                    const sdy = this.y - stressVector.y;
+                    const sdist = Math.sqrt(sdx * sdx + sdy * sdy);
+                    if (sdist < stressVector.radius) {
+                        const push = (stressVector.radius - sdist) / stressVector.radius;
+                        // Injecting frantic, non-coherent spatial chaos
+                        this.x += (sdx / sdist) * push * 8 + (Math.random() - 0.5) * 4;
+                        this.y += (sdy / sdist) * push * 8 + (Math.random() - 0.5) * 4;
                     }
                 }
             }
-            draw(freq) {
+            draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, 1.2, 0, Math.PI * 2);
-                if (!isRunning) {
-                    ctx.fillStyle = 'rgba(140, 140, 150, 0.3)';
-                } else if (freq >= 2400) {
-                    ctx.fillStyle = 'rgba(255, 68, 68, 0.5)'; // High resistance red friction
-                } else {
-                    ctx.fillStyle = 'rgba(0, 255, 200, 0.6)'; // Coherent quantum biophoton
-                }
+                ctx.fillStyle = isRunning ? 'rgba(0, 195, 255, 0.25)' : 'rgba(100, 110, 130, 0.15)';
                 ctx.fill();
             }
         }
 
-        for(let i=0; i<maxParticles; i++) particles.push(new QuantumParticle());
+        for(let i=0; i<maxAmbient; i++) ambientParticles.push(new FieldParticle());
 
         function render() {
             const w = window.innerWidth;
             const h = window.innerHeight;
             const cx = w / 2;
-            const cy = h / 2;
+            const cy = h * 0.52;
             const freq = parseFloat(freqInput.value) || 432;
 
-            ctx.fillStyle = 'rgba(3, 3, 5, 0.07)';
+            ctx.fillStyle = 'rgba(1, 1, 3, 0.09)'; // Fluid chemical delay decay
             ctx.fillRect(0, 0, w, h);
-            time += 0.02;
+            time += 0.025;
 
-            for(let p of particles) {
-                p.update(freq, cx, cy);
-                p.draw(freq);
+            // Draw Outer Toroidal Boundary Fields
+            if (isRunning && freq < 2400) {
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.lineWidth = 1;
+                const fieldLimit = Math.min(w, h) * 0.45;
+                for(let r = 50; r < fieldLimit; r += 35) {
+                    ctx.beginPath();
+                    const alpha = (1 - (r / fieldLimit)) * 0.35;
+                    ctx.strokeStyle = `rgba(212, 175, 55, ${alpha})`;
+                    for(let th = 0; th < Math.PI*2; th += 0.04) {
+                        const wave = Math.sin(r*0.03 - time*3) * Math.cos(th * Math.floor(freq/40 || 2)) * 12;
+                        const rx = (r + wave) * Math.cos(th);
+                        const ry = (r + wave) * Math.sin(th) * 0.75; // Elliptical Torus structure
+                        if (th === 0) ctx.moveTo(rx, ry); else ctx.lineTo(rx, ry);
+                    }
+                    ctx.closePath(); ctx.stroke();
+                }
+                ctx.restore();
             }
 
-            if (isRunning) {
-                const maxRadius = Math.min(w, h) * 0.5;
-                
-                if (freq >= 2400) {
-                    // Visual Representation of Digital Microwave Jamming / Saturated Fields
-                    ctx.beginPath();
-                    ctx.strokeStyle = 'rgba(255, 68, 85, 0.15)';
-                    ctx.lineWidth = 1;
-                    for (let r = 10; r < maxRadius * 1.5; r += 8) {
-                        ctx.strokeRect(cx - r, cy - r, r * 2, r * 2); // Boxy, non-organic digital grids
-                    }
-                } else {
-                    // Organic Geometric Toroidal Field Vectors
-                    const waveCount = Math.max(4, Math.floor(freq / 15));
-                    for (let r = 25; r < maxRadius; r += 20) {
-                        ctx.beginPath();
-                        const progress = r / maxRadius;
-                        const alpha = (1 - progress) * 0.6;
-                        
-                        ctx.strokeStyle = (Math.floor(r/20) % 2 === 0) 
-                            ? `rgba(212, 175, 55, ${alpha})` // Gold zero-resistance vector
-                            : `rgba(0, 195, 255, ${alpha * 0.6})`; // Toroidal magnetic flux
-                        
-                        ctx.lineWidth = 1.5;
+            // Render Ambient Field Continuum
+            for(let p of ambientParticles) {
+                p.update(freq, cx, cy);
+                p.draw();
+            }
 
-                        for (let theta = 0; theta <= Math.PI * 2; theta += 0.03) {
-                            const radialHarmonic = Math.sin(r * 0.05 - time * (freq * 0.015)) * 14;
-                            const angularHarmonic = Math.cos(theta * waveCount) * (12 * progress);
-                            const dynamicRadius = r + radialHarmonic + angularHarmonic;
+            // Render and Modulate the Human Atomic Lattice Matrix
+            bodyNodes.forEach(node => {
+                let ox = 0;
+                let oy = 0;
+                let nodeColor = 'rgba(212, 175, 55, 0.45)'; // Baseline systemic gold
 
-                            const x = cx + dynamicRadius * Math.cos(theta);
-                            const y = cy + dynamicRadius * Math.sin(theta);
-
-                            if (theta === 0) ctx.moveTo(x, y);
-                            else ctx.lineTo(x, y);
-                        }
-                        ctx.closePath();
-                        ctx.stroke();
+                // Compute interactive environmental interference directly hitting the node cell
+                let interactiveStress = 0;
+                if (stressVector.active) {
+                    const ndx = node.bx - stressVector.x;
+                    const ndy = node.by - stressVector.y;
+                    const ndist = Math.sqrt(ndx*ndx + ndy*ndy);
+                    if (ndist < stressVector.radius) {
+                        interactiveStress = (stressVector.radius - ndist) / stressVector.radius;
                     }
                 }
+
+                if (isRunning) {
+                    if (freq >= 18.9 && freq <= 85) {
+                        // UNNATURAL ELF / LOW INFRASOUND CORRUPTION
+                        // Evokes structural organ dragging/vibration and neurological dread states
+                        const stressFactor = freq === 18.9 ? 4.5 : 2.5;
+                        ox = Math.sin(time * (freq * 0.3) + node.by) * (stressFactor + interactiveStress * 6);
+                        oy = Math.cos(time * (freq * 0.3) + node.bx) * (stressFactor + interactiveStress * 6);
+                        nodeColor = `rgba(230, 70, 70, ${0.45 + interactiveStress * 0.4})`; // Cellular polarization warning threshold
+                    } else if (freq >= 2400) {
+                        // UNNATURAL MICROWAVE CLUTTER (Wi-Fi / 5G Simulation)
+                        // Simulates cellular thermal chatter and calcium gate breakdown across lipid matrices
+                        ox = (Math.random() - 0.5) * (7 + interactiveStress * 10);
+                        oy = (Math.random() - 0.5) * (7 + interactiveStress * 10);
+                        nodeColor = `rgba(255, 30, 30, ${0.5 + Math.sin(time*10)*0.2})`; // Maximum Entropy cellular stress profile
+                    } else {
+                        // NATURAL COHERENT SYNCHRONIZATION
+                        // Standing-wave phase lock. Low entropy, optimized molecular transfer architecture.
+                        const alignment = Math.sin(node.by * 0.04 - time * 2) * 2;
+                        ox = Math.cos(node.baseAng + time) * alignment;
+                        oy = Math.sin(node.baseAng + time) * alignment;
+                        nodeColor = 'rgba(0, 255, 200, 0.75)'; // High coherence biophoton emission profile
+                    }
+                } else if (interactiveStress > 0) {
+                    // Pre-initiation environmental overlay (Simulating standalone local trauma/toxic exposures)
+                    ox = (Math.random() - 0.5) * (interactiveStress * 12);
+                    oy = (Math.random() - 0.5) * (interactiveStress * 12);
+                    nodeColor = `rgba(200, 40, 90, ${0.3 + interactiveStress * 0.5})`;
+                }
+
+                // Render individual atomic cell points
+                ctx.beginPath();
+                ctx.arc(node.bx + ox, node.by + oy, isRunning && freq < 2400 ? 1.6 : 1.3, 0, Math.PI * 2);
+                ctx.fillStyle = nodeColor;
+                ctx.fill();
+
+                // Draw molecular connection links for specific structural points if coherent
+                if (isRunning && freq < 2400 && Math.random() * 100 > 98.5 && node.type === 'spine') {
+                    ctx.beginPath();
+                    ctx.strokeStyle = 'rgba(0, 255, 200, 0.25)';
+                    ctx.lineWidth = 0.5;
+                    ctx.moveTo(node.bx + ox, node.by + oy);
+                    ctx.lineTo(node.bx + ox + 40, node.by + oy + 10);
+                    ctx.stroke();
+                }
+            });
+
+            // Draw Visual Anchor of the External Stress Vector
+            if (stressVector.active) {
+                ctx.beginPath();
+                ctx.arc(stressVector.x, stressVector.y, stressVector.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(255, 68, 68, 0.15)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.arc(stressVector.x, stressVector.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#ff4444';
+                ctx.fill();
             }
+
             animId = requestAnimationFrame(render);
         }
 
         render();
 
+        // Audio Engine Synthesis Map (Translating biological reactions to acoustic signatures)
         function startQuantumAudio(frequency) {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
-            oscillator = audioCtx.createOscillator();
             
-            // If microwave preset, generate a phase-chopped static tone to simulate pulse modulation noise
+            mainGain = audioCtx.createGain();
+            mainGain.gain.setValueAtTime(0, audioCtx.currentTime);
+            mainGain.gain.linearRampToValueAtTime(0.09, audioCtx.currentTime + 1.0);
+            mainGain.connect(audioCtx.destination);
+
             if (frequency >= 2400) {
-                oscillator.type = 'sawtooth';
-                oscillator.frequency.setValueAtTime(120, audioCtx.currentTime); // Low-frequency pulse noise artifact
+                // High frequency pulsed wave structures (Simulates wireless data translation grids)
+                leadOsc = audioCtx.createOscillator();
+                leadOsc.type = 'square';
+                leadOsc.frequency.setValueAtTime(140, audioCtx.currentTime); 
+                
+                // Frequency Modulation configuration representing continuous packet delivery noise
+                const fmOsc = audioCtx.createOscillator();
+                fmOsc.type = 'sawtooth';
+                fmOsc.frequency.setValueAtTime(8, audioCtx.currentTime); // 8Hz pulsing burst noise
+                const fmGain = audioCtx.createGain();
+                fmGain.gain.setValueAtTime(90, audioCtx.currentTime);
+                
+                fmOsc.connect(fmGain);
+                fmGain.connect(leadOsc.frequency);
+                
+                leadOsc.connect(mainGain);
+                fmOsc.start();
+                leadOsc.start();
+            } else if (frequency === 18.9) {
+                // Infrasound cinematic stress simulation (Deep infrasonic tension signature)
+                subOsc = audioCtx.createOscillator();
+                subOsc.type = 'sine';
+                subOsc.frequency.setValueAtTime(18.9, audioCtx.currentTime); // True eyeball/visceral resonant node
+                
+                leadOsc = audioCtx.createOscillator();
+                leadOsc.type = 'sawtooth';
+                leadOsc.frequency.setValueAtTime(37.8, audioCtx.currentTime); // Second harmonic grit layer
+                
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(50, audioCtx.currentTime);
+
+                subOsc.connect(filter);
+                leadOsc.connect(filter);
+                filter.connect(mainGain);
+                
+                subOsc.start();
+                leadOsc.start();
             } else {
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+                // Highly balanced, low harmonic musical tone arrays (Coherent Sound Therapy signatures)
+                subOsc = audioCtx.createOscillator();
+                subOsc.type = 'sine';
+                subOsc.frequency.setValueAtTime(frequency / 2, audioCtx.currentTime);
+
+                leadOsc = audioCtx.createOscillator();
+                leadOsc.type = 'sine';
+                leadOsc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+
+                subOsc.connect(mainGain);
+                leadOsc.connect(mainGain);
+                
+                subOsc.start();
+                leadOsc.start();
             }
-            
-            const gainNode = audioCtx.createGain();
-            gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime); 
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.start();
         }
 
         function stopQuantumAudio() {
-            if (oscillator) {
-                oscillator.stop();
-                oscillator.disconnect();
+            if (mainGain) {
+                try {
+                    mainGain.gain.setValueAtTime(mainGain.gain.value, audioCtx.currentTime);
+                    mainGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+                    setTimeout(() => {
+                        if (subOsc) { subOsc.stop(); subOsc.disconnect(); subOsc = null; }
+                        if (leadOsc) { leadOsc.stop(); leadOsc.disconnect(); leadOsc = null; }
+                    }, 350);
+                } catch(e){}
             }
         }
 
-        function updateMeta(freq) {
-            if (freq === 7.83) return "Schumann Resonance: Earth's electromagnetic heartbeat. Entrains human alpha/theta brainwaves, removing biological resistance.";
-            if (freq === 117) return "Pyramid Acoustic Node: Resonance profile of the granite King's Chamber sarcophagus. Acts as a macro-telluric capacitor.";
-            if (freq === 432) return "Cosmic Harmonic: Aligns biophotonic particle field into highly coherent geometric symmetry. Lowers cellular friction.";
-            if (freq === 528) return "Transformation Vector: Core Solfeggio scale blueprint. Resonates directly with biological memory systems and tissue repair.";
-            if (freq === 2400) return "2.4 GHz Microwave Blockade: Artificial home Wi-Fi carrier loop. Generates dense chaotic tracking noise across calcium gates.";
-            if (freq === 5000) return "5.0 GHz Pulse Saturation: High-speed fiber translation beam. Saturates ambient space with micro-packet signal interference.";
-            return `Custom Resonant Matrix: Projecting dynamic field geometry at ${freq}Hz.`;
+        const environmentalProfiles = {
+            "7.83": ["The planet is humming a soft lullaby that balances our bodies and makes our cells happy.", "Schumann Electromagnetic Grounding Vector ($7.83\\text{ Hz}$). Coincides perfectly with human Alpha neurological rhythms. Eliminates background electrical friction, allowing voltage-gated channels to maintain natural metabolic equilibrium."],
+            "117.0": ["Deep acoustic echo structures inside ancient stone monuments that help our cells stand completely still.", "Megalithic Hypogeum Resonant Node ($117.0\\text{ Hz}$). High-density acoustic standing waves focus telluric currents across bone density arrays, establishing geometric stability across spinal fluid layers."],
+            "432.0": ["Nature's clean math lines making sure all our building blocks spin perfectly without bumping into each other.", "A=432Hz Pythagorean Standard Geometric Vector. Generates zero-resistance structural paths across water-molecular arrangements, reducing mechanical drag inside biological systems."],
+            "528.0": ["A magical musical tool kit that repairs microscopic pieces inside your cells to make them strong again.", "Solfeggio Genetic Conduction Axis ($528\\text{ Hz}$). Harmonic oscillations interface directly with structured hydration matrices, optimizing biophotonic transfer vectors across cellular division templates."],
+            "18.9": ["Spooky movie sounds that you can't quite hear, but they make your heart race and your skin feel scared.", "Infrasonic Resonance Spectrum ($18.9\\text{ Hz}$). Sub-audible pressure waves match the mechanical resonance threshold of human ocular and visceral cavities. Triggers visceral panic responses via mechanical deformation of tissue structures."],
+            "60.0": ["The continuous wall power leakage that constantly shakes our bodies and leaves us feeling tired.", "North American Power Grid AC Flux ($60\\text{ Hz}$). Induces localized electrical fields that continuously perturb peripheral nervous trunks, causing low-level autonomic stress responses."],
+            "85.0": ["Fast flashing screens and video games that trick your brain, making your atoms run too fast and get stuck.", "Blue-Light Visual Display Overexposure Loop ($85\\text{ Hz}$ flicker index). Desynchronizes the suprachiasmatic nucleus master rhythm, triggering micro-cortisol elevations at the cellular level."],
+            "2400.0": ["An invisible laser spiderweb from routers that makes your atoms bounce around crazily and lose their rhythm.", "Pulsed Microwave Carrier Field ($2.4\\text{ GHz}$ Router Array). Triggers chaotic, high-entropy voltage swings across cellular membranes, forcing calcium ions ($VGCCs$) to leak rapidly into internal cellular compartments."],
+            "30000.0": ["Tiny, aggressive radio energy waves hitting the outer layers of your skin like static friction.", "5G High-Density Beamforming Vector ($30.0\\text{ GHz}$ spectrum). Millimeter electromagnetic energy is completely absorbed by epidermal layers. Sweat glands serve as helical antennas, registering persistent environmental stress parameters across the central nervous grid."]
+        };
+
+        function updateScientificDisplays(val) {
+            const profile = environmentalProfiles[val];
+            if (profile) {
+                g3Text.textContent = profile[0];
+                physText.innerHTML = profile[1];
+                physText.style.color = (parseFloat(val) >= 18.9 && parseFloat(val) <= 30000) ? "#ff3b3b" : "#00ffc8";
+            }
         }
 
-        // Drop-down handler
         presetSelect.addEventListener('change', (e) => {
             freqInput.value = e.target.value;
+            updateScientificDisplays(e.target.value);
             if (isRunning) {
-                // Instantly cycle the system context if changed while live
                 stopQuantumAudio();
                 startQuantumAudio(parseFloat(e.target.value));
-                metaDisplay.textContent = updateMeta(parseFloat(e.target.value));
             }
+            resetUITimer();
         });
 
-        toggleBtn.addEventListener('click', () => {
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
+        function resetUITimer() {
+            uiContainer.classList.remove('hidden');
+            clearTimeout(uiTimer);
+            if (isRunning) {
+                uiTimer = setTimeout(() => { uiContainer.classList.add('hidden'); }, 6000);
             }
+        }
+
+        // Handle Touch Tracking for Environmental Trauma Simulations
+        function handleInteractionInput(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            stressVector.x = clientX - rect.left;
+            stressVector.y = clientY - rect.top;
+        }
+
+        window.addEventListener('click', (e) => {
+            if (!uiContainer.contains(e.target)) { resetUITimer(); }
+        });
+
+        canvas.addEventListener('mousedown', (e) => { stressVector.active = true; handleInteractionInput(e); resetUITimer(); });
+        canvas.addEventListener('mousemove', (e) => { if(stressVector.active) handleInteractionInput(e); });
+        window.addEventListener('mouseup', () => { stressVector.active = false; });
+
+        canvas.addEventListener('touchstart', (e) => { stressVector.active = true; handleInteractionInput(e); resetUITimer(); }, {passive: true});
+        canvas.addEventListener('touchmove', (e) => { if(stressVector.active) handleInteractionInput(e); }, {passive: true});
+        window.addEventListener('touchend', () => { stressVector.active = false; });
+
+        toggleBtn.addEventListener('click', () => {
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
 
             if (!isRunning) {
                 const freq = parseFloat(freqInput.value) || 432;
                 startQuantumAudio(freq);
-                metaDisplay.textContent = updateMeta(freq);
-                metaDisplay.style.color = (freq >= 2400) ? "#ff4455" : "#00ffc8";
-                toggleBtn.textContent = "Disconnect Field";
-                toggleBtn.style.background = "linear-gradient(135deg, #ff4455, #aa1122)";
+                toggleBtn.textContent = "Disconnect Field Analysis";
+                toggleBtn.style.background = "linear-gradient(135deg, #ff3b3b, #991111)";
+                toggleBtn.style.color = "#ffffff";
                 isRunning = true;
+                resetUITimer();
             } else {
                 stopQuantumAudio();
-                metaDisplay.textContent = "Field Status: High Resistance Static";
-                metaDisplay.style.color = "#9696a0";
-                toggleBtn.textContent = "Initiate Field";
+                toggleBtn.textContent = "Initiate Field Analysis";
                 toggleBtn.style.background = "linear-gradient(135deg, #d4af37, #aa7c11)";
+                toggleBtn.style.color = "#010103";
                 isRunning = false;
+                uiContainer.classList.remove('hidden');
+                clearTimeout(uiTimer);
+                g3Text.textContent = "Everything inside us is made of tiny bouncing dots. When things are quiet, they dance smoothly together.";
+                physText.textContent = "System Status: Ambient baseline. Cellular membranes maintain unaligned polarization gradients in thermodynamic equilibrium.";
+                physText.style.color = "#9696a0";
             }
         });
     </script>
