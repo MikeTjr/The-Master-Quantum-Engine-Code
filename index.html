@@ -1,19 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Resonance: Universal Cymatic Field Engine</title>
+    <title>Resonance: Toroidal Field Matrix</title>
     <style>
         :root {
-            --bg-deep: #030407;
+            --bg-deep: #020305;
             --gold-pure: #d4af37;
-            --gold-glow: rgba(212, 175, 55, 0.3);
+            --gold-glow: rgba(212, 175, 55, 0.25);
             --gold-dim: #aa842c;
             --text-light: #f1f5f9;
             --text-muted: #64748b;
             --dark-energy: #ff0055;
             --light-energy: #00f2fe;
+            --etheric-glow: rgba(168, 85, 247, 0.4);
         }
 
         * {
@@ -33,7 +32,7 @@
             width: 100vw;
         }
 
-        /* Continuous 4K Atmospheric Canvas */
+        /* 4K Quantum Rendering Viewport */
         #quantum-stage {
             position: absolute;
             top: 0;
@@ -41,10 +40,10 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            background: radial-gradient(circle at center, #0a0d16 0%, #020305 100%);
+            background: radial-gradient(circle at center, #05070f 0%, #010204 100%);
         }
 
-        /* Glassmorphic Ivy-League Elite Overlay */
+        /* Immersive User Interface Overlays */
         .immersive-ui {
             position: absolute;
             top: 0;
@@ -87,8 +86,43 @@
             margin-top: 4px;
         }
 
-        /* Ancient Gold Chamber Activation Switch */
-        .gold-amplifier-toggle {
+        .header-controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .quantum-dropdown {
+            background: rgba(4, 6, 12, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            outline: none;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 340px;
+            transition: all 0.3s;
+        }
+
+        .quantum-dropdown optgroup {
+            background: #060913;
+            color: #94a3b8;
+        }
+
+        .quantum-dropdown option {
+            background: #0b0f19;
+            color: #fff;
+        }
+
+        .quantum-dropdown:hover, .quantum-dropdown:focus {
+            border-color: var(--gold-pure);
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .cosmic-amplifier-btn {
             background: rgba(0, 0, 0, 0.6);
             border: 1px solid var(--gold-dim);
             padding: 12px 20px;
@@ -101,13 +135,13 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
-        .gold-amplifier-toggle.active {
+        .cosmic-amplifier-btn.active {
             background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(0,0,0,0.8));
             border-color: var(--gold-pure);
             box-shadow: 0 0 25px var(--gold-glow);
         }
 
-        .gold-amplifier-toggle .indicator {
+        .cosmic-amplifier-btn .indicator {
             width: 8px;
             height: 8px;
             background: var(--text-muted);
@@ -115,229 +149,247 @@
             transition: all 0.3s;
         }
 
-        .gold-amplifier-toggle.active .indicator {
+        .cosmic-amplifier-btn.active .indicator {
             background: var(--gold-pure);
             box-shadow: 0 0 10px var(--gold-pure);
         }
 
-        .gold-amplifier-toggle span {
+        .cosmic-amplifier-btn span {
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             color: var(--text-light);
         }
 
-        /* Scrollable Cosmic Vector Belt */
-        .frequency-carousel {
+        /* Proximity Population Control Slider */
+        .proximity-dock {
             display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            padding: 10px 0;
-            width: 100%;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            margin-bottom: 20px;
-        }
-
-        .frequency-carousel::-webkit-scrollbar {
-            display: none;
-        }
-
-        .node-card {
-            background: rgba(5, 7, 12, 0.75);
+            flex-direction: column;
+            gap: 6px;
+            background: rgba(4, 6, 12, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 20px;
-            min-width: 240px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 12px 20px;
+            border-radius: 20px;
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
         }
 
-        .node-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255,255,255,0.15);
-        }
-
-        .node-card.active {
-            background: rgba(10, 14, 24, 0.9);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .node-card.active.light-node { border-color: var(--light-energy); }
-        .node-card.active.dark-node { border-color: var(--dark-energy); }
-
-        .card-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .card-type {
+        .proximity-dock label {
             font-size: 0.65rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 3px 8px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.05);
+            letter-spacing: 2px;
+            color: var(--gold-pure);
         }
 
-        .light-node .card-type { color: var(--light-energy); }
-        .dark-node .card-type { color: var(--dark-energy); }
-
-        .card-freq {
-            font-family: monospace;
-            font-size: 1.1rem;
-            font-weight: 700;
+        .proximity-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 140px;
+            height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            outline: none;
         }
 
-        .node-card h3 {
-            font-size: 1rem;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-            color: #fff;
+        .proximity-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--gold-pure);
+            cursor: pointer;
+            box-shadow: 0 0 8px var(--gold-pure);
         }
 
-        .node-card p {
-            font-size: 0.75rem;
+        /* Phase Control System Belt */
+        .state-shifter-belt {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .phase-toggle {
+            background: rgba(5, 7, 12, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             color: var(--text-muted);
-            margin-top: 4px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        /* Central Insight & Epigenetic Cleansing Dock */
+        .phase-toggle.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border-color: var(--gold-pure);
+            box-shadow: 0 0 15px rgba(255,255,255,0.05);
+        }
+
+        /* Technical Readout & Description Panel */
         .insight-dock {
             display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 24px;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
             width: 100%;
-            background: rgba(4, 6, 10, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(4, 6, 10, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             border-radius: 24px;
             padding: 30px;
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.7);
         }
 
         .analysis-text h2 {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             font-weight: 300;
             letter-spacing: 2px;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             color: #fff;
         }
 
         .analysis-text .origin-tag {
             font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             color: var(--gold-pure);
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             display: block;
         }
 
         .analysis-text p {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             line-height: 1.6;
             color: #cbd5e1;
         }
 
-        .homeostasis-panel {
-            border-left: 1px solid rgba(255, 255, 255, 0.08);
-            padding-left: 24px;
+        .atomic-panel {
+            border-left: 1px solid rgba(255, 255, 255, 0.06);
+            padding-left: 30px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
         }
 
-        .homeostasis-panel h4 {
-            font-size: 0.75rem;
+        .atomic-group h4 {
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             color: var(--text-muted);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
-        .cleansing-action {
-            font-size: 0.95rem;
+        .atomic-stat-lbl {
+            font-size: 0.9rem;
             color: #fff;
-            font-weight: 500;
-            margin-bottom: 14px;
+            font-weight: 400;
+            margin-bottom: 12px;
             line-height: 1.4;
         }
 
-        .timer-row {
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
+        .biophoton-bar-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 6px;
         }
 
-        .timer-row .time-val {
-            font-size: 2rem;
-            font-family: monospace;
-            font-weight: 700;
-            color: var(--gold-pure);
+        .biophoton-bar {
+            height: 100%;
+            width: 50%;
+            background: var(--light-energy);
+            box-shadow: 0 0 10px var(--light-energy);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .timer-row .time-unit {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Absolute Layout Responsiveness */
+        /* Mobile Layout Modifiers */
         @media(max-width: 960px) {
             .insight-dock { grid-template-columns: 1fr; gap: 20px; padding: 20px; }
-            .homeostasis-panel { border-left: none; border-top: 1px solid rgba(255,255,255,0.08); padding-left: 0; padding-top: 16px; }
+            .atomic-panel { border-left: none; border-top: 1px solid rgba(255,255,255,0.06); padding-left: 0; padding-top: 20px; }
             .immersive-ui { padding: 16px; overflow-y: auto; }
-            header { margin-bottom: 20px; }
+            header { flex-direction: column; gap: 16px; align-items: flex-start; }
+            .header-controls { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+            .quantum-dropdown { max-width: 100%; width: 100%; }
         }
-    </style>
-</head>
-<body>
+    </style></head><body>
 
-    <!-- Hyper-Dimensional 4K Particle Canvas -->
     <canvas id="quantum-stage"></canvas>
 
-    <!-- Content Interaction Framework -->
     <div class="immersive-ui">
         
         <header>
             <div class="brand-block">
                 <h1>Resonance</h1>
-                <p>Cymatic Field Matrix</p>
+                <p>Cardiovascular Toroidal Field Engine</p>
             </div>
             
-            <button class="gold-amplifier-toggle" id="gold-amp" onclick="toggleGoldAmplification()">
-                <div class="indicator"></div>
-                <span>Pyramid Gold Chamber Amp</span>
-            </button>
+            <div class="header-controls">
+                <!-- Proximity Fields Modulator -->
+                <div class="proximity-dock">
+                    <label for="prox-range">Field Proximity Count</label>
+                    <input type="range" id="prox-range" class="proximity-slider" min="1" max="3" value="1" oninput="handleProximityShift(this.value)">
+                </div>
+
+                <!-- Structured Matrix Vectors -->
+                <select class="quantum-dropdown" id="vector-selector" onchange="handleDropdownShift(this.value)">
+                    <optgroup label="PROVEN SCIENCE / ATOMIC MECHANICS">
+                        <option value="torus-default" selected>Coherent Heart Toroidal Field (8-12ft Default Baseline)</option>
+                        <option value="cellular-smog">Smart-Device Ambient Field Interference (60 Hz)</option>
+                        <option value="cellular-isochronic">Coherent Cell-to-Cell Intercellular Isochronic Wave</option>
+                        <option value="kinetic-rhythm">Kinetic Sync Resonance (Why Music Drives Motion)</option>
+                    </optgroup>
+                    <optgroup label="BIBLICAL ARRAYS">
+                        <option value="jericho-shatter">Shouting / Sonic Collapse Arrays (Jericho Frequency)</option>
+                        <option value="david-harp">Davidic Kinetic Healing Signature (Ethereal Dispersion)</option>
+                    </optgroup>
+                    <optgroup label="SPIRITUAL PRACTICE & DISGUISED ANCIENT SCIENCE">
+                        <option value="sanctuary-resonance">Ancient Sanctuary Resonant Chamber Toning (117 Hz)</option>
+                        <option value="prayer-coherent">Sustained Focused Prayer / Intentional Meditation</option>
+                    </optgroup>
+                    <optgroup label="BIOPHYSICAL MODULATORS (ALTERED STATES)">
+                        <option value="alcohol-entropy">C2H5OH Molecular Disruption (Common Alcohol)</option>
+                        <option value="dmt-transcendence">Hyper-Dimensional Chemical Alignment (Endogenous DMT)</option>
+                    </optgroup>
+                </select>
+
+                <button class="cosmic-amplifier-btn" id="cosmic-amp" onclick="toggleCosmicAmplifier()">
+                    <div class="indicator"></div>
+                    <span>Crystalline Metal Amplifier</span>
+                </button>
+            </div>
         </header>
 
         <div class="interaction-footing">
-            <!-- Node Selector Horizon -->
-            <div class="frequency-carousel" id="frequency-belt">
-                <!-- Injected Programmatically -->
+            <!-- Phase Identification Array Switches -->
+            <div class="state-shifter-belt">
+                <button class="phase-toggle active" id="phase-before" onclick="togglePhaseState('before')">Interfered Vector Status</button>
+                <button class="phase-toggle" id="phase-after" onclick="togglePhaseState('after')">Cleared Coherent Status</button>
             </div>
 
-            <!-- Contextual Knowledge & Recovery Dock -->
+            <!-- Conceptual Telemetry Analytics Box -->
             <div class="insight-dock">
                 <div class="analysis-text">
-                    <h2 id="field-title">Signal Vector Base</h2>
-                    <span class="origin-tag" id="field-origin">Origin Core</span>
-                    <p id="field-desc">Universal structural data matrix loading...</p>
+                    <h2 id="field-title">Vector Shift Loading</h2>
+                    <span class="origin-tag" id="field-origin">Categorized System Data Array</span>
+                    <p id="field-desc">Accessing master quantum database pipeline...</p>
                 </div>
                 
-                <div class="homeostasis-panel">
-                    <h4>Field Clearing Protocol</h4>
-                    <div class="cleansing-action" id="field-protocol">Neutralizing environmental vectors...</div>
-                    <h4>Homeostasis Alignment Time</h4>
-                    <div class="timer-row">
-                        <span class="time-val" id="field-time">0</span>
-                        <span class="time-unit" id="field-unit">sec</span>
+                <div class="atomic-panel">
+                    <div class="atomic-group">
+                        <h4>Toroidal Biophoton Emission Spectrum</h4>
+                        <div class="atomic-stat-lbl" id="field-photon-lbl">Zero Interferences Running</div>
+                        <div class="biophoton-bar-container">
+                            <div class="biophoton-bar" id="photon-metric-bar"></div>
+                        </div>
+                    </div>
+                    <div class="atomic-group" style="margin-top:14px;">
+                        <h4>Intercellular Signal Flow State</h4>
+                        <div class="atomic-stat-lbl" id="field-flow-desc">Phase coherence standing by...</div>
                     </div>
                 </div>
             </div>
@@ -346,95 +398,147 @@
     </div>
 
     <script>
-        // --- Immutable Scientific & Ancient Frequency Matrix ---
-        const universeMatrix = {
-            "pyramid-king": {
-                name: "Pyramid King's Chamber",
-                frequency: 117.0,
-                type: "light",
-                origin: "Giza Plateau, Egypt — Acoustic Archeology",
-                desc: "The exact acoustic resonant frequency of the granite sarcophagus in the Great Pyramid. Ancient builders tuned these chambers to generate acoustic stabilization fields. Floods the body with deep phase-alignment properties, instantly centering the energetic envelope.",
-                protocol: "Engage in vocalized hum toning at a matching octave. Stand flat-footed on natural ground.",
-                homeostasisTime: 90,
-                unit: "seconds",
-                particleComplexity: 4,
-                harmonicCoherence: 0.98
-            },
-            "visceral-stress": {
-                name: "Media / Digital Shock Wave",
-                frequency: 19.4,
-                type: "dark",
-                origin: "Technological Exploitation Vectors / Cinematic Infrasound",
-                desc: "A predatory resonance band frequently utilized in horrific media design and sub-audible mechanical systems to evoke physiological dread. Directly triggers instantaneous vagus nerve collapse, leading to immediate visceral tightening, nausea, and gut-level gag responses.",
-                protocol: "Immediate blue-light disconnection. Consume pure structured electrolyte water and perform 4-7-8 chest-expansion breath cycles.",
-                homeostasisTime: 17,
-                unit: "minutes",
-                particleComplexity: 19,
-                harmonicCoherence: 0.12
-            },
-            "solfeggio-transformation": {
-                name: "Solfeggio Blueprint (528 Hz)",
-                frequency: 528.0,
-                type: "light",
-                origin: "Ancient Gregorian Antiphons / Modern Molecular Biology",
-                desc: "The universal mathematical scaling signature of nature. Used in epigenetic science to maximize structural integrity of cellular matrices. Restores coherent geometry to fields fragmented by modern electromagnetic radiation and environmental noise.",
-                protocol: "Closed-eye passive listening through organic speakers or raw tuning fork deployment directly over the solar plexus.",
-                homeostasisTime: 5,
-                unit: "minutes",
-                particleComplexity: 6,
-                harmonicCoherence: 0.95
-            },
-            "thx-cinema-impact": {
-                name: "THX Deep Note Deep-Dive",
-                frequency: 35.0,
-                type: "light",
-                origin: "Cinematic Audio Synthesis (Lucasfilm)",
-                desc: "A massive, synthetic exponential sweep designed to maximize psychoacoustic perception. It commands the central nervous system's full attention by creating an architectural wall of sound that unifies the environmental air pressure.",
-                protocol: "Grounding movement; gentle physical stretching to redistribute localized acoustic pressure points.",
-                homeostasisTime: 3,
-                unit: "minutes",
-                particleComplexity: 8,
-                harmonicCoherence: 0.85
+        // --- Multi-Categorized Toroidal Information Framework ---
+        const quantumLibrary = {
+            "torus-default": {
+                name: "Coherent Heart Toroidal Field",
+                origin: "PROVEN SCIENCE / CARDIOVASCULAR BIO-FIELD",
+                desc: "The true default state of the human biological envelope. Driven by the rhythmic electrical signals of the heartbeat, this massive toroidal field projects outward 8 to 12 feet around the frame. Metaphysically, a toroidal being is perfectly aligned when they consciously manage this expansive breathing cycle of energy, establishing a seamless relationship of circulation and feedback loop data exchanges between the core self and the broader external environment.",
+                photonLbl: "Perfect Balanced Coherence (100%)",
+                flowDesc: "Pristine circular feedback loop. Heart rhythm variability is cleanly translated across the outer envelope layers.",
+                photonWidth: "100%",
+                complexity: 3,
+                coherence: 1.0,
+                color: "#10b981"
             },
             "cellular-smog": {
                 name: "Smart-Device Power Grid Noise",
-                frequency: 60.0,
-                type: "dark",
-                origin: "Modern Alternating Current Lines & Device Power Blocks",
-                desc: "The ubiquitous, omnipresent ambient background distortion of civilization. It applies a continuous, invisible micro-stressor to human cellular gates, causing the energy field to constantly shake and lose its clean circular symmetry over prolonged exposures.",
-                protocol: "Enforce complete device distance (~6 feet minimum) or touch bare hands directly to natural soil or wooden elements.",
-                homeostasisTime: 45,
-                unit: "minutes",
-                particleComplexity: 25,
-                harmonicCoherence: 0.30
+                origin: "PROVEN SCIENCE / AMBIENT ELECTROMAGNETIC INTRUSION",
+                desc: "Omnipresent alternating current noise directly fracturing the smooth geometry of the heart torus. Cellular water structures drop into random jitter, turning the protective 8-12ft field outline inward into a fragmented, chaotic mesh where bio-energy bleeds outward irregularly.",
+                photonLbl: "Highly Fragmented/Scattered Field (22%)",
+                flowDesc: "Disrupted geometric lines. The standard toroidal breathing pattern is choked by high-frequency technical static.",
+                photonWidth: "22%",
+                complexity: 25,
+                coherence: 0.15,
+                color: "#ff0055"
+            },
+            "cellular-isochronic": {
+                name: "Intercellular Isochronic Alignment",
+                origin: "PROVEN SCIENCE / RESONANT ENTRAINMENT MODEL",
+                desc: "Sharply defined sound gates that structure uneven brainwave matrices. It acts directly upon the heart torus, stripping out environmental tracking static to ensure that neural firings and vascular flow cycles beat in absolute mechanical symmetry.",
+                photonLbl: "Amplified Ordered Emissions (85%)",
+                flowDesc: "Rhythmic phase-lock parameters established. Signals circulate through the torus walls without localized blockages.",
+                photonWidth: "85%",
+                complexity: 6,
+                coherence: 0.88,
+                color: "#00f2fe"
+            },
+            "kinetic-rhythm": {
+                name: "Kinetic Sync Resonance (Music Adaptation)",
+                origin: "PROVEN SCIENCE / NEURO-ACOUSTIC MOTOR ENTRAINMENT",
+                desc: "Why music compels physical dance: Acoustic wave cycles directly modify pressure variations within cellular tissues, setting off immediate motor loops. The human heart torus locks phase with the outside bass beats, converting sonic energy into real physical movement as the field expands and contracts with the music.",
+                photonLbl: "High Kinetic Trajectory Radiance (90%)",
+                flowDesc: "Motor loop tracking channels run at peak volume, instantly mimicking outside audio signatures.",
+                photonWidth: "90%",
+                complexity: 8,
+                coherence: 0.92,
+                color: "#3b82f6"
+            },
+            "jericho-shatter": {
+                name: "Shouting / Sonic Collapse Arrays",
+                origin: "BIBLICAL MECHANICS / ACOUSTIC DECONSTRUCTION",
+                desc: "A massive, synchronized acoustic wave array tuned to compromise dense atomic bonds. When thousands of unique throat nodes hit phase alignment simultaneously, local target frameworks shatter as spatial energy pathways collapse entirely.",
+                photonLbl: "Violent Energy Flash Discharges (40%)",
+                flowDesc: "Extreme local pressure waves completely collapse normal background field structures.",
+                photonWidth: "40%",
+                complexity: 32,
+                coherence: 0.2,
+                color: "#ef4444"
+            },
+            "david-harp": {
+                name: "Davidic Kinetic Healing Signature",
+                origin: "BIBLICAL MECHANICS / RECONSTRUCTIVE HARMONICS",
+                desc: "Mathematical stringed intervals tuned to clear central nervous system agitation. The incoming wave vectors instantly envelope the heart torus, casting a smooth geometric shield that drops the biological vessel back into deep rest.",
+                photonLbl: "Clean, Restored Restful Fields (92%)",
+                flowDesc: "Soothes internal adrenaline loops, returning the cell grid back to a pristine baseline state.",
+                photonWidth: "92%",
+                complexity: 4,
+                coherence: 0.96,
+                color: "#a855f7"
+            },
+            "sanctuary-resonance": {
+                name: "Resonant Chamber Toning (117 Hz Array)",
+                origin: "SPIRITUAL PRACTICE / DISGUISED ANCIENT SCIENCE",
+                desc: "The geometric, acoustic blueprint of protected chambers. Sound reflections turn vocal sweeps into clean standing wave layers. This creates a spatial environment that mimics crystalline metal structures, magnifying the heart torus boundaries to envelope the entire physical room safely.",
+                photonLbl: "Hyper-Coherent Geometric Output (95%)",
+                flowDesc: "Unlocks massive cellular resonance. The default heart envelope radiates seamlessly outward through solid matter.",
+                photonWidth: "95%",
+                complexity: 5,
+                coherence: 0.98,
+                color: "#f59e0b"
+            },
+            "prayer-coherent": {
+                name: "Sustained Intentional Prayer Matrix",
+                origin: "SPIRITUAL PRACTICE / INTENTIONAL BIO-FIELD SHIFTS",
+                desc: "Deep cardiovascular alignment states reached via focused intent or sacred chanting. The heart's toroidal geometry organizes into nested, concentric ring paths, purging incoming technical background noise completely while expanding the boundaries of the field outward.",
+                photonLbl: "Absolute Radiance Saturation (98%)",
+                flowDesc: "Peak biophoton purity. Re-establishes clean communication vectors across all biological layers within seconds.",
+                photonWidth: "98%",
+                complexity: 2,
+                coherence: 0.99,
+                color: "#ec4899"
+            },
+            "alcohol-entropy": {
+                name: "C2H5OH Molecular Disruption",
+                origin: "BIOPHYSICAL MODULATORS / MOLECULAR CHAOS",
+                desc: "Introduction of heavy ethanol drops overall cellular frequency voltages. This injects chaotic entropy right into the heart center, breaking the elegant torus field down into a jagged, leaky visual layout. Subjective energy is stuck in local loops, blocking clean external circulation.",
+                photonLbl: "Faded, Bleeding Visual Radiance (30%)",
+                flowDesc: "Severe signal drops. Gaps appear across the protective envelope, causing energy to drain uselessly into the local room.",
+                photonWidth: "30%",
+                complexity: 18,
+                coherence: 0.25,
+                color: "#f97316"
+            },
+            "dmt-transcendence": {
+                name: "Hyper-Dimensional Chemical Alignment",
+                origin: "BIOPHYSICAL MODULATORS / QUANTUM TRANSCENDENCE",
+                desc: "Tryptamine saturation shifts the heart torus into hyper-phase speed. Atoms break clear of 3D spatial limits, re-organizing into stunning 4D and 5D multi-toroidal lattices. The biological framework begins importing and circulating massive fields of hyper-dimensional raw data.",
+                photonLbl: "Infinite Multidimensional Flash (99%)",
+                flowDesc: "Standard structural bio-lines are overwritten by a radiant, hyper-fast crystalline zero-point matrix layout.",
+                photonWidth: "99%",
+                complexity: 12,
+                coherence: 0.95,
+                color: "#06b6d4"
             }
         };
 
-        // --- Core Application State Matrix ---
+        // --- Core Application State Controls ---
         let appState = {
-            activeKey: "solfeggio-transformation",
-            goldAmplificationActive: false,
+            activeKey: "torus-default",
+            phaseState: "before", 
+            amplifierActive: false,
+            proximityCount: 1, 
             timeVector: 0
         };
 
-        // --- High-Performance Photographic Particle Engine ---
+        // --- High-Fidelity Physics Engine ---
         const canvas = document.getElementById('quantum-stage');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const particleCount = 2800; // Mass density array to mimic fine sand/matter photorealism
+        const baseParticleCount = 3000;
 
         function initParticleCloud() {
             particles = [];
-            for (let i = 0; i < particleCount; i++) {
+            const w = canvas.width / (window.devicePixelRatio || 1);
+            const h = canvas.height / (window.devicePixelRatio || 1);
+            for (let i = 0; i < baseParticleCount; i++) {
                 particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    origX: Math.random() * canvas.width,
-                    origY: Math.random() * canvas.height,
+                    x: Math.random() * w,
+                    y: Math.random() * h,
                     vx: 0,
                     vy: 0,
-                    alpha: Math.random() * 0.6 + 0.2,
-                    size: Math.random() * 1.5 + 0.5 // Ultra-fine micro points to give a photographic look
+                    alpha: Math.random() * 0.4 + 0.15,
+                    size: Math.random() * 1.1 + 0.3
                 });
             }
         }
@@ -447,70 +551,170 @@
             initParticleCloud();
         }
 
-        // --- Main Mathematical Simulation Loop ---
-        function renderUniversePipeline() {
+        // --- Geometric Engine: Human Form & Toroidal Field Networks ---
+        function drawToroidalIndividual(ctx, cx, cy, scaleSize, currentCoherence, activeColor) {
+            ctx.save();
+
+            // 1. Core Figure Framework Vector Coordinates
+            ctx.lineWidth = 1.2;
+            if (currentCoherence < 0.4) {
+                ctx.strokeStyle = 'rgba(255, 0, 85, 0.12)';
+                ctx.fillStyle = 'rgba(255, 0, 85, 0.05)';
+                ctx.beginPath();
+                ctx.arc(cx, cy - scaleSize * 0.3, scaleSize * 0.05, 0, Math.PI * 2);
+                ctx.moveTo(cx, cy - scaleSize * 0.25);
+                ctx.lineTo(cx - scaleSize * 0.08, cy);
+                ctx.moveTo(cx, cy - scaleSize * 0.25);
+                ctx.lineTo(cx + scaleSize * 0.08, cy);
+                ctx.stroke();
+            } else {
+                ctx.strokeStyle = appState.amplifierActive ? 'rgba(212, 175, 55, 0.3)' : 'rgba(255, 255, 255, 0.18)';
+                ctx.beginPath();
+                ctx.arc(cx, cy - scaleSize * 0.3, scaleSize * 0.05, 0, Math.PI * 2); 
+                ctx.moveTo(cx, cy - scaleSize * 0.25);
+                ctx.lineTo(cx, cy + scaleSize * 0.1); 
+                ctx.moveTo(cx, cy - scaleSize * 0.18);
+                ctx.lineTo(cx - scaleSize * 0.1, cy - scaleSize * 0.1);
+                ctx.moveTo(cx, cy - scaleSize * 0.18);
+                ctx.lineTo(cx + scaleSize * 0.1, cy - scaleSize * 0.1);
+                ctx.moveTo(cx, cy + scaleSize * 0.1);
+                ctx.lineTo(cx - scaleSize * 0.06, cy + scaleSize * 0.35);
+                ctx.moveTo(cx, cy + scaleSize * 0.1);
+                ctx.lineTo(cx + scaleSize * 0.06, cy + scaleSize * 0.35);
+                ctx.stroke();
+
+                // Heart Center Point (The Core Origin)
+                ctx.beginPath();
+                ctx.arc(cx, cy - scaleSize * 0.15, 4, 0, Math.PI * 2);
+                ctx.fillStyle = activeColor;
+                ctx.fill();
+            }
+
+            // 2. Multidimensional Heart Torus Lattice Ring Construction
+            const ringCount = 8;
+            for (let i = 0; i < ringCount; i++) {
+                let flowPhase = (appState.timeVector * 0.5) + (i * Math.PI / ringCount);
+                let dynamicWidth = scaleSize * 0.75 * (0.8 + 0.2 * Math.sin(appState.timeVector * 2));
+                let dynamicHeight = scaleSize * 0.45 * (0.8 + 0.2 * Math.cos(appState.timeVector * 2));
+
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = currentCoherence > 0.4
+                    ? hexToRgba(activeColor, 0.04 * currentCoherence)
+                    : `rgba(255, 0, 85, 0.02)`;
+
+                ctx.beginPath();
+                ctx.ellipse(cx, cy - scaleSize * 0.15, dynamicWidth, dynamicHeight, flowPhase, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.ellipse(cx, cy - scaleSize * 0.15, dynamicWidth * 0.4, dynamicHeight * 1.6, -flowPhase * 0.5, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
+        // --- Universe Loop & Entanglement Engine Pipeline ---
+        function runUniversePipeline() {
             const w = window.innerWidth;
             const h = window.innerHeight;
             
-            // Jet velvet dark background erasure with high trail retention for long exposures
-            ctx.fillStyle = 'rgba(3, 4, 7, 0.08)';
+            ctx.fillStyle = 'rgba(2, 3, 5, 0.09)';
             ctx.fillRect(0, 0, w, h);
 
-            appState.timeVector += 0.015;
+            appState.timeVector += 0.016;
             
-            const currentData = universeMatrix[appState.activeKey];
-            const cx = w / 2;
-            const cy = h / 2 - 40; // Pivot visual field upwards to balance viewport spatial gravity
+            const currentData = quantumLibrary[appState.activeKey];
+            const sizeMetric = Math.min(w, h) * 0.65;
 
-            // Dynamically morph particle vectors using complex Chladni wave equation mathematics
+            // Coherence matrix computations
+            let coherence = appState.amplifierActive ? 1.0 : currentData.coherence;
+            if (appState.phaseState === 'after') coherence = Math.min(1.0, coherence + 0.35);
+            if (appState.phaseState === 'before' && coherence > 0.5) coherence *= 0.5;
+
+            // Generate structural anchor coordinate points dynamically based on current slider counts
+            let positions = [];
+            const yCenter = h / 2 - 30;
+            
+            if (appState.proximityCount === 1) {
+                positions.push({ x: w / 2, y: yCenter, scale: sizeMetric });
+            } else if (appState.proximityCount === 2) {
+                positions.push({ x: w / 2 - sizeMetric * 0.4, y: yCenter, scale: sizeMetric * 0.85 });
+                positions.push({ x: w / 2 + sizeMetric * 0.4, y: yCenter, scale: sizeMetric * 0.85 });
+            } else {
+                positions.push({ x: w / 2 - sizeMetric * 0.6, y: yCenter, scale: sizeMetric * 0.7 });
+                positions.push({ x: w / 2, y: yCenter, scale: sizeMetric * 0.7 });
+                positions.push({ x: w / 2 + sizeMetric * 0.6, y: yCenter, scale: sizeMetric * 0.7 });
+            }
+
+            // Draw structural centers
+            positions.forEach(pos => {
+                drawToroidalIndividual(ctx, pos.x, pos.y, pos.scale, coherence, currentData.color);
+            });
+
+            // Process mathematical particle dynamics across the unified multi-body space
             for (let i = 0; i < particles.length; i++) {
                 let p = particles[i];
                 
-                // Determine raw distance and vector from central nexus core
-                let dx = p.x - cx;
-                let dy = p.y - cy;
+                // Track forces from closest heart anchor nodes
+                let closestNode = null;
+                let minDist = 999999;
+                
+                positions.forEach(pos => {
+                    let heartX = pos.x;
+                    let heartY = pos.y - pos.scale * 0.15;
+                    let dx = p.x - heartX;
+                    let dy = p.y - heartY;
+                    let d = Math.sqrt(dx*dx + dy*dy);
+                    if (d < minDist) {
+                        minDist = d;
+                        closestNode = { x: heartX, y: heartY, scale: pos.scale };
+                    }
+                });
+
+                let dx = p.x - closestNode.x;
+                let dy = p.y - closestNode.y;
                 let r = Math.sqrt(dx * dx + dy * dy);
                 let angle = Math.atan2(dy, dx);
 
-                // Cymatic Standing Wave Logic Setup
-                let frequencyFactor = currentData.particleComplexity;
-                let coherence = appState.goldAmplificationActive ? 1.0 : currentData.harmonicCoherence;
-                
-                // Master Chladni Cymatic Node Math
-                let waveTarget;
-                if (coherence > 0.5) {
-                    // Geometric Coherent Array Model
-                    waveTarget = Math.sin(r * 0.04 - appState.timeVector * 2) * Math.cos(angle * frequencyFactor);
+                let freq = currentData.complexity;
+                let targetX = p.x;
+                let targetY = p.y;
+
+                if (coherence > 0.4) {
+                    // Perfect Toroidal Circulation Equations: Clean Expansion and Contraction Loops
+                    let loopPulse = Math.sin(r * 0.022 - appState.timeVector * 2.2) * Math.cos(angle * freq);
+                    targetX += Math.cos(angle + Math.PI / 2) * loopPulse * 2.0;
+                    targetY += Math.sin(angle + Math.PI / 2) * loopPulse * 2.0;
+                    
+                    // Pull particles gently back through the heart source axis
+                    let intakeForce = Math.sin(r * 0.01 - appState.timeVector) * 0.6;
+                    targetX -= Math.cos(angle) * intakeForce;
+                    targetY -= Math.sin(angle) * intakeForce;
                 } else {
-                    // High-Entropy Distorted Noise Matrix (Chaos/Shock Waves)
-                    waveTarget = Math.sin(r * 0.08 + appState.timeVector * 8) * Math.sin(angle * 3) * (1.5 - coherence);
+                    // Fragmented High-Entropy Jitter Models
+                    let chaosPulse = Math.sin(r * 0.08 + appState.timeVector * 8) * Math.sin(angle * 6);
+                    targetX += Math.cos(angle) * chaosPulse * 2.8;
+                    targetY += Math.sin(angle) * chaosPulse * 2.8;
                 }
 
-                // Force Vector Mapping
-                let force = waveTarget * 1.8;
-                let targetX = p.x + Math.cos(angle) * force;
-                let targetY = p.y + Math.sin(angle) * force;
-
-                // Gold Chamber Geometric Optimization Vector
-                if (appState.goldAmplificationActive) {
-                    // Force particles into beautiful concentric golden spirals
-                    let goldenSpiralForce = Math.sin(r * 0.02 - angle - appState.timeVector);
-                    targetX += Math.cos(angle + Math.PI/2) * goldenSpiralForce * 2;
-                    targetY += Math.sin(angle + Math.PI/2) * goldenSpiralForce * 2;
+                // Internal Metal Amplification Calculations
+                if (appState.amplifierActive) {
+                    let goldWave = Math.cos(r * 0.015 - angle * 2 - appState.timeVector * 1.5);
+                    targetX += Math.cos(angle + Math.PI / 4) * goldWave * 2.5;
+                    targetY += Math.sin(angle + Math.PI / 4) * goldWave * 2.5;
                 }
 
-                // Smooth interpolation physics loop
-                p.vx += (targetX - p.x) * 0.03;
-                p.vy += (targetY - p.y) * 0.03;
-                
-                // Physics damping mechanics
+                // Interpolation and drag execution
+                p.vx += (targetX - p.x) * 0.04;
+                p.vy += (targetY - p.y) * 0.04;
                 p.vx *= 0.82;
                 p.vy *= 0.82;
 
                 p.x += p.vx;
                 p.y += p.vy;
 
-                // Boundary containment reset scripts
+                // Border overflow recycling parameters
                 if (p.x < 0 || p.x > w || p.y < 0 || p.y > h) {
                     p.x = Math.random() * w;
                     p.y = Math.random() * h;
@@ -518,107 +722,67 @@
                     p.vy = 0;
                 }
 
-                // Draw photographic glow particle node
+                // Render individual nodes using calculated weights
+                ctx.fillStyle = appState.amplifierActive && Math.random() > 0.4 
+                    ? `rgba(212, 175, 55, ${p.alpha * coherence})` 
+                    : hexToRgba(currentData.color, p.alpha * coherence);
+                
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                
-                // Dynamic Color Transmutation Core
-                if (appState.goldAmplificationActive) {
-                    ctx.fillStyle = `rgba(212, 175, 55, ${p.alpha})`;
-                } else {
-                    if (currentData.type === "light") {
-                        ctx.fillStyle = `rgba(0, 242, 254, ${p.alpha * 0.85})`;
-                    } else {
-                        ctx.fillStyle = `rgba(255, 0, 85, ${p.alpha * 0.9})`;
-                    }
-                }
                 ctx.fill();
             }
 
-            requestAnimationFrame(renderUniversePipeline);
+            requestAnimationFrame(runUniversePipeline);
         }
 
-        // --- Immersive UI Assembly Engine ---
-        function assembleFrequencyBelt() {
-            const belt = document.getElementById('frequency-belt');
-            belt.innerHTML = "";
-
-            Object.keys(universeMatrix).forEach(key => {
-                const node = universeMatrix[key];
-                const card = document.createElement('div');
-                card.className = `node-card ${node.type}-node ${key === appState.activeKey ? 'active' : ''}`;
-                card.setAttribute('data-id', key);
-                
-                card.innerHTML = `
-                    <div class="card-meta">
-                        <span class="card-type">${node.type} frequency</span>
-                        <span class="card-freq">${node.frequency} Hz</span>
-                    </div>
-                    <h3>${node.name}</h3>
-                    <p>Tap to inject vibration</p>
-                `;
-
-                card.addEventListener('click', () => triggerFrequencyShift(key));
-                belt.appendChild(card);
-            });
-        }
-
-        function triggerFrequencyShift(key) {
-            appState.activeKey = key;
+        // --- UI Interactions & State Handlers ---
+        function updateUIElements() {
+            const data = quantumLibrary[appState.activeKey];
             
-            // Re-sync visual class states across UI carousel
-            document.querySelectorAll('.node-card').forEach(c => {
-                c.classList.remove('active');
-                if (c.getAttribute('data-id') === key) c.classList.add('active');
-            });
-
-            const data = universeMatrix[key];
-            
-            // Smoothly render database narratives to the text blocks
             document.getElementById('field-title').innerText = data.name;
             document.getElementById('field-origin').innerText = data.origin;
             document.getElementById('field-desc').innerText = data.desc;
-            document.getElementById('field-protocol').innerText = data.protocol;
-            document.getElementById('field-time').innerText = data.homeostasisTime;
-            document.getElementById('field-unit').innerText = data.unit;
+            document.getElementById('field-photon-lbl').innerText = data.photonLbl;
+            document.getElementById('field-flow-desc').innerText = data.flowDesc;
             
-            // Color theme adaptation rules
-            const titleEl = document.getElementById('field-title');
-            if (data.type === "dark") {
-                titleEl.style.color = "var(--dark-energy)";
-            } else {
-                titleEl.style.color = "#fff";
-            }
+            const bar = document.getElementById('photon-metric-bar');
+            bar.style.width = data.photonWidth;
+            bar.style.backgroundColor = data.color;
+            bar.style.boxShadow = `0 0 10px ${data.color}`;
         }
 
-        function toggleGoldAmplification() {
-            appState.goldAmplificationActive = !appState.goldAmplificationActive;
-            const btn = document.getElementById('gold-amp');
-            
-            if (appState.goldAmplificationActive) {
-                btn.classList.add('active');
-                document.getElementById('field-protocol').innerText = "Pyramid Gold Chamber Stabilization algorithm running. Tuning environmental fields to geometric maximum efficiency.";
-                document.getElementById('field-time').innerText = "Instantaneous";
-                document.getElementById('field-unit').innerText = "Phase Shift";
-            } else {
-                btn.classList.remove('active');
-                // Revert text instantly back to selected node definitions
-                triggerFrequencyShift(appState.activeKey);
-            }
+        function handleDropdownShift(selectedVal) {
+            appState.activeKey = selectedVal;
+            updateUIElements();
         }
 
-        // --- System Start Execution Listeners ---
+        function handleProximityShift(val) {
+            appState.proximityCount = parseInt(val, 10);
+        }
+
+        function togglePhaseState(state) {
+            appState.phaseState = state;
+            document.getElementById('phase-before').classList.toggle('active', state === 'before');
+            document.getElementById('phase-after').classList.toggle('active', state === 'after');
+        }
+
+        function toggleCosmicAmplifier() {
+            appState.amplifierActive = !appState.amplifierActive;
+            document.getElementById('cosmic-amp').classList.toggle('active', appState.amplifierActive);
+        }
+
+        // --- Helper Utilities ---
+        function hexToRgba(hex, alpha) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, ${alpha})` : `rgba(255,255,255,${alpha})`;
+        }
+
+        // --- Initialization Lifecycle ---
+        window.addEventListener('resize', resizeStage);
         window.addEventListener('DOMContentLoaded', () => {
-            window.addEventListener('resize', resizeStage);
             resizeStage();
-            assembleFrequencyBelt();
-            
-            // Bootstrap initial vector settings
-            triggerFrequencyShift("solfeggio-transformation");
-            
-            // Execute animation render pipeline threads
-            requestAnimationFrame(renderUniversePipeline);
+            updateUIElements();
+            runUniversePipeline();
         });
     </script>
-</body>
-</html>
+</body></html>
