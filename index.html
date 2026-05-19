@@ -1,2217 +1,1167 @@
-<!-- SECTION 1 START -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<meta name="theme-color" content="#050816"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="PyramidOS"/>
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+/>
+<title>Resonance Field — Cymatics & Human Frequency Interface</title>
 
-<title>PyramidOS Super App</title>
-
-<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
--webkit-tap-highlight-color:transparent;
+:root{
+  --bg:#050816;
+  --panel:#0d1226;
+  --panel2:#111933;
+  --text:#f5f7ff;
+  --muted:#8ea2c9;
+  --cyan:#5ef2ff;
+  --purple:#8d72ff;
+  --pink:#ff6ae6;
+  --green:#7dffb3;
+  --gold:#ffd56a;
+  --danger:#ff6b6b;
+  --border:rgba(255,255,255,.08);
 }
 
-:root{
---bg:#050816;
---bg2:#09101f;
---card:rgba(255,255,255,0.08);
---border:rgba(255,255,255,0.12);
---text:#ffffff;
---muted:#9fb2d1;
---gold:#ffd700;
---cyan:#6ae3ff;
---purple:#a855f7;
---green:#22c55e;
---red:#ef4444;
---radius:24px;
---blur:22px;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,body{
+  width:100%;
+  min-height:100%;
+  background:
+    radial-gradient(circle at top,#1a2452 0%,#050816 55%);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  overflow-x:hidden;
 }
 
 body{
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-background:
-radial-gradient(circle at top left,#1e293b 0%,transparent 35%),
-radial-gradient(circle at bottom right,#111827 0%,transparent 40%),
-linear-gradient(180deg,var(--bg),#02030a);
-color:var(--text);
-overflow-x:hidden;
-min-height:100vh;
-padding-bottom:120px;
+  position:relative;
 }
 
-body.light{
---bg:#eef4ff;
---bg2:#dce9ff;
---card:rgba(255,255,255,0.7);
---border:rgba(0,0,0,0.08);
---text:#08111f;
---muted:#475569;
-background:
-linear-gradient(180deg,#dbeafe,#f8fafc);
+canvas#bg{
+  position:fixed;
+  inset:0;
+  z-index:-2;
 }
 
-canvas#stars{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-z-index:-1;
-opacity:.6;
+.grid-overlay{
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size:40px 40px;
+  mask-image:radial-gradient(circle at center, black 35%, transparent 100%);
+  z-index:-1;
 }
 
-.app{
-width:100%;
-max-width:520px;
-margin:auto;
-padding:18px;
-}
-
-.topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
+header{
+  padding:36px 22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  flex-wrap:wrap;
 }
 
 .logo{
-display:flex;
-align-items:center;
-gap:12px;
-}
-
-.logo-icon{
-width:52px;
-height:52px;
-border-radius:18px;
-background:
-linear-gradient(135deg,#facc15,#f59e0b);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:24px;
-box-shadow:0 0 25px rgba(255,215,0,.4);
+  display:flex;
+  flex-direction:column;
+  gap:6px;
 }
 
 .logo h1{
-font-size:1.4rem;
-font-weight:800;
-letter-spacing:.5px;
+  font-size:clamp(2rem,5vw,4rem);
+  font-weight:900;
+  letter-spacing:-2px;
+  background:linear-gradient(
+    90deg,
+    var(--cyan),
+    var(--purple),
+    var(--pink)
+  );
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
-.logo span{
-display:block;
-font-size:.78rem;
-color:var(--muted);
-font-weight:500;
-margin-top:2px;
+.logo p{
+  color:var(--muted);
+  max-width:720px;
+  line-height:1.6;
 }
 
-.icon-btn{
-width:48px;
-height:48px;
-border:none;
-border-radius:16px;
-background:var(--card);
-backdrop-filter:blur(var(--blur));
-border:1px solid var(--border);
-display:flex;
-align-items:center;
-justify-content:center;
-color:var(--text);
-font-size:1.1rem;
+.top-controls{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+button{
+  border:none;
+  outline:none;
+  cursor:pointer;
+  transition:.25s ease;
+}
+
+.glow-btn{
+  background:linear-gradient(
+    135deg,
+    rgba(94,242,255,.18),
+    rgba(141,114,255,.18)
+  );
+  border:1px solid rgba(255,255,255,.12);
+  color:white;
+  padding:14px 18px;
+  border-radius:16px;
+  font-weight:700;
+  backdrop-filter:blur(10px);
+}
+
+.glow-btn:hover{
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:
+    0 0 30px rgba(94,242,255,.18),
+    0 0 60px rgba(141,114,255,.12);
+}
+
+main{
+  width:min(1600px,95%);
+  margin:auto;
+  padding-bottom:120px;
 }
 
 .hero{
-padding:28px;
-border-radius:32px;
-background:
-linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
-backdrop-filter:blur(26px);
-border:1px solid var(--border);
-position:relative;
-overflow:hidden;
-margin-bottom:22px;
-}
-
-.hero::before{
-content:"";
-position:absolute;
-width:240px;
-height:240px;
-background:radial-gradient(circle,rgba(255,215,0,.35),transparent 70%);
-top:-80px;
-right:-80px;
-}
-
-.hero h2{
-font-size:2rem;
-line-height:1.1;
-margin-bottom:12px;
-font-weight:800;
-}
-
-.hero p{
-color:var(--muted);
-line-height:1.6;
-font-size:.96rem;
-}
-
-.hero-actions{
-display:flex;
-gap:12px;
-margin-top:24px;
-}
-
-.primary-btn{
-flex:1;
-padding:16px;
-border:none;
-border-radius:18px;
-background:
-linear-gradient(135deg,#facc15,#f59e0b);
-color:#111827;
-font-weight:800;
-font-size:1rem;
-}
-
-.secondary-btn{
-flex:1;
-padding:16px;
-border:none;
-border-radius:18px;
-background:var(--card);
-backdrop-filter:blur(18px);
-border:1px solid var(--border);
-color:var(--text);
-font-weight:700;
-}
-
-.section-title{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin:24px 0 16px;
-}
-
-.section-title h3{
-font-size:1.15rem;
-font-weight:800;
-}
-
-.section-title span{
-color:var(--muted);
-font-size:.84rem;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:26px;
+  margin-bottom:26px;
 }
 
 .card{
-background:var(--card);
-backdrop-filter:blur(var(--blur));
-border:1px solid var(--border);
-border-radius:28px;
-padding:20px;
-margin-bottom:18px;
-position:relative;
-overflow:hidden;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.05),
+      rgba(255,255,255,.02)
+    );
+  border:1px solid var(--border);
+  border-radius:28px;
+  overflow:hidden;
+  backdrop-filter:blur(18px);
+  position:relative;
 }
 
-.glow{
-position:absolute;
-width:180px;
-height:180px;
-border-radius:50%;
-background:radial-gradient(circle,rgba(106,227,255,.18),transparent 70%);
-top:-60px;
-right:-60px;
-pointer-events:none;
+.card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at top right,
+      rgba(94,242,255,.12),
+      transparent 30%);
+  pointer-events:none;
 }
 
-.stats-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:14px;
+.hero-left{
+  padding:34px;
 }
 
-.stat-box{
-background:rgba(255,255,255,.04);
-border:1px solid rgba(255,255,255,.08);
-padding:18px;
-border-radius:22px;
+.hero-title{
+  font-size:clamp(2rem,5vw,5rem);
+  line-height:.95;
+  margin-bottom:18px;
+  font-weight:900;
+  letter-spacing:-3px;
 }
 
-body.light .stat-box{
-background:rgba(255,255,255,.65);
+.hero-title span{
+  background:linear-gradient(
+    90deg,
+    var(--cyan),
+    var(--purple),
+    var(--pink)
+  );
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
-.stat-box h4{
-font-size:.8rem;
-color:var(--muted);
-margin-bottom:8px;
-font-weight:600;
+.hero-text{
+  color:var(--muted);
+  line-height:1.8;
+  margin-bottom:28px;
+  font-size:1.05rem;
 }
 
-.stat-box .value{
-font-size:1.5rem;
-font-weight:800;
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
 }
 
-.pyramid-visual{
-height:260px;
-display:flex;
-align-items:center;
-justify-content:center;
-position:relative;
-margin-top:12px;
+.stat{
+  padding:18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
 }
 
-.pyramid{
-width:0;
-height:0;
-border-left:120px solid transparent;
-border-right:120px solid transparent;
-border-bottom:210px solid rgba(255,215,0,.22);
-position:relative;
-filter:drop-shadow(0 0 30px rgba(255,215,0,.45));
-animation:pulse 4s infinite ease-in-out;
+.stat h2{
+  font-size:1.5rem;
+  margin-bottom:6px;
 }
 
-.pyramid::after{
-content:"";
-position:absolute;
-left:-100px;
-top:30px;
-width:0;
-height:0;
-border-left:100px solid transparent;
-border-right:100px solid transparent;
-border-bottom:170px solid rgba(255,255,255,.08);
+.stat p{
+  color:var(--muted);
+  font-size:.85rem;
 }
 
-.energy-ring{
-position:absolute;
-border-radius:50%;
-border:1px solid rgba(106,227,255,.3);
-animation:spin 12s linear infinite;
+.hero-right{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  min-height:620px;
 }
 
-.r1{
-width:260px;
-height:260px;
+#humanCanvas{
+  width:100%;
+  height:100%;
+  display:block;
 }
 
-.r2{
-width:340px;
-height:340px;
-animation-direction:reverse;
+.section{
+  margin-top:28px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
 }
 
-.r3{
-width:420px;
-height:420px;
-opacity:.4;
+.panel{
+  padding:26px;
 }
 
-@keyframes spin{
-from{transform:rotate(0deg);}
-to{transform:rotate(360deg);}
+.panel h3{
+  font-size:1.4rem;
+  margin-bottom:18px;
 }
 
-@keyframes pulse{
-0%{transform:translateY(0px) scale(1);}
-50%{transform:translateY(-10px) scale(1.03);}
-100%{transform:translateY(0px) scale(1);}
+.sub{
+  color:var(--muted);
+  margin-bottom:18px;
+  line-height:1.7;
 }
 
 .frequency-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:14px;
-margin-top:18px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
 }
 
-.freq-card{
-padding:18px;
-border-radius:22px;
-background:rgba(255,255,255,.05);
-border:1px solid rgba(255,255,255,.08);
+.freq{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+  padding:18px;
+  border-radius:18px;
+  transition:.25s ease;
+  cursor:pointer;
 }
 
-.freq-card h4{
-font-size:1rem;
-margin-bottom:8px;
+.freq:hover{
+  transform:translateY(-3px);
+  border-color:rgba(94,242,255,.4);
+  box-shadow:0 0 40px rgba(94,242,255,.12);
 }
 
-.freq-card p{
-font-size:.84rem;
-color:var(--muted);
-line-height:1.5;
+.freq.active{
+  border-color:var(--cyan);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(94,242,255,.12),
+      rgba(141,114,255,.1)
+    );
 }
 
-.freq-value{
-font-size:1.7rem;
-font-weight:800;
-margin-top:12px;
-color:var(--gold);
+.freq h4{
+  font-size:1.2rem;
+  margin-bottom:8px;
 }
 
-.tools-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:16px;
+.freq p{
+  color:var(--muted);
+  font-size:.92rem;
+  line-height:1.5;
 }
 
-.tool-card{
-padding:20px;
-border-radius:26px;
-background:var(--card);
-backdrop-filter:blur(var(--blur));
-border:1px solid var(--border);
-min-height:160px;
-position:relative;
-overflow:hidden;
+.visual-box{
+  height:420px;
+  border-radius:24px;
+  overflow:hidden;
+  position:relative;
+  background:#070b18;
+  border:1px solid rgba(255,255,255,.08);
 }
 
-.tool-icon{
-font-size:2rem;
-margin-bottom:18px;
+#cymaticsCanvas{
+  width:100%;
+  height:100%;
+  display:block;
 }
 
-.tool-card h4{
-font-size:1rem;
-margin-bottom:8px;
+.readout{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
 }
 
-.tool-card p{
-font-size:.84rem;
-line-height:1.5;
-color:var(--muted);
+.readout-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:18px;
+  padding:18px;
 }
 
-.tool-card button{
-margin-top:18px;
-width:100%;
-padding:12px;
-border:none;
-border-radius:14px;
-background:rgba(255,255,255,.08);
-color:var(--text);
-font-weight:700;
+.readout-card h5{
+  margin-bottom:8px;
+  color:var(--cyan);
 }
 
-.journal-box textarea{
-width:100%;
-height:160px;
-background:rgba(255,255,255,.05);
-border:1px solid rgba(255,255,255,.08);
-border-radius:22px;
-padding:18px;
-color:var(--text);
-resize:none;
-font-size:.95rem;
-outline:none;
+.readout-card p{
+  color:var(--muted);
+  line-height:1.7;
+  font-size:.95rem;
 }
 
-body.light .journal-box textarea{
-background:rgba(255,255,255,.75);
+.recommendations{
+  margin-top:22px;
+  padding:20px;
+  border-radius:20px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(125,255,179,.08),
+      rgba(94,242,255,.08)
+    );
+  border:1px solid rgba(125,255,179,.16);
 }
 
-.save-btn{
-width:100%;
-margin-top:16px;
-padding:16px;
-border:none;
-border-radius:18px;
-background:
-linear-gradient(135deg,#06b6d4,#3b82f6);
-color:white;
-font-weight:800;
-font-size:1rem;
+.recommendations ul{
+  margin-top:12px;
+  padding-left:20px;
 }
 
-.mood-row{
-display:flex;
-gap:12px;
-margin-top:18px;
-overflow-x:auto;
-padding-bottom:4px;
+.recommendations li{
+  margin-bottom:10px;
+  line-height:1.6;
+  color:#d9fbe9;
 }
 
-.mood-btn{
-min-width:70px;
-padding:14px;
-border-radius:18px;
-border:1px solid rgba(255,255,255,.08);
-background:rgba(255,255,255,.05);
-text-align:center;
-font-size:1.4rem;
+.footer{
+  text-align:center;
+  padding:60px 20px 120px;
+  color:var(--muted);
 }
 
-.mood-btn span{
-display:block;
-font-size:.72rem;
-margin-top:8px;
-color:var(--muted);
+.wave-meter{
+  height:16px;
+  width:100%;
+  background:rgba(255,255,255,.06);
+  border-radius:100px;
+  overflow:hidden;
+  margin-top:12px;
 }
 
-.bottom-nav{
-position:fixed;
-bottom:18px;
-left:50%;
-transform:translateX(-50%);
-width:calc(100% - 28px);
-max-width:520px;
-padding:14px;
-border-radius:28px;
-background:rgba(8,15,30,.78);
-backdrop-filter:blur(28px);
-border:1px solid rgba(255,255,255,.08);
-display:flex;
-justify-content:space-around;
-z-index:999;
+.wave-fill{
+  height:100%;
+  width:50%;
+  border-radius:100px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--cyan),
+      var(--purple),
+      var(--pink)
+    );
+  transition:1s ease;
 }
 
-.bottom-nav button{
-background:none;
-border:none;
-color:var(--muted);
-font-size:.78rem;
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:6px;
-font-weight:600;
+.live-tag{
+  position:absolute;
+  top:18px;
+  right:18px;
+  padding:10px 14px;
+  border-radius:100px;
+  background:rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.08);
+  font-size:.8rem;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  backdrop-filter:blur(12px);
 }
 
-.bottom-nav button.active{
-color:var(--gold);
+.dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 18px var(--green);
+  animation:pulse 1.2s infinite;
 }
 
-.orb{
-position:absolute;
-border-radius:50%;
-filter:blur(20px);
-opacity:.55;
-pointer-events:none;
+@keyframes pulse{
+  0%{transform:scale(1);opacity:1;}
+  50%{transform:scale(1.5);opacity:.6;}
+  100%{transform:scale(1);opacity:1;}
 }
 
-.orb1{
-width:140px;
-height:140px;
-background:#6ae3ff;
-top:-40px;
-left:-30px;
+.bottom-panels{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+  margin-top:24px;
 }
 
-.orb2{
-width:120px;
-height:120px;
-background:#a855f7;
-bottom:-30px;
-right:-30px;
+.mini-card{
+  padding:22px;
 }
 
-.hidden{
-display:none;
+.mini-card h4{
+  margin-bottom:14px;
+  font-size:1.15rem;
 }
 
-.ai-chat{
-display:flex;
-flex-direction:column;
-gap:14px;
-margin-top:18px;
+.mini-card p{
+  color:var(--muted);
+  line-height:1.7;
 }
 
-.ai-msg{
-padding:16px;
-border-radius:20px;
-max-width:85%;
-line-height:1.5;
-font-size:.92rem;
+.tag{
+  display:inline-flex;
+  padding:8px 12px;
+  border-radius:100px;
+  background:rgba(255,255,255,.06);
+  margin-bottom:14px;
+  font-size:.8rem;
 }
 
-.ai-msg.bot{
-background:rgba(255,255,255,.08);
-align-self:flex-start;
+@media(max-width:1100px){
+  .hero{
+    grid-template-columns:1fr;
+  }
+
+  .section{
+    grid-template-columns:1fr;
+  }
+
+  .bottom-panels{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
 }
 
-.ai-msg.user{
-background:linear-gradient(135deg,#3b82f6,#06b6d4);
-align-self:flex-end;
-}
+@media(max-width:700px){
+  .frequency-grid{
+    grid-template-columns:1fr;
+  }
 
-.chat-input{
-display:flex;
-gap:12px;
-margin-top:18px;
-}
+  .stats{
+    grid-template-columns:1fr;
+  }
 
-.chat-input input{
-flex:1;
-padding:16px;
-border:none;
-border-radius:18px;
-background:rgba(255,255,255,.06);
-color:var(--text);
-outline:none;
-}
-
-.chat-input button{
-width:60px;
-border:none;
-border-radius:18px;
-background:linear-gradient(135deg,#facc15,#f59e0b);
-font-size:1.2rem;
-font-weight:800;
-}
-
-.breath-circle{
-width:220px;
-height:220px;
-border-radius:50%;
-margin:30px auto;
-background:radial-gradient(circle,#6ae3ff,#2563eb);
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:1.4rem;
-font-weight:800;
-animation:breathe 8s infinite ease-in-out;
-box-shadow:0 0 60px rgba(106,227,255,.45);
-}
-
-@keyframes breathe{
-0%{transform:scale(.8);}
-50%{transform:scale(1.08);}
-100%{transform:scale(.8);}
-}
-
-.todo-item{
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:14px 0;
-border-bottom:1px solid rgba(255,255,255,.06);
-}
-
-.todo-item input{
-margin-right:12px;
-}
-
-.todo-left{
-display:flex;
-align-items:center;
-}
-
-.progress-wrap{
-margin-top:16px;
-}
-
-.progress-bar{
-height:14px;
-border-radius:999px;
-background:rgba(255,255,255,.08);
-overflow:hidden;
-}
-
-.progress-fill{
-height:100%;
-width:72%;
-background:linear-gradient(135deg,#22c55e,#06b6d4);
-border-radius:999px;
-}
-
-.install-banner{
-padding:18px;
-border-radius:24px;
-margin-bottom:20px;
-background:
-linear-gradient(135deg,rgba(250,204,21,.2),rgba(245,158,11,.08));
-border:1px solid rgba(250,204,21,.3);
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:14px;
-}
-
-.install-banner button{
-padding:12px 16px;
-border:none;
-border-radius:14px;
-font-weight:800;
-background:#facc15;
-color:#111827;
-}
-
-.fade-in{
-animation:fade .7s ease;
-}
-
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(20px);
-}
-to{
-opacity:1;
-transform:translateY(0px);
-}
+  .readout{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="stars"></canvas>
+<canvas id="bg"></canvas>
+<div class="grid-overlay"></div>
 
-<div class="app fade-in">
+<header>
+  <div class="logo">
+    <h1>RESONANCE FIELD</h1>
+    <p>
+      Interactive cymatics-inspired visualization system exploring
+      environmental frequencies, wave interaction,
+      electromagnetic fields, resonance patterns,
+      and human-centered recalibration experiences.
+    </p>
+  </div>
 
-<div class="topbar">
-<div class="logo">
-<div class="logo-icon">△</div>
-<div>
-<h1>PyramidOS</h1>
-<span>Consciousness + Daily Utility</span>
-</div>
-</div>
+  <div class="top-controls">
+    <button class="glow-btn" id="resetBtn">
+      Reset Field
+    </button>
 
-<button class="icon-btn" id="themeToggle">☼</button>
-</div>
+    <button class="glow-btn" id="calmBtn">
+      Calm State
+    </button>
 
-<div class="install-banner" id="installBanner">
-<div>
-<h4 style="margin-bottom:6px;">Install PyramidOS</h4>
-<p style="font-size:.82rem;color:var(--muted);">
-Add to your home screen for full immersive mode.
-</p>
-</div>
+    <button class="glow-btn" id="focusBtn">
+      Focus State
+    </button>
+  </div>
+</header>
 
-<button id="installBtn">Install</button>
-</div>
+<main>
 
-<section class="hero">
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
+  <section class="hero">
 
-<h2>
-Elevate Your<br/>
-Daily Frequency
-</h2>
+    <div class="card hero-left">
 
-<p>
-A consciousness-centered super app combining ancient pyramid wisdom,
-modern productivity, meditation, journaling, immersive resonance,
-AI-style guidance, and vibrational tools for everyday life.
-</p>
-
-<div class="hero-actions">
-<button class="primary-btn" onclick="scrollToSection('pyramidSection')">
-Enter Pyramid
-</button>
-
-<button class="secondary-btn" onclick="scrollToSection('dashboardSection')">
-Dashboard
-</button>
-</div>
-</section>
-
-<div class="section-title">
-<h3>Daily Resonance</h3>
-<span>Live Metrics</span>
-</div>
-
-<section class="card">
-<div class="glow"></div>
-
-<div class="stats-grid">
-
-<div class="stat-box">
-<h4>Current Energy</h4>
-<div class="value" id="energyValue">87%</div>
-</div>
-
-<div class="stat-box">
-<h4>Meditation Minutes</h4>
-<div class="value" id="meditationValue">42</div>
-</div>
-
-<div class="stat-box">
-<h4>Focus Alignment</h4>
-<div class="value">93%</div>
-</div>
-
-<div class="stat-box">
-<h4>Sleep Harmony</h4>
-<div class="value">8.2h</div>
-</div>
-
-</div>
-
-<div class="progress-wrap">
-<div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-<span style="font-size:.85rem;color:var(--muted);">
-Vibrational Progress
-</span>
-
-<span style="font-size:.85rem;font-weight:700;">
-72%
-</span>
-</div>
-
-<div class="progress-bar">
-<div class="progress-fill"></div>
-</div>
-</div>
-</section>
-
-<div class="section-title">
-<h3>Pyramid Resonance</h3>
-<span>Ancient Knowledge</span>
-</div>
-
-<section class="card" id="pyramidSection">
-
-<div class="pyramid-visual">
-
-<div class="energy-ring r1"></div>
-<div class="energy-ring r2"></div>
-<div class="energy-ring r3"></div>
-
-<div class="pyramid"></div>
-
-</div>
-
-<div class="frequency-grid">
-
-<div class="freq-card">
-<h4>528 Hz</h4>
-<p>
-Associated with transformation, repair, harmony, and energetic alignment.
-</p>
-<div class="freq-value">528</div>
-</div>
-
-<div class="freq-card">
-<h4>963 Hz</h4>
-<p>
-Connected to higher consciousness, intuition, and spiritual awareness.
-</p>
-<div class="freq-value">963</div>
-</div>
-
-<div class="freq-card">
-<h4>432 Hz</h4>
-<p>
-A natural resonance frequency often associated with calming balance.
-</p>
-<div class="freq-value">432</div>
-</div>
-
-<div class="freq-card">
-<h4>741 Hz</h4>
-<p>
-Linked symbolically to clarity, cleansing, and awakened creativity.
-</p>
-<div class="freq-value">741</div>
-</div>
-
-</div>
-
-</section>
-
-<div class="section-title">
-<h3>Consciousness Tools</h3>
-<span>Interactive Modules</span>
-</div>
-
-<section class="tools-grid">
-
-<div class="tool-card">
-<div class="tool-icon">🧘</div>
-<h4>Meditation</h4>
-<p>
-Breathing cycles, resonance timing, and immersive calm sessions.
-</p>
-<button onclick="openPanel('meditationPanel')">
-Open
-</button>
-</div>
-
-<div class="tool-card">
-<div class="tool-icon">📓</div>
-<h4>AI Journal</h4>
-<p>
-Capture thoughts, dreams, goals, and emotional reflections.
-</p>
-<button onclick="openPanel('journalPanel')">
-Open
-</button>
-</div>
-
-<div class="tool-card">
-<div class="tool-icon">🌙</div>
-<h4>Dream Log</h4>
-<p>
-Track recurring dreams, symbols, and subconscious patterns.
-</p>
-<button onclick="openPanel('dreamPanel')">
-Open
-</button>
-</div>
-
-<div class="tool-card">
-<div class="tool-icon">🎧</div>
-<h4>Frequencies</h4>
-<p>
-Explore binaural-style resonance tones and focus frequencies.
-</p>
-<button onclick="openPanel('frequencyPanel')">
-Open
-</button>
-</div>
-
-</section>
-
-<div class="section-title">
-<h3>AI Consciousness Assistant</h3>
-<span>Adaptive Guidance</span>
-</div>
-
-<section class="card">
-
-<div class="ai-chat" id="chatMessages">
-
-<div class="ai-msg bot">
-Welcome back. Your current resonance trend appears elevated today.
-Would you like a meditation recommendation, journaling prompt,
-or productivity alignment session?
-</div>
-
-<div class="ai-msg user">
-Give me a focus recommendation for today.
-</div>
-
-<div class="ai-msg bot">
-Recommended:
-25 minutes focused work,
-5 minutes breath reset,
-528Hz ambient tone,
-then reflective journaling tonight.
-</div>
-
-</div>
-
-<div class="chat-input">
-<input
-type="text"
-id="chatInput"
-placeholder="Ask PyramidOS anything..."
-/>
-
-<button onclick="sendMessage()">↑</button>
-</div>
-
-</section>
-
-<!-- SECTION 1 END -->
-<!-- =========================
-SECTION 2 START
-Core Layout + Navigation + Pyramid Engine
-Paste directly BELOW Section 1
-========================= -->
-
-<body>
-<div id="app">
-
-  <!-- BACKGROUND -->
-  <div class="bg-grid"></div>
-  <div class="ambient ambient-1"></div>
-  <div class="ambient ambient-2"></div>
-
-  <!-- HEADER -->
-  <header class="topbar glass">
-    <div class="brand">
-      <div class="logo">△</div>
-      <div>
-        <h1>PyramidOS</h1>
-        <p>Ancient Intelligence • Modern Utility</p>
+      <div class="hero-title">
+        Visualize the
+        <span>Invisible Environment</span>
       </div>
+
+      <p class="hero-text">
+        Explore how frequencies, light exposure,
+        sound environments, digital stimulation,
+        and rhythm patterns influence energetic states,
+        attention, emotional balance,
+        and perceived environmental harmony
+        through interactive visual resonance systems.
+      </p>
+
+      <div class="stats">
+
+        <div class="stat">
+          <h2 id="freqDisplay">432Hz</h2>
+          <p>Active Resonance</p>
+        </div>
+
+        <div class="stat">
+          <h2 id="coherenceDisplay">81%</h2>
+          <p>Field Coherence</p>
+        </div>
+
+        <div class="stat">
+          <h2 id="stressDisplay">22%</h2>
+          <p>Environmental Load</p>
+        </div>
+
+        <div class="stat">
+          <h2 id="waveDisplay">5.8</h2>
+          <p>Wave Density</p>
+        </div>
+
+      </div>
+
     </div>
 
-    <div class="top-actions">
-      <button class="nav-btn active" data-page="dashboard">
-        Dashboard
-      </button>
+    <div class="card hero-right">
 
-      <button class="nav-btn" data-page="pyramids">
-        Pyramids
-      </button>
+      <div class="live-tag">
+        <div class="dot"></div>
+        LIVE FIELD VISUALIZATION
+      </div>
 
-      <button class="nav-btn" data-page="rituals">
-        Rituals
-      </button>
+      <canvas id="humanCanvas"></canvas>
 
-      <button class="nav-btn" data-page="focus">
-        Focus
-      </button>
-
-      <button class="nav-btn" data-page="journal">
-        Journal
-      </button>
-
-      <button class="nav-btn" data-page="oracle">
-        Oracle
-      </button>
-
-      <button class="nav-btn" data-page="sound">
-        Frequencies
-      </button>
-
-      <button class="nav-btn" data-page="settings">
-        Settings
-      </button>
     </div>
-  </header>
 
-  <!-- MAIN -->
-  <main class="main-shell">
+  </section>
 
-    <!-- DASHBOARD -->
-    <section class="page active" id="dashboard">
+  <section class="section">
 
-      <div class="hero glass">
-        <div class="hero-left">
-          <div class="hero-badge">
-            Ancient Systems • Daily Use
-          </div>
+    <div class="card panel">
 
-          <h2>
-            Your daily operating system for clarity,
-            vibration, focus, and intentional living.
-          </h2>
+      <h3>Frequency Library</h3>
 
-          <p>
-            PyramidOS blends sacred geometry, vibrational tools,
-            mindfulness systems, focus architecture, ritual tracking,
-            and personal insight into a single unified experience.
-          </p>
-
-          <div class="hero-actions">
-            <button class="primary-btn" id="activateEnergy">
-              Activate Energy
-            </button>
-
-            <button class="secondary-btn" id="dailyReset">
-              Daily Reset
-            </button>
-          </div>
-        </div>
-
-        <div class="hero-right">
-          <div class="pyramid-container">
-            <div class="pyramid-glow"></div>
-
-            <div class="pyramid">
-              <div class="face face1"></div>
-              <div class="face face2"></div>
-              <div class="face face3"></div>
-              <div class="face face4"></div>
-            </div>
-
-            <div class="orbit orbit1"></div>
-            <div class="orbit orbit2"></div>
-            <div class="orbit orbit3"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- QUICK TOOLS -->
-      <div class="grid-3">
-
-        <div class="card glass">
-          <div class="card-top">
-            <span>Frequency State</span>
-            <span id="freqValue">528Hz</span>
-          </div>
-
-          <div class="freq-bar">
-            <div class="freq-fill" id="freqFill"></div>
-          </div>
-
-          <p>
-            Current resonance calibrated for restoration,
-            focus, and clarity.
-          </p>
-
-          <button class="small-btn" id="shiftFrequency">
-            Shift Frequency
-          </button>
-        </div>
-
-        <div class="card glass">
-          <div class="card-top">
-            <span>Focus Timer</span>
-            <span id="focusDisplay">25:00</span>
-          </div>
-
-          <div class="timer-ring">
-            <div class="ring-inner">
-              Focus
-            </div>
-          </div>
-
-          <div class="timer-actions">
-            <button class="small-btn" id="startFocus">
-              Start
-            </button>
-
-            <button class="small-btn" id="resetFocus">
-              Reset
-            </button>
-          </div>
-        </div>
-
-        <div class="card glass">
-          <div class="card-top">
-            <span>Daily Alignment</span>
-            <span id="alignmentScore">87%</span>
-          </div>
-
-          <div class="alignment-circle">
-            <div class="alignment-inner">
-              HIGH
-            </div>
-          </div>
-
-          <ul class="mini-list">
-            <li>✓ Hydration</li>
-            <li>✓ Reflection</li>
-            <li>✓ Focus Session</li>
-            <li>○ Breathwork</li>
-          </ul>
-        </div>
-
-      </div>
-
-      <!-- INSIGHT CARDS -->
-      <div class="grid-2">
-
-        <div class="wide-card glass">
-          <div class="section-title">
-            Pyramid Resonance Engine
-          </div>
-
-          <p>
-            The pyramid structure represents energetic amplification,
-            intentional focus, elevated consciousness, and alignment.
-            This module acts as the symbolic “core processor” of the app.
-          </p>
-
-          <div class="energy-grid">
-
-            <div class="energy-node">
-              <div class="node-symbol">△</div>
-              <span>Clarity</span>
-            </div>
-
-            <div class="energy-node">
-              <div class="node-symbol">◉</div>
-              <span>Focus</span>
-            </div>
-
-            <div class="energy-node">
-              <div class="node-symbol">✦</div>
-              <span>Energy</span>
-            </div>
-
-            <div class="energy-node">
-              <div class="node-symbol">☉</div>
-              <span>Alignment</span>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="wide-card glass">
-          <div class="section-title">
-            Today's Insight
-          </div>
-
-          <div class="quote-box" id="dailyInsight">
-            “Stillness amplifies perception.”
-          </div>
-
-          <div class="insight-actions">
-            <button class="small-btn" id="newInsight">
-              New Insight
-            </button>
-          </div>
-
-          <div class="pulse-line"></div>
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- PYRAMIDS PAGE -->
-    <section class="page" id="pyramids">
-
-      <div class="page-header glass">
-        <h2>Pyramid Intelligence</h2>
-
-        <p>
-          Ancient geometry interpreted through modern interaction.
-        </p>
-      </div>
-
-      <div class="grid-2">
-
-        <div class="feature-card glass">
-          <div class="feature-icon">△</div>
-
-          <h3>Resonance Mapping</h3>
-
-          <p>
-            Visualize internal energetic states through symbolic
-            geometric interaction and motion.
-          </p>
-
-          <button class="small-btn">
-            Open Mapping
-          </button>
-        </div>
-
-        <div class="feature-card glass">
-          <div class="feature-icon">☀</div>
-
-          <h3>Solar Alignment</h3>
-
-          <p>
-            Inspired by solar positioning, directional awareness,
-            and cyclical energetic patterns.
-          </p>
-
-          <button class="small-btn">
-            View Alignment
-          </button>
-        </div>
-
-        <div class="feature-card glass">
-          <div class="feature-icon">◉</div>
-
-          <h3>Vibration Engine</h3>
-
-          <p>
-            Frequency visualization and immersive ambient
-            resonance environments.
-          </p>
-
-          <button class="small-btn">
-            Activate
-          </button>
-        </div>
-
-        <div class="feature-card glass">
-          <div class="feature-icon">✦</div>
-
-          <h3>Symbolic Rituals</h3>
-
-          <p>
-            Ritual systems for intentional focus, grounding,
-            clarity, and repetition.
-          </p>
-
-          <button class="small-btn">
-            Begin Ritual
-          </button>
-        </div>
-
-      </div>
-
-      <div class="large-pyramid-panel glass">
-
-        <div class="big-pyramid-wrapper">
-
-          <div class="big-pyramid">
-            <div class="big-face bf1"></div>
-            <div class="big-face bf2"></div>
-            <div class="big-face bf3"></div>
-            <div class="big-face bf4"></div>
-          </div>
-
-        </div>
-
-        <div class="pyramid-info">
-
-          <h3>The Pyramid Core</h3>
-
-          <p>
-            The pyramid is used throughout this operating system as
-            a symbolic interface for amplification, awareness,
-            and intentional energy direction.
-          </p>
-
-          <div class="symbol-row">
-            <span>△ Clarity</span>
-            <span>☉ Energy</span>
-            <span>◉ Focus</span>
-            <span>✦ Intuition</span>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-<!-- =========================
-SECTION 2 END
-========================= -->
-<!-- =========================
-SECTION 3 START
-Rituals + Focus + Journal + Oracle
-Paste directly BELOW Section 2
-========================= -->
-
-    <!-- RITUALS PAGE -->
-    <section class="page" id="rituals">
-
-      <div class="page-header glass">
-        <h2>Daily Ritual Systems</h2>
-
-        <p>
-          Build intentional repetition for energy, grounding, focus,
-          and mental clarity.
-        </p>
-      </div>
-
-      <div class="ritual-grid">
-
-        <div class="ritual-card glass">
-          <div class="ritual-symbol">☀</div>
-
-          <h3>Morning Alignment</h3>
-
-          <ul>
-            <li>Hydrate immediately</li>
-            <li>3 minutes of breathwork</li>
-            <li>Set daily intention</li>
-            <li>Review priorities</li>
-          </ul>
-
-          <button class="small-btn ritual-complete">
-            Complete Ritual
-          </button>
-        </div>
-
-        <div class="ritual-card glass">
-          <div class="ritual-symbol">△</div>
-
-          <h3>Pyramid Focus Session</h3>
-
-          <ul>
-            <li>25 minute focus cycle</li>
-            <li>528Hz resonance</li>
-            <li>Deep work state</li>
-            <li>Distraction shutdown</li>
-          </ul>
-
-          <button class="small-btn ritual-complete">
-            Begin Session
-          </button>
-        </div>
-
-        <div class="ritual-card glass">
-          <div class="ritual-symbol">☾</div>
-
-          <h3>Night Reflection</h3>
-
-          <ul>
-            <li>Journal insights</li>
-            <li>Clear mental clutter</li>
-            <li>Reflect on lessons</li>
-            <li>Prepare for tomorrow</li>
-          </ul>
-
-          <button class="small-btn ritual-complete">
-            Start Reflection
-          </button>
-        </div>
-
-      </div>
-
-      <div class="glass ritual-tracker">
-
-        <div class="section-title">
-          Ritual Completion Tracker
-        </div>
-
-        <div class="tracker-grid">
-
-          <div class="tracker-box active"></div>
-          <div class="tracker-box active"></div>
-          <div class="tracker-box active"></div>
-          <div class="tracker-box"></div>
-          <div class="tracker-box"></div>
-          <div class="tracker-box"></div>
-          <div class="tracker-box"></div>
-
-        </div>
-
-        <p>
-          Consistency amplifies momentum.
-        </p>
-
-      </div>
-
-    </section>
-
-    <!-- FOCUS PAGE -->
-    <section class="page" id="focus">
-
-      <div class="page-header glass">
-        <h2>Focus Architecture</h2>
-
-        <p>
-          Deep work systems powered by intentional rhythm and
-          environmental calibration.
-        </p>
-      </div>
-
-      <div class="focus-layout">
-
-        <div class="focus-main glass">
-
-          <div class="focus-clock" id="focusClock">
-            25:00
-          </div>
-
-          <div class="focus-controls">
-
-            <button class="primary-btn" id="focusStartMain">
-              Start Focus
-            </button>
-
-            <button class="secondary-btn" id="focusPauseMain">
-              Pause
-            </button>
-
-            <button class="secondary-btn" id="focusResetMain">
-              Reset
-            </button>
-
-          </div>
-
-          <div class="focus-modes">
-
-            <button class="mode-btn active">
-              Deep Work
-            </button>
-
-            <button class="mode-btn">
-              Study
-            </button>
-
-            <button class="mode-btn">
-              Meditation
-            </button>
-
-            <button class="mode-btn">
-              Creative
-            </button>
-
-          </div>
-
-        </div>
-
-        <div class="focus-side">
-
-          <div class="glass side-card">
-
-            <div class="section-title">
-              Environment
-            </div>
-
-            <div class="toggle-row">
-              <span>Ambient Sound</span>
-              <label class="switch">
-                <input type="checkbox" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <div class="toggle-row">
-              <span>Focus Notifications</span>
-              <label class="switch">
-                <input type="checkbox">
-                <span class="slider"></span>
-              </label>
-            </div>
-
-            <div class="toggle-row">
-              <span>Pyramid Visualizer</span>
-              <label class="switch">
-                <input type="checkbox" checked>
-                <span class="slider"></span>
-              </label>
-            </div>
-
-          </div>
-
-          <div class="glass side-card">
-
-            <div class="section-title">
-              Session Stats
-            </div>
-
-            <ul class="stats-list">
-              <li>Focus Sessions: 18</li>
-              <li>Hours Focused: 42</li>
-              <li>Current Streak: 7 Days</li>
-              <li>Distraction Rate: Low</li>
-            </ul>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- JOURNAL PAGE -->
-    <section class="page" id="journal">
-
-      <div class="page-header glass">
-        <h2>Reflection Journal</h2>
-
-        <p>
-          Capture insight, emotional states, ideas, and awareness.
-        </p>
-      </div>
-
-      <div class="journal-layout">
-
-        <div class="glass journal-editor">
-
-          <input
-            type="text"
-            id="journalTitle"
-            placeholder="Journal title..."
-          >
-
-          <textarea
-            id="journalText"
-            placeholder="Write your reflections here..."
-          ></textarea>
-
-          <div class="journal-actions">
-
-            <button class="primary-btn" id="saveJournal">
-              Save Entry
-            </button>
-
-            <button class="secondary-btn" id="clearJournal">
-              Clear
-            </button>
-
-          </div>
-
-        </div>
-
-        <div class="glass journal-history">
-
-          <div class="section-title">
-            Saved Entries
-          </div>
-
-          <div id="entriesContainer">
-
-            <div class="entry-card">
-              <h4>Clarity Session</h4>
-              <p>
-                Stillness produced unexpected insight today.
-              </p>
-            </div>
-
-            <div class="entry-card">
-              <h4>Energy Reflection</h4>
-              <p>
-                Consistency appears more important than intensity.
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-    <!-- ORACLE PAGE -->
-    <section class="page" id="oracle">
-
-      <div class="page-header glass">
-        <h2>Oracle Engine</h2>
-
-        <p>
-          Reflective prompts, symbolic guidance,
-          and randomized insight generation.
-        </p>
-      </div>
-
-      <div class="oracle-shell glass">
-
-        <div class="oracle-symbol">
-          ◉
-        </div>
-
-        <div class="oracle-message" id="oracleMessage">
-          “Attention shapes perception.”
-        </div>
-
-        <button class="primary-btn" id="generateOracle">
-          Generate Insight
-        </button>
-
-      </div>
-
-      <div class="oracle-grid">
-
-        <div class="glass oracle-card">
-          <h3>Clarity</h3>
-          <p>
-            Remove excess to increase perception.
-          </p>
-        </div>
-
-        <div class="glass oracle-card">
-          <h3>Momentum</h3>
-          <p>
-            Repetition creates energetic pathways.
-          </p>
-        </div>
-
-        <div class="glass oracle-card">
-          <h3>Presence</h3>
-          <p>
-            Awareness amplifies experience.
-          </p>
-        </div>
-
-      </div>
-
-    </section>
-
-<!-- =========================
-SECTION 3 END
-========================= -->
-<!-- =========================
-SECTION 4 START
-Frequencies + Settings + Footer + Core Scripts
-Paste directly BELOW Section 3
-========================= -->
-
-    <!-- FREQUENCIES PAGE -->
-    <section class="page" id="sound">
-
-      <div class="page-header glass">
-        <h2>Frequency Chamber</h2>
-
-        <p>
-          Resonance-inspired environments and vibrational tools.
-        </p>
-      </div>
+      <p class="sub">
+        Select a resonance environment to visualize
+        wave interaction patterns around the body field.
+      </p>
 
       <div class="frequency-grid">
 
-        <div class="glass frequency-card">
-          <div class="freq-number">174Hz</div>
-          <h3>Grounding</h3>
+        <div class="freq active"
+             data-freq="432"
+             data-name="432Hz Earth Resonance"
+             data-coherence="81"
+             data-stress="22"
+             data-wave="5.8"
+             data-color="#5ef2ff">
+
+          <h4>432Hz</h4>
 
           <p>
-            Stabilization and energetic anchoring.
+            Harmonic resonance visualization inspired by natural tuning concepts,
+            calm focus, and smooth wave geometry.
           </p>
 
-          <button class="small-btn play-frequency">
-            Play
-          </button>
         </div>
 
-        <div class="glass frequency-card">
-          <div class="freq-number">285Hz</div>
-          <h3>Restoration</h3>
+        <div class="freq"
+             data-freq="528"
+             data-name="528Hz Repair State"
+             data-coherence="88"
+             data-stress="18"
+             data-wave="4.9"
+             data-color="#7dffb3">
+
+          <h4>528Hz</h4>
 
           <p>
-            Renewal and energetic recalibration.
+            Bright resonance field with symmetrical cymatic structures
+            and expanded harmonic movement.
           </p>
 
-          <button class="small-btn play-frequency">
-            Play
-          </button>
         </div>
 
-        <div class="glass frequency-card featured-frequency">
-          <div class="freq-number">528Hz</div>
-          <h3>Transformation</h3>
+        <div class="freq"
+             data-freq="741"
+             data-name="741Hz Cognitive Clarity"
+             data-coherence="73"
+             data-stress="36"
+             data-wave="6.5"
+             data-color="#ffd56a">
+
+          <h4>741Hz</h4>
 
           <p>
-            Commonly associated with clarity and harmony.
+            Sharper wave structures with higher oscillation density
+            and increased energetic complexity.
           </p>
 
-          <button class="primary-btn play-frequency">
-            Activate
-          </button>
         </div>
 
-        <div class="glass frequency-card">
-          <div class="freq-number">741Hz</div>
-          <h3>Awareness</h3>
+        <div class="freq"
+             data-freq="Digital Noise"
+             data-name="Urban Signal Saturation"
+             data-coherence="49"
+             data-stress="68"
+             data-wave="9.1"
+             data-color="#ff6ae6">
+
+          <h4>Urban Signal</h4>
 
           <p>
-            Insight and intuitive perception.
+            Simulated dense digital environments,
+            notification overload,
+            blue light exposure,
+            and fragmented rhythm patterns.
           </p>
-
-          <button class="small-btn play-frequency">
-            Play
-          </button>
-        </div>
-
-      </div>
-
-      <div class="glass visualizer-panel">
-
-        <div class="section-title">
-          Resonance Visualizer
-        </div>
-
-        <div class="visualizer-bars">
-
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
 
         </div>
 
       </div>
 
-    </section>
+      <div class="recommendations">
 
-    <!-- SETTINGS PAGE -->
-    <section class="page" id="settings">
+        <h4 id="recommendTitle">
+          Resonance Guidance
+        </h4>
 
-      <div class="page-header glass">
-        <h2>System Settings</h2>
-
-        <p>
-          Configure the PyramidOS environment.
-        </p>
-      </div>
-
-      <div class="settings-grid">
-
-        <div class="glass settings-card">
-
-          <div class="section-title">
-            Appearance
-          </div>
-
-          <div class="toggle-row">
-            <span>Ambient Effects</span>
-
-            <label class="switch">
-              <input type="checkbox" checked id="toggleAmbient">
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-row">
-            <span>Glass Interface</span>
-
-            <label class="switch">
-              <input type="checkbox" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-row">
-            <span>Animations</span>
-
-            <label class="switch">
-              <input type="checkbox" checked id="toggleAnimations">
-              <span class="slider"></span>
-            </label>
-          </div>
-
-        </div>
-
-        <div class="glass settings-card">
-
-          <div class="section-title">
-            System
-          </div>
-
-          <div class="toggle-row">
-            <span>Save Local Data</span>
-
-            <label class="switch">
-              <input type="checkbox" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-row">
-            <span>Focus Alerts</span>
-
-            <label class="switch">
-              <input type="checkbox">
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-row">
-            <span>Sound Feedback</span>
-
-            <label class="switch">
-              <input type="checkbox" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-
-        </div>
+        <ul id="recommendList">
+          <li>Reduce abrupt stimulation cycles.</li>
+          <li>Use calm ambient sound environments.</li>
+          <li>Increase periods of silence and grounding.</li>
+          <li>Lower evening blue-light intensity.</li>
+        </ul>
 
       </div>
 
-    </section>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="footer glass">
-
-    <div>
-      PyramidOS • Ancient Practices • Modern Interface
     </div>
 
-    <div>
-      Built for Safari • Chrome • GitHub Pages
+    <div class="card panel">
+
+      <h3>Interactive Cymatics Engine</h3>
+
+      <p class="sub">
+        Dynamic wave-field visualization representing
+        energetic interaction between environmental inputs
+        and the human-centered resonance field.
+      </p>
+
+      <div class="visual-box">
+        <canvas id="cymaticsCanvas"></canvas>
+      </div>
+
+      <div class="readout">
+
+        <div class="readout-card">
+          <h5>Body Field Visualization</h5>
+
+          <p id="bodyReadout">
+            Current pattern indicates smoother oscillation,
+            wider harmonic spacing,
+            and lower turbulence around the central field.
+          </p>
+
+          <div class="wave-meter">
+            <div class="wave-fill" id="bodyMeter"></div>
+          </div>
+        </div>
+
+        <div class="readout-card">
+          <h5>Environmental Influence</h5>
+
+          <p id="envReadout">
+            External environmental rhythm appears moderately stable
+            with balanced cyclical movement and low fragmentation.
+          </p>
+
+          <div class="wave-meter">
+            <div class="wave-fill" id="envMeter"></div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
-  </footer>
+  </section>
 
+  <section class="bottom-panels">
+
+    <div class="card mini-card">
+
+      <div class="tag">
+        HUMAN FIELD
+      </div>
+
+      <h4>Electromagnetic Interpretation Layer</h4>
+
+      <p>
+        This interface is a conceptual visualization environment inspired by
+        cymatics, wave theory, resonance,
+        rhythm perception, environmental psychology,
+        and energetic symbolism.
+        It is not a medical device
+        and does not diagnose or treat conditions.
+      </p>
+
+    </div>
+
+    <div class="card mini-card">
+
+      <div class="tag">
+        ENVIRONMENT
+      </div>
+
+      <h4>Wave Environment Mapping</h4>
+
+      <p>
+        Simulate the relationship between sound,
+        visual stimulation,
+        device saturation,
+        rhythm cycles,
+        attention fragmentation,
+        and calm environmental architecture
+        using live generative geometry.
+      </p>
+
+    </div>
+
+    <div class="card mini-card">
+
+      <div class="tag">
+        REBALANCE
+      </div>
+
+      <h4>Daily Recalibration Concepts</h4>
+
+      <p>
+        Breath pacing,
+        low-noise environments,
+        reduced notification density,
+        outdoor exposure,
+        sleep rhythm consistency,
+        and intentional silence
+        can contribute to a more centered sensory experience.
+      </p>
+
+    </div>
+
+  </section>
+
+</main>
+
+<div class="footer">
+  Resonance Field — Interactive Frequency Visualization System
 </div>
 
-<!-- AUDIO -->
-<audio id="ambientAudio" loop>
-  <source
-    src="https://cdn.pixabay.com/audio/2022/03/15/audio_4a1b8fa2d7.mp3"
-    type="audio/mpeg"
-  >
-</audio>
-
-<!-- JAVASCRIPT -->
 <script>
+/* =========================================
+   BACKGROUND PARTICLES
+========================================= */
 
-const pages = document.querySelectorAll('.page');
-const navButtons = document.querySelectorAll('.nav-btn');
+const bg = document.getElementById('bg');
+const bgCtx = bg.getContext('2d');
 
-navButtons.forEach(button => {
+function resizeBG(){
+  bg.width = window.innerWidth;
+  bg.height = window.innerHeight;
+}
+resizeBG();
 
-  button.addEventListener('click', () => {
+window.addEventListener('resize',resizeBG);
 
-    navButtons.forEach(btn => {
-      btn.classList.remove('active');
-    });
+const stars = [];
 
-    button.classList.add('active');
+for(let i=0;i<140;i++){
+  stars.push({
+    x:Math.random()*bg.width,
+    y:Math.random()*bg.height,
+    r:Math.random()*2,
+    s:Math.random()*0.5+0.1
+  });
+}
 
-    const pageId = button.dataset.page;
+function animateBG(){
+  bgCtx.clearRect(0,0,bg.width,bg.height);
 
-    pages.forEach(page => {
-      page.classList.remove('active');
-    });
+  stars.forEach(star=>{
+    star.y += star.s;
 
-    document
-      .getElementById(pageId)
-      .classList.add('active');
+    if(star.y > bg.height){
+      star.y = 0;
+      star.x = Math.random()*bg.width;
+    }
 
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    bgCtx.beginPath();
+    bgCtx.arc(star.x,star.y,star.r,0,Math.PI*2);
+    bgCtx.fillStyle = 'rgba(255,255,255,.7)';
+    bgCtx.fill();
+  });
+
+  requestAnimationFrame(animateBG);
+}
+animateBG();
+
+/* =========================================
+   HUMAN FIELD VISUALIZATION
+========================================= */
+
+const humanCanvas = document.getElementById('humanCanvas');
+const hctx = humanCanvas.getContext('2d');
+
+function resizeHuman(){
+  humanCanvas.width = humanCanvas.offsetWidth;
+  humanCanvas.height = humanCanvas.offsetHeight;
+}
+resizeHuman();
+
+window.addEventListener('resize',resizeHuman);
+
+let humanColor = '#5ef2ff';
+let pulse = 0;
+
+function drawHuman(){
+
+  hctx.clearRect(
+    0,
+    0,
+    humanCanvas.width,
+    humanCanvas.height
+  );
+
+  const cx = humanCanvas.width/2;
+  const cy = humanCanvas.height/2;
+
+  pulse += 0.02;
+
+  for(let i=0;i<6;i++){
+
+    const radius = 90 + i*32 + Math.sin(pulse+i)*12;
+
+    hctx.beginPath();
+    hctx.arc(cx,cy,radius,0,Math.PI*2);
+
+    hctx.strokeStyle =
+      `rgba(${hexToRgb(humanColor)},${0.15-(i*.018)})`;
+
+    hctx.lineWidth = 2;
+
+    hctx.stroke();
+  }
+
+  hctx.strokeStyle = humanColor;
+  hctx.lineWidth = 4;
+
+  hctx.beginPath();
+
+  hctx.arc(cx,cy-120,36,0,Math.PI*2);
+
+  hctx.moveTo(cx,cy-84);
+  hctx.lineTo(cx,cy+80);
+
+  hctx.moveTo(cx-70,cy-10);
+  hctx.lineTo(cx,cy-30);
+  hctx.lineTo(cx+70,cy-10);
+
+  hctx.moveTo(cx,cy+80);
+  hctx.lineTo(cx-45,cy+170);
+
+  hctx.moveTo(cx,cy+80);
+  hctx.lineTo(cx+45,cy+170);
+
+  hctx.stroke();
+
+  requestAnimationFrame(drawHuman);
+}
+drawHuman();
+
+/* =========================================
+   CYMATICS ENGINE
+========================================= */
+
+const cymaticsCanvas =
+  document.getElementById('cymaticsCanvas');
+
+const cctx = cymaticsCanvas.getContext('2d');
+
+function resizeCymatics(){
+  cymaticsCanvas.width =
+    cymaticsCanvas.offsetWidth;
+
+  cymaticsCanvas.height =
+    cymaticsCanvas.offsetHeight;
+}
+resizeCymatics();
+
+window.addEventListener(
+  'resize',
+  resizeCymatics
+);
+
+let waveIntensity = 5.8;
+let currentColor = '#5ef2ff';
+
+function drawCymatics(){
+
+  cctx.clearRect(
+    0,
+    0,
+    cymaticsCanvas.width,
+    cymaticsCanvas.height
+  );
+
+  const w = cymaticsCanvas.width;
+  const h = cymaticsCanvas.height;
+
+  const time = Date.now()*0.001;
+
+  for(let y=0;y<h;y+=8){
+
+    cctx.beginPath();
+
+    for(let x=0;x<w;x+=8){
+
+      const wave =
+        Math.sin((x*0.015*waveIntensity)+time)
+        *
+        Math.cos((y*0.015*waveIntensity)+time);
+
+      const py =
+        y + wave * 18;
+
+      if(x===0){
+        cctx.moveTo(x,py);
+      }else{
+        cctx.lineTo(x,py);
+      }
+    }
+
+    cctx.strokeStyle =
+      `rgba(${hexToRgb(currentColor)},0.08)`;
+
+    cctx.lineWidth = 1.4;
+
+    cctx.stroke();
+  }
+
+  for(let i=0;i<180;i++){
+
+    const angle =
+      (Math.PI*2/180)*i;
+
+    const radius =
+      120 +
+      Math.sin(angle*waveIntensity+time)*40;
+
+    const x =
+      w/2 + Math.cos(angle)*radius;
+
+    const y =
+      h/2 + Math.sin(angle)*radius;
+
+    cctx.beginPath();
+
+    cctx.arc(x,y,2,0,Math.PI*2);
+
+    cctx.fillStyle = currentColor;
+
+    cctx.fill();
+  }
+
+  requestAnimationFrame(drawCymatics);
+}
+drawCymatics();
+
+/* =========================================
+   INTERACTIONS
+========================================= */
+
+const freqCards =
+  document.querySelectorAll('.freq');
+
+const freqDisplay =
+  document.getElementById('freqDisplay');
+
+const coherenceDisplay =
+  document.getElementById('coherenceDisplay');
+
+const stressDisplay =
+  document.getElementById('stressDisplay');
+
+const waveDisplay =
+  document.getElementById('waveDisplay');
+
+const bodyReadout =
+  document.getElementById('bodyReadout');
+
+const envReadout =
+  document.getElementById('envReadout');
+
+const bodyMeter =
+  document.getElementById('bodyMeter');
+
+const envMeter =
+  document.getElementById('envMeter');
+
+const recommendList =
+  document.getElementById('recommendList');
+
+freqCards.forEach(card=>{
+
+  card.addEventListener('click',()=>{
+
+    freqCards.forEach(c=>c.classList.remove('active'));
+
+    card.classList.add('active');
+
+    const freq = card.dataset.freq;
+    const coherence = card.dataset.coherence;
+    const stress = card.dataset.stress;
+    const wave = card.dataset.wave;
+    const color = card.dataset.color;
+
+    freqDisplay.innerText = freq;
+    coherenceDisplay.innerText = coherence + '%';
+    stressDisplay.innerText = stress + '%';
+    waveDisplay.innerText = wave;
+
+    currentColor = color;
+    humanColor = color;
+    waveIntensity = Number(wave);
+
+    bodyMeter.style.width = coherence + '%';
+    envMeter.style.width = (100-stress) + '%';
+
+    if(freq === 'Digital Noise'){
+
+      bodyReadout.innerText =
+        'Higher fragmentation pattern detected with tighter wave compression and increased energetic turbulence.';
+
+      envReadout.innerText =
+        'Dense digital stimulation environment with irregular rhythmic spacing and elevated sensory saturation.';
+
+      recommendList.innerHTML = `
+        <li>Reduce rapid notification exposure.</li>
+        <li>Increase low-noise periods during evening hours.</li>
+        <li>Use warmer lighting after sunset.</li>
+        <li>Introduce calm rhythmic sound environments.</li>
+      `;
+
+    } else {
+
+      bodyReadout.innerText =
+        'Wave geometry appears smoother with more evenly distributed resonance spacing around the central body field.';
+
+      envReadout.innerText =
+        'Environmental rhythm patterns appear more coherent with reduced fragmentation and smoother oscillation cycles.';
+
+      recommendList.innerHTML = `
+        <li>Maintain intentional rhythm and rest cycles.</li>
+        <li>Use calming ambient environments.</li>
+        <li>Limit overstimulation during focus periods.</li>
+        <li>Incorporate moments of silence and stillness.</li>
+      `;
+    }
 
   });
 
 });
 
-/* DAILY INSIGHTS */
-
-const insights = [
-
-  "Stillness amplifies perception.",
-
-  "Attention directs energy.",
-
-  "Consistency creates momentum.",
-
-  "Clarity emerges through simplification.",
-
-  "Focus is modern power.",
-
-  "Repetition builds internal architecture.",
-
-  "Your environment shapes consciousness.",
-
-  "Intentional action compounds over time."
-
-];
+/* =========================================
+   BUTTONS
+========================================= */
 
 document
-  .getElementById('newInsight')
-  .addEventListener('click', () => {
+.getElementById('resetBtn')
+.addEventListener('click',()=>{
 
-    const random =
-      insights[Math.floor(
-        Math.random() * insights.length
-      )];
-
-    document.getElementById(
-      'dailyInsight'
-    ).innerText = `“${random}”`;
+  currentColor = '#5ef2ff';
+  humanColor = '#5ef2ff';
+  waveIntensity = 5.8;
 
 });
 
-/* ORACLE */
-
-const oracleMessages = [
-
-  "The answer appears when distraction fades.",
-
-  "Energy follows disciplined focus.",
-
-  "Awareness reveals hidden structure.",
-
-  "You already know the next step.",
-
-  "Simplify to amplify.",
-
-  "Momentum requires repetition.",
-
-  "Stillness strengthens intuition."
-
-];
-
 document
-  .getElementById('generateOracle')
-  .addEventListener('click', () => {
+.getElementById('calmBtn')
+.addEventListener('click',()=>{
 
-    const msg =
-      oracleMessages[
-        Math.floor(
-          Math.random() * oracleMessages.length
-        )
-      ];
-
-    document.getElementById(
-      'oracleMessage'
-    ).innerText = `“${msg}”`;
+  currentColor = '#7dffb3';
+  humanColor = '#7dffb3';
+  waveIntensity = 4.2;
 
 });
 
-/* FOCUS TIMER */
+document
+.getElementById('focusBtn')
+.addEventListener('click',()=>{
 
-let focusSeconds = 1500;
-let focusInterval = null;
+  currentColor = '#ffd56a';
+  humanColor = '#ffd56a';
+  waveIntensity = 7.2;
 
-function updateFocusDisplay() {
+});
 
-  const minutes =
-    Math.floor(focusSeconds / 60)
-      .toString()
-      .padStart(2, '0');
+/* =========================================
+   UTIL
+========================================= */
 
-  const seconds =
-    (focusSeconds % 60)
-      .toString()
-      .padStart(2, '0');
+function hexToRgb(hex){
 
-  const timeString =
-    `${minutes}:${seconds}`;
+  const bigint =
+    parseInt(hex.slice(1),16);
 
-  document.getElementById(
-    'focusDisplay'
-  ).innerText = timeString;
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
 
-  document.getElementById(
-    'focusClock'
-  ).innerText = timeString;
-
+  return `${r},${g},${b}`;
 }
-
-function startFocusTimer() {
-
-  if (focusInterval) return;
-
-  focusInterval = setInterval(() => {
-
-    if (focusSeconds > 0) {
-
-      focusSeconds--;
-
-      updateFocusDisplay();
-
-    } else {
-
-      clearInterval(focusInterval);
-
-      focusInterval = null;
-
-      alert('Focus session complete.');
-
-    }
-
-  }, 1000);
-
-}
-
-function resetFocusTimer() {
-
-  clearInterval(focusInterval);
-
-  focusInterval = null;
-
-  focusSeconds = 1500;
-
-  updateFocusDisplay();
-
-}
-
-document
-  .getElementById('startFocus')
-  .addEventListener('click', startFocusTimer);
-
-document
-  .getElementById('focusStartMain')
-  .addEventListener('click', startFocusTimer);
-
-document
-  .getElementById('resetFocus')
-  .addEventListener('click', resetFocusTimer);
-
-document
-  .getElementById('focusResetMain')
-  .addEventListener('click', resetFocusTimer);
-
-/* JOURNAL */
-
-document
-  .getElementById('saveJournal')
-  .addEventListener('click', () => {
-
-    const title =
-      document.getElementById(
-        'journalTitle'
-      ).value;
-
-    const text =
-      document.getElementById(
-        'journalText'
-      ).value;
-
-    if (!title || !text) return;
-
-    const container =
-      document.getElementById(
-        'entriesContainer'
-      );
-
-    const card =
-      document.createElement('div');
-
-    card.className = 'entry-card';
-
-    card.innerHTML = `
-      <h4>${title}</h4>
-      <p>${text}</p>
-    `;
-
-    container.prepend(card);
-
-    localStorage.setItem(
-      `journal-${Date.now()}`,
-      JSON.stringify({ title, text })
-    );
-
-    document.getElementById(
-      'journalTitle'
-    ).value = '';
-
-    document.getElementById(
-      'journalText'
-    ).value = '';
-
-});
-
-document
-  .getElementById('clearJournal')
-  .addEventListener('click', () => {
-
-    document.getElementById(
-      'journalTitle'
-    ).value = '';
-
-    document.getElementById(
-      'journalText'
-    ).value = '';
-
-});
-
-/* FREQUENCY SHIFT */
-
-const frequencies = [
-  "174Hz",
-  "285Hz",
-  "396Hz",
-  "417Hz",
-  "528Hz",
-  "639Hz",
-  "741Hz",
-  "852Hz"
-];
-
-document
-  .getElementById('shiftFrequency')
-  .addEventListener('click', () => {
-
-    const randomFreq =
-      frequencies[
-        Math.floor(
-          Math.random() * frequencies.length
-        )
-      ];
-
-    document.getElementById(
-      'freqValue'
-    ).innerText = randomFreq;
-
-});
-
-/* ENERGY BUTTON */
-
-document
-  .getElementById('activateEnergy')
-  .addEventListener('click', () => {
-
-    document.body.classList.add(
-      'energy-active'
-    );
-
-    setTimeout(() => {
-
-      document.body.classList.remove(
-        'energy-active'
-      );
-
-    }, 3000);
-
-});
-
-/* DAILY RESET */
-
-document
-  .getElementById('dailyReset')
-  .addEventListener('click', () => {
-
-    resetFocusTimer();
-
-    alert(
-      'System reset complete. Re-center and begin again.'
-    );
-
-});
-
-/* AMBIENT AUDIO */
-
-const audio =
-  document.getElementById(
-    'ambientAudio'
-  );
-
-document
-  .querySelectorAll('.play-frequency')
-  .forEach(button => {
-
-    button.addEventListener('click', async () => {
-
-      try {
-
-        await audio.play();
-
-      } catch (err) {
-
-        console.log(err);
-
-      }
-
-    });
-
-});
-
-/* SETTINGS */
-
-document
-  .getElementById('toggleAmbient')
-  .addEventListener('change', (e) => {
-
-    document
-      .querySelectorAll('.ambient')
-      .forEach(el => {
-
-        el.style.display =
-          e.target.checked
-            ? 'block'
-            : 'none';
-
-      });
-
-});
-
-document
-  .getElementById('toggleAnimations')
-  .addEventListener('change', (e) => {
-
-    document.body.style.animation =
-      e.target.checked
-        ? ''
-        : 'none';
-
-});
-
-/* INITIALIZE */
-
-updateFocusDisplay();
-
 </script>
 
 </body>
 </html>
-
-<!-- =========================
-SECTION 4 END
-========================= -->
