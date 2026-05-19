@@ -1,855 +1,726 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Quantum Soma — Bio-Resonance Field Matrix</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Exo+2:wght@200;300;400;600&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --gold:#d4af37;--teal:#00ffc8;--red:#ff3b3b;--deep:#000205;
-  --panel:rgba(0,2,8,0.93);--border:rgba(212,175,55,0.18);
-  --font-display:'Cinzel',serif;--font-body:'Exo 2',sans-serif;
-}
-html,body{width:100%;height:100%;overflow:hidden;background:var(--deep);cursor:crosshair;-webkit-user-select:none;user-select:none}
-#canvas-container{position:fixed;inset:0;width:100%;height:100%}
-canvas{display:block;width:100%!important;height:100%!important}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quantum Biofield Matrix Engine</title>
+    <style>
+        :root {
+            --bg-dark: #05070b;
+            --panel-bg: rgba(10, 15, 26, 0.85);
+            --border-glow: #1e293b;
+            --accent-cyan: #00f2fe;
+            --accent-magenta: #ff007f;
+            --text-light: #f8fafc;
+            --text-dim: #64748b;
+        }
 
-/* ── HUD PANEL ── */
-#hud{
-  position:fixed;top:0;left:0;width:100%;z-index:30;
-  display:flex;flex-direction:column;align-items:center;
-  padding:10px 12px 0;
-  transition:opacity 0.5s ease,transform 0.5s ease;
-}
-#hud.fade{opacity:0.1;transform:translateY(-10px)}
-.panel{
-  background:rgba(0,2,10,0.94);border:1px solid var(--border);
-  border-radius:14px;backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
-  padding:12px 14px;width:100%;max-width:440px;
-  box-shadow:0 20px 80px rgba(0,0,0,0.98),inset 0 1px 0 rgba(212,175,55,0.07);
-  display:flex;flex-direction:column;gap:8px;
-}
-.panel-title{
-  font-family:var(--font-display);font-size:9px;letter-spacing:3px;
-  color:rgba(212,175,55,0.5);text-align:center;text-transform:uppercase;
-}
-select{
-  background:rgba(0,0,0,0.7);border:1px solid var(--border);color:var(--gold);
-  padding:8px 10px;border-radius:8px;font-family:var(--font-body);
-  font-size:12px;font-weight:600;width:100%;outline:none;letter-spacing:.4px;
-  -webkit-appearance:none;
-}
-select option{background:#03060f;color:var(--gold)}
-select optgroup{color:rgba(212,175,55,0.45);font-size:10px}
-.row{display:flex;align-items:center;gap:8px;width:100%}
-.row input[type="number"]{
-  background:rgba(0,0,0,0.8);border:1px solid rgba(212,175,55,0.3);color:var(--teal);
-  padding:7px 10px;border-radius:8px;font-family:var(--font-body);font-size:15px;
-  font-weight:600;width:95px;text-align:center;outline:none;
-}
-.unit{font-size:10px;color:rgba(212,175,55,0.4);letter-spacing:1px;flex:1}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-/* Harmonics Control Styling */
-.harmonics-wrap{
-  background:rgba(0,0,0,0.4);border:1px solid rgba(212,175,55,0.08);
-  border-radius:8px;padding:6px 10px;display:flex;flex-direction:column;gap:4px;
-}
-.harmonics-label{
-  display:flex;justify-content:between;font-family:var(--font-body);
-  font-size:9px;color:rgba(212,175,55,0.5);text-transform:uppercase;letter-spacing:1px;
-}
-.harmonics-slider{
-  -webkit-appearance:none;width:100%;height:4px;background:rgba(255,255,255,0.08);
-  border-radius:2px;outline:none;
-}
-.harmonics-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--gold);cursor:pointer}
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+        }
 
-/* State buttons row */
-.state-row{display:flex;gap:6px;width:100%}
-.state-btn{
-  flex:1;padding:7px 4px;border:1px solid var(--border);border-radius:7px;
-  background:rgba(0,0,0,0.6);color:rgba(212,175,55,0.6);
-  font-family:var(--font-display);font-size:8px;letter-spacing:1.5px;
-  cursor:pointer;transition:all .3s;text-transform:uppercase;
-}
-.state-btn:hover{border-color:var(--gold);color:var(--gold)}
-.state-btn.active-state{background:rgba(212,175,55,0.12);color:var(--gold);border-color:var(--gold)}
-.state-btn.rage-active{background:rgba(255,30,30,0.15);color:#ff5555;border-color:#ff3333}
-.state-btn.sick-active{background:rgba(100,200,50,0.1);color:#88cc44;border-color:#66aa22}
-.state-btn.gold-active{background:rgba(212,175,55,0.2);color:#ffd700;border-color:#ffd700;box-shadow:0 0 12px rgba(212,175,55,0.3)}
+        #app-wrapper {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
 
-#activateBtn{
-  background:linear-gradient(135deg,#d4af37 0%,#7a5c08 100%);
-  border:none;color:#000205;padding:11px;border-radius:8px;
-  font-family:var(--font-display);font-size:10px;font-weight:700;
-  letter-spacing:2.5px;cursor:pointer;width:100%;text-transform:uppercase;transition:all .3s;
-}
-#activateBtn.on{background:linear-gradient(135deg,#ff3b3b 0%,#6a0000 100%);color:#fff}
+        /* Render Pipeline Window */
+        #viewport-container {
+            flex: 1;
+            height: 100%;
+            position: relative;
+            background: radial-gradient(circle at center, #0d1527 0%, #020408 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-/* ── NARRATION OVERLAY ── */
-#narration{
-  position:fixed;bottom:0;left:0;width:100%;z-index:25;
-  display:flex;flex-direction:column;align-items:center;
-  padding:0 12px 14px;
-  transition:opacity .5s ease;pointer-events:none;
-}
-.narr-inner{
-  background:rgba(0,2,10,0.88);border:1px solid var(--border);
-  border-radius:12px;backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
-  padding:12px 16px;max-width:600px;width:100%;pointer-events:auto;
-  box-shadow:0 -10px 40px rgba(0,0,0,0.8);
-}
-.narr-header{display:flex;align-items:center;justify-content:between;margin-bottom:6px}
-.narr-badge{font-family:var(--font-display);font-size:8px;letter-spacing:2px;padding:3px 10px;border-radius:4px;text-transform:uppercase}
-.narr-badge.coherent{background:rgba(0,255,200,0.1);color:var(--teal);border:1px solid rgba(0,255,200,0.3)}
-.narr-badge.disrupted{background:rgba(255,59,59,0.1);color:#ff7070;border:1px solid rgba(255,59,59,0.3)}
-.narr-badge.neutral{background:rgba(212,175,55,0.07);color:var(--gold);border:1px solid var(--border)}
-.narr-badge.pyramid{background:rgba(255,215,0,0.15);color:#ffd700;border:1px solid rgba(255,215,0,0.4);box-shadow:0 0 10px rgba(255,215,0,0.2)}
-.narr-wave{width:28px;height:14px;display:flex;align-items:center;gap:2px}
-.narr-wave span{display:block;width:3px;border-radius:2px;background:var(--teal);animation:wave .8s ease-in-out infinite}
-.narr-wave span:nth-child(2){animation-delay:.1s}
-.narr-wave span:nth-child(3){animation-delay:.2s}
-.narr-wave span:nth-child(4){animation-delay:.3s}
-.narr-wave.off span{animation:none;height:3px!important}
-@keyframes wave{0%,100%{height:3px}50%{height:12px}}
-#narr-title{font-family:var(--font-display);font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:4px}
-#narr-text{font-family:var(--font-body);font-size:11px;color:rgba(200,210,230,0.85);line-height:1.5;font-weight:300}
-#narr-science{font-family:var(--font-body);font-size:9px;color:rgba(150,170,200,0.6);line-height:1.4;margin-top:5px;font-style:italic;border-top:1px solid var(--border);padding-top:5px}
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
 
-/* Organ labels */
-#organ-labels{position:fixed;inset:0;pointer-events:none;z-index:20;transition:opacity 0.4s}
-.organ-label{
-  position:absolute;transform:translate(-50%,-50%);
-  font-family:var(--font-display);font-size:8px;letter-spacing:2px;
-  color:rgba(212,175,55,0.7);text-transform:uppercase;
-  transition:opacity .5s,color .5s;white-space:nowrap;
-  text-shadow:0 0 8px rgba(0,0,0,0.9);
-}
-.organ-label.active{color:var(--teal)}
-.organ-label.disrupted{color:#ff6060}
-.organ-label.pyramid-lbl{color:#ffd700}
+        /* Operational UI Panel */
+        #control-panel {
+            width: 400px;
+            height: 100%;
+            background: var(--panel-bg);
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.7);
+        }
 
-/* Hint & Meters */
-#hint{
-  position:fixed;top:50%;right:14px;transform:translateY(-50%);
-  font-family:var(--font-body);font-size:8px;letter-spacing:2px;
-  color:rgba(212,175,55,0.2);pointer-events:none;z-index:5;
-  text-transform:uppercase;writing-mode:vertical-rl;text-orientation:mixed;
-}
-#coherence-meter{position:fixed;left:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;z-index:20}
-.coh-bar-wrap{width:6px;height:120px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
-#coh-bar{width:100%;height:50%;background:linear-gradient(to top,#ff3333,#ffdd00,#00ffc8);border-radius:3px;transition:height .4s ease;transform-origin:bottom}
-.coh-label{font-family:var(--font-display);font-size:7px;letter-spacing:1.5px;color:rgba(212,175,55,0.4);text-transform:uppercase;writing-mode:vertical-rl}
-#coh-pct{font-family:var(--font-body);font-size:9px;color:var(--teal);font-weight:600}
+        .panel-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0,0,0,0.2);
+        }
 
-#speakBtn{
-  position:fixed;bottom:14px;right:14px;z-index:30;
-  background:rgba(0,2,10,0.9);border:1px solid var(--border);
-  color:var(--gold);padding:8px 12px;border-radius:8px;
-  font-family:var(--font-display);font-size:8px;letter-spacing:2px;
-  cursor:pointer;text-transform:uppercase;transition:all .3s;
-}
-#speakBtn.speaking{color:var(--teal);border-color:var(--teal)}
-</style>
+        .panel-header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #fff 30%, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .panel-header p {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        .panel-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .crypto-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .metric-node {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-node .num {
+            font-size: 1.4rem;
+            font-family: monospace;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        .metric-node .label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .ui-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .control-block {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .state-btn {
+            background: #111726;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+            padding: 12px;
+            font-size: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            text-align: left;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .state-btn:hover {
+            border-color: var(--accent-cyan);
+            color: #fff;
+        }
+
+        .state-btn.active {
+            background: linear-gradient(135deg, #0052d4, #4364f7, #6fb1fc);
+            border-color: #93c5fd;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(67, 100, 247, 0.4);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .input-group label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        input[type="number"], input[type="text"] {
+            background: #090d16;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: monospace;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            border-color: var(--accent-cyan);
+        }
+
+        .slider-flex {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            accent-color: var(--accent-cyan);
+        }
+
+        .slider-flex span {
+            font-family: monospace;
+            font-size: 0.9rem;
+            min-width: 36px;
+        }
+
+        #quantum-analysis-box {
+            background: rgba(0, 242, 254, 0.02);
+            border: 1px solid rgba(0, 242, 254, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: #cbd5e1;
+        }
+
+        #quantum-analysis-box h3 {
+            color: #fff;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-footer {
+            padding: 16px 24px;
+            background: rgba(5, 7, 11, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.78rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulse-glow 1.5s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 14px #10b981; }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+
+        /* Absolute Cross-Platform Responsiveness Layout */
+        @media(max-width: 900px) {
+            #app-wrapper { flex-direction: column; }
+            #viewport-container { flex: 1; width: 100%; height: 55%; }
+            #control-panel { width: 100%; height: 45%; border-left: none; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        }
+    </style>
 </head>
 <body>
 
-<div id="canvas-container"><canvas id="c"></canvas></div>
+    <div id="app-wrapper">
+        <!-- Main Quantum Field Canvas Viewport -->
+        <div id="viewport-container">
+            <canvas id="quantumCanvas"></canvas>
+        </div>
 
-<!-- ── HUD PANEL ── -->
-<div id="hud">
-  <div class="panel">
-    <div class="panel-title">Quantum Soma · Field Matrix v4</div>
+        <!-- System Controls Sidebar -->
+        <div id="control-panel">
+            <div class="panel-header">
+                <h1>Biofield Quantum Matrix</h1>
+                <p>Real-Time Frequency Topology Engine</p>
+            </div>
 
-    <select id="presetSelect" onchange="applyPreset(this.value)">
-      <option value="" disabled selected>— Select Frequency Vector —</option>
-      <optgroup label="🌐 Earth Coherence">
-        <option value="1.0">1.0 Hz — Deep Delta Regeneration</option>
-        <option value="4.0">4.0 Hz — Theta Sub-Conscious Gate</option>
-        <option value="7.83">7.83 Hz — Schumann Primary Resonance</option>
-        <option value="14.3">14.3 Hz — Schumann Secondary Harmonic</option>
-        <option value="136.1">136.1 Hz — Cosmic Ohm Matrix</option>
-      </optgroup>
-      <optgroup label="📐 Sacred Chamber Geometry">
-        <option value="111.0">111.0 Hz — Neolithic Holy Chamber</option>
-        <option value="117.0">117.0 Hz — Giza King's Chamber</option>
-        <option value="432.0">432.0 Hz — Pythagorean Harmonic Water</option>
-      </optgroup>
-      <optgroup label="🧬 Solfeggio Matrix">
-        <option value="285.0">285.0 Hz — Quantum Blueprint Recall</option>
-        <option value="528.0">528.0 Hz — DNA Repair Blueprint</option>
-        <option value="852.0">852.0 Hz — Pineal Portal Realignment</option>
-        <option value="963.0">963.0 Hz — Crown Absolute Coherence</option>
-      </optgroup>
-      <optgroup label="⚡ Environmental Vector Stress">
-        <option value="60.0">60.0 Hz — North American Grid Hum</option>
-        <option value="440.0">440.0 Hz — ISO Standard Tension</option>
-      </optgroup>
-    </select>
+            <div class="panel-scroll">
+                <!-- Live Telemetry Matrix -->
+                <div class="crypto-metrics">
+                    <div class="metric-node" id="node-coherence">
+                        <div class="num" id="val-coherence">94.2%</div>
+                        <div class="label">Field Coherence</div>
+                    </div>
+                    <div class="metric-node" id="node-entropy">
+                        <div class="num" id="val-entropy">0.12</div>
+                        <div class="label">Quantum Entropy</div>
+                    </div>
+                </div>
 
-    <div class="row">
-      <input type="number" id="freqInput" value="7.83" step="0.01" min="0.1" max="20000" oninput="updateFrequency(this.value)">
-      <span class="unit">Hz Matrix Node</span>
+                <!-- Modality Presets -->
+                <div class="ui-section-title">Nervous System Diagnostics</div>
+                <div class="control-block">
+                    <div class="matrix-grid" id="preset-layout">
+                        <!-- Populated Programmatically -->
+                    </div>
+                </div>
+
+                <!-- Manual Signals Injection -->
+                <div class="ui-section-title">Frequency Overrides</div>
+                <div class="control-block">
+                    <div class="input-group">
+                        <label for="freq-override">Manual Vector Input (Hz)</label>
+                        <input type="number" id="freq-override" value="528" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label for="env-gain">Environmental EMF Gain</label>
+                        <div class="slider-flex">
+                            <input type="range" id="env-gain" min="0" max="100" value="30">
+                            <span id="gain-lbl">30%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Structural Epigenetic Analysis Panel -->
+                <div class="ui-section-title">Biological Signal Analysis</div>
+                <div id="quantum-analysis-box">
+                    <h3><span style="display:inline-block; width:8px; height:8px; background:var(--accent-cyan); border-radius:50%;"></span> Analytics Standby</h3>
+                    Initialize system vectors to evaluate quantum biological metrics.
+                </div>
+            </div>
+
+            <!-- Hardware/Sensor Integration Hook Layer -->
+            <div class="live-footer">
+                <div class="status-pill">
+                    <div class="pulse-dot"></div>
+                    <span id="sensor-modality">Core Engine Active</span>
+                </div>
+                <span style="color: var(--text-dim); font-family: monospace;">v2.5.0-Quantum</span>
+            </div>
+        </div>
     </div>
 
-    <!-- Harmonics Field Generator Slider -->
-    <div class="harmonics-wrap">
-      <div class="harmonics-label">
-        <span>Harmonics Multiplier</span>
-        <span id="harmonicsVal">1.0x</span>
-      </div>
-      <input type="range" id="harmonicSlider" class="harmonics-slider" min="1.0" max="8.0" step="1.0" value="1.0" oninput="updateHarmonics(this.value)">
-    </div>
+    <script>
+        // --- High-Fidelity Dataset Framework ---
+        const quantumDatabase = {
+            "visceral-shock": {
+                name: "Visceral Shock Matrix",
+                frequency: 174.0,
+                targetNode: "gut",
+                coherence: 18.4,
+                entropy: 0.94,
+                primaryColor: "#ff0055",
+                vagusNerveActive: true,
+                title: "Vagus Phase Collapse (Nausea/Stress)",
+                analysis: "Triggered by localized shock. High sympathetic discharge down the vagus nerve causes immediate smooth muscle contraction of the gut wall. Local energy fields undergo destructive interference, dropping coherence to absolute critical baselines and causing immediate physical gagging reflexes."
+            },
+            "cellular-optimization": {
+                name: "Cellular Matrix (528 Hz)",
+                frequency: 528.0,
+                targetNode: "heart",
+                coherence: 97.2,
+                entropy: 0.05,
+                primaryColor: "#00f2fe",
+                vagusNerveActive: false,
+                title: "Phase Coherent Transformation",
+                analysis: "Resonates with cellular matrix structures. Acts as an organizing node within the cardio-respiratory loop, creating an outward-expanding, harmonious toroidal field pattern that optimizes autonomic regulation."
+            },
+            "neurological-gamma": {
+                name: "Gamma Peak Focus (40 Hz)",
+                frequency: 40.0,
+                targetNode: "brain",
+                coherence: 88.9,
+                entropy: 0.14,
+                primaryColor: "#a855f7",
+                vagusNerveActive: false,
+                title: "Cortical Information Binding",
+                desc: "High-level neural integration state. Synchronizes inter-hemispheric communication, organizing localized brainwave fields into coherent mental arrays."
+            },
+            "grounding-adrenal": {
+                name: "Adrenal Grounding (396 Hz)",
+                frequency: 396.0,
+                targetNode: "root",
+                coherence: 79.5,
+                entropy: 0.28,
+                primaryColor: "#f59e0b",
+                vagusNerveActive: false,
+                title: "Basal Stress Offloading",
+                analysis: "Maps to the lower tracking array. Functions as an informational buffer designed to ground hyper-active adrenal signals caused by extended flight-or-fight feedback loops."
+            }
+        };
 
-    <div class="state-row">
-      <button class="state-btn active-state" id="btnHealthy" onclick="setState('healthy')">Healthy</button>
-      <button class="state-btn" id="btnRage" onclick="setState('rage')">Rage</button>
-      <button class="state-btn" id="btnSick" onclick="setState('sick')">Sick</button>
-      <button class="state-btn" id="btnPyramid" onclick="setState('pyramid')">🔺 Pyramid</button>
-    </div>
+        // --- Application State Management ---
+        const state = {
+            activeKey: "cellular-optimization",
+            frequency: 528.0,
+            targetNode: "heart",
+            coherence: 97.2,
+            entropy: 0.05,
+            fieldColor: "#00f2fe",
+            vagusActive: false,
+            envEMFGain: 0.3,
+            timeTrack: 0
+        };
 
-    <button id="activateBtn" onclick="toggleField()">Initiate Field Resonance</button>
-  </div>
-</div>
-
-<!-- ── BIOMETRIC LABELS ── -->
-<div id="organ-labels">
-  <div class="organ-label" id="lbl-brain" style="top:18%;left:50%">Brain / Pineal</div>
-  <div class="organ-label" id="lbl-throat" style="top:26%;left:50%">Throat / Thyroid</div>
-  <div class="organ-label" id="lbl-heart" style="top:36%;left:64%">Heart Matrix</div>
-  <div class="organ-label" id="lbl-lungs" style="top:36%;left:36%">Lungs</div>
-  <div class="organ-label" id="lbl-solar" style="top:47%;left:65%">Solar Plexus</div>
-  <div class="organ-label" id="lbl-sacral" style="top:56%;left:35%">Sacral / Gut</div>
-  <div class="organ-label" id="lbl-root" style="top:63%;left:64%">Root / Pelvis</div>
-</div>
-
-<div id="coherence-meter">
-  <div class="coh-label">Field Coherence</div>
-  <div class="coh-bar-wrap"><div id="coh-bar"></div></div>
-  <div id="coh-pct">50%</div>
-</div>
-
-<!-- ── NARRATION ANALYSIS ── -->
-<div id="narration">
-  <div class="narr-inner">
-    <div class="narr-header">
-      <div id="narr-badge" class="narr-badge neutral">BASELINE</div>
-      <div class="narr-wave off" id="narr-wave"><span></span><span></span><span></span><span></span></div>
-    </div>
-    <div id="narr-title">Bio-Resonance Field At Rest</div>
-    <div id="narr-text">System initialization complete. The biological envelope stands in a state of local baseline potential, ready to absorb targeted frequency inputs.</div>
-    <div id="narr-science">Biophysics: Standard biophoton emission tracks inside baseline parameters. Phase coordination can be established via systemic acoustic inputs.</div>
-  </div>
-</div>
-
-<button id="speakBtn" onclick="speakNarration()">🔊 Narrate</button>
-<div id="hint">Drag backdrop to rotate grid · Tap clear space to toggle HUD</div>
-
-<!-- ── THREE.JS ENGINE ── -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-// ═══════════════════════════════════════════════════════
-//  APPLICATION ARCHITECTURE DATA
-// ═══════════════════════════════════════════════════════
-let isRunning = false, bodyState = 'healthy', frequency = 7.83, harmonicOrder = 1.0, coherence = 0.5;
-let clock, scene, camera, renderer, bodyGroup, auricGroup, cymaticsGroup, pyramidMesh;
-let fieldParticles, particleUniforms, bodyUniforms, auricUniforms, cymaticsUniforms;
-let organMeshes = {}, chakraOrbs = [];
-let audioCtx = null, fundamentalOsc = null, harmonicOscs = [], structuralGain = null;
-let targetRotationY = 0, currentRotationY = 0, pointerIsDown = false, previousPointerX = 0;
-
-const NARRATION_DIRECTORY = {
-  "healthy": {
-    badge: "COHERENT", class: "coherent", title: "Harmonic Optimization Vector",
-    text: "The structural envelope demonstrates high phase-locking across all biofield coordinates. Cellular structures demonstrate optimized energetic output.",
-    science: "Resonant entrainment coordinates localized biophoton streams into structured cellular arrays, reducing energetic impedance."
-  },
-  "rage": {
-    badge: "DISRUPTED", class: "disrupted", title: "Hyper-Chaotic Vector",
-    text: "The field manifests severe amplitude fragmentation. High-frequency structural shockwaves decouple coherent structural fields.",
-    science: "Chaotic voltage spikes disrupt regular electromagnetic phase-locking, mimicking nervous system stress cycles."
-  },
-  "sick": {
-    badge: "CRITICAL COLLAPSE", class: "disrupted", title: "Hypo-Resonant Envelope",
-    text: "The auric boundary experiences immediate structural collapse, losing geometric definition and drawing inward toward core elements.",
-    science: "Depleted cellular charge maps directly to attenuated field profiles, suppressing standard bioelectric output ranges."
-  },
-  "pyramid": {
-    badge: "🔺 GEOMETRIC ANCHOR", class: "pyramid", title: "Pyramidal Compression Field",
-    text: "The localized field anchors into an immutable geometric torus. Energetic vectors accumulate at the core matrices.",
-    science: "Sacred architectural vectors organize sub-atomic wave patterns into self-sustaining standing wave geometries."
-  }
-};
-
-// ═══════════════════════════════════════════════════════
-//  CUSTOM COMPLEX SHADER CONSTANTS
-// ═══════════════════════════════════════════════════════
-const particleVertGLSL = `
-  uniform float uTime;
-  uniform float uCoherence;
-  uniform int uState;
-  uniform float uFreq;
-  uniform float uHarmonic;
-  attribute float aPhase;
-  attribute float aRadius;
-  attribute float aSpeed;
-  varying float vAlpha;
-  varying vec3 vColor;
-
-  void main(){
-    float t = uTime * aSpeed * 0.4 + aPhase;
-    float currentFreq = uFreq * uHarmonic;
-    
-    // Core Cymatic Torus Wave Equations
-    float radialMode = sin(aRadius * (currentFreq * 0.05) - uTime * 2.0);
-    float angularMode = cos(4.0 * t);
-    float cymaticMod = radialMode * angularMode * (0.15 * uCoherence);
-    
-    float majorR = aRadius + cymaticMod;
-    vec3 pos = vec3(majorR * cos(t), position.y + sin(t * 1.5) * 1.6, majorR * sin(t));
-
-    if(uState == 1) {
-      pos += normalize(pos) * sin(uTime * 12.0 + aPhase) * 0.5;
-    } else if(uState == 2) {
-      pos.y -= abs(sin(uTime * 0.4 + aPhase)) * 0.6;
-      pos.xz *= 0.5;
-    } else if(uState == 3) {
-      float pHeight = (pos.y + 2.0) / 4.0;
-      pos.xz *= (1.0 - clamp(pHeight, 0.0, 0.95));
-      pos.xz *= 1.1 + sin(uTime * 4.0 + pos.y * 3.0) * 0.05;
-    }
-
-    vAlpha = (0.25 + uCoherence * 0.6) * (0.4 + 0.6 * sin(uTime * 3.0 + aPhase));
-    
-    // High performance dynamic spectral shifts
-    if(uState == 0) vColor = mix(vec3(0.0, 0.9, 1.0), vec3(0.4, 0.0, 0.9), position.y * 0.2 + 0.5);
-    else if(uState == 1) vColor = mix(vec3(1.0, 0.1, 0.0), vec3(1.0, 0.5, 0.0), sin(t));
-    else if(uState == 2) vColor = vec3(0.3, 0.65, 0.1);
-    else vColor = mix(vec3(1.0, 0.85, 0.1), vec3(1.0, 0.5, 0.0), pHeight);
-
-    vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
-    gl_PointSize = (2.2 + aRadius * 1.4) * (320.0 / -mvPos.z);
-    gl_Position = projectionMatrix * mvPos;
-  }
-`;
-
-const particleFragGLSL = `
-  varying float vAlpha;
-  varying vec3 vColor;
-  void main(){
-    vec2 uv = gl_PointCoord - 0.5;
-    if(length(uv) > 0.5) discard;
-    float intensity = 1.0 - smoothstep(0.0, 0.5, length(uv));
-    gl_FragColor = vec4(vColor, vAlpha * intensity);
-  }
-`;
-
-// ═══════════════════════════════════════════════════════
-//  ENGINE CORE ENGINE VALIDATION
-// ═══════════════════════════════════════════════════════
-window.onload = function() {
-  initThree();
-  buildSystemMatrix();
-  setupTouchInteractions();
-  computeCoherence();
-  animatePipeline();
-};
-
-function initThree() {
-  const container = document.getElementById('canvas-container');
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x000205);
-  scene.fog = new THREE.FogExp2(0x000205, 0.012);
-
-  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 0.2, 5.2);
-
-  renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('c'), antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.3;
-
-  clock = new THREE.Clock();
-  window.addEventListener('resize', onWindowResize);
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-// ═══════════════════════════════════════════════════════
-//  BIOMETRIC SYSTEM CONSTRUCTION
-// ═══════════════════════════════════════════════════════
-function buildSystemMatrix() {
-  bodyGroup = new THREE.Group();
-  auricGroup = new THREE.Group();
-  scene.add(bodyGroup);
-  scene.add(auricGroup);
-
-  // Core uniform registration structures
-  bodyUniforms = { uTime: {value:0}, uFreq: {value:7.83}, uHarmonic: {value:1.0}, uCoherence: {value:0.5}, uIntensity: {value:0.3}, uState: {value:0} };
-  auricUniforms = { uTime: {value:0}, uCoherence: {value:0.5}, uState: {value:0} };
-
-  const bodyMat = new THREE.ShaderMaterial({
-    vertexShader: `
-      uniform float uTime; uniform float uFreq; uniform float uHarmonic; uniform float uCoherence; uniform float uIntensity; uniform int uState;
-      varying vec3 vNormal; varying vec3 vPos;
-      void main(){
-        vNormal = normalMatrix * normal; vPos = position;
-        float wave = sin(position.y * (uFreq * 0.08) * uHarmonic - uTime * 4.0) * 0.03 * uIntensity * uCoherence;
-        if(uState == 1) wave = sin(position.y * 15.0 - uTime * 10.0) * 0.09 * uIntensity;
-        if(uState == 2) wave = sin(uTime * 1.5) * 0.02 * uIntensity - 0.04;
-        vec3 newPos = position + normal * wave;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos, 1.0);
-      }
-    `,
-    fragmentShader: `
-      uniform float uTime; uniform float uCoherence; uniform int uState;
-      varying vec3 vNormal; varying vec3 vPos;
-      void main(){
-        vec3 n = normalize(vNormal); float rim = pow(1.0 - abs(dot(n, vec3(0.0,0.0,1.0))), 2.5);
-        vec3 col = mix(vec3(0.0, 0.8, 1.0), vec3(0.4, 0.1, 0.9), vPos.y * 0.2 + 0.5);
-        if(uState == 1) col = vec3(1.0, 0.1, 0.0);
-        if(uState == 2) col = vec3(0.25, 0.55, 0.1);
-        if(uState == 3) col = vec3(1.0, 0.84, 0.1);
-        gl_FragColor = vec4(col + col * rim * 2.0, 0.2 + rim * 0.6);
-      }
-    `,
-    uniforms: bodyUniforms, transparent: true, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending
-  });
-
-  // Construct precise anatomical coordinates
-  const structures = [
-    ['head', new THREE.SphereGeometry(0.32, 24, 24), 0, 1.45, 0],
-    ['neck', new THREE.CylinderGeometry(0.12, 0.14, 0.2, 16), 0, 1.15, 0],
-    ['chest', new THREE.SphereGeometry(0.45, 24, 20), 0, 0.65, 0],
-    ['abdomen', new THREE.SphereGeometry(0.38, 24, 20), 0, 0.1, 0],
-    ['pelvis', new THREE.SphereGeometry(0.32, 24, 20), 0, -0.4, 0],
-    ['armL_u', new THREE.CapsuleGeometry(0.08, 0.4, 4, 8), -0.65, 0.55, 0],
-    ['armL_l', new THREE.CapsuleGeometry(0.07, 0.4, 4, 8), -0.8, 0.05, 0],
-    ['armR_u', new THREE.CapsuleGeometry(0.08, 0.4, 4, 8), 0.65, 0.55, 0],
-    ['armR_l', new THREE.CapsuleGeometry(0.07, 0.4, 4, 8), 0.8, 0.05, 0],
-    ['legL_u', new THREE.CapsuleGeometry(0.12, 0.6, 4, 8), -0.22, -0.85, 0],
-    ['legL_l', new THREE.CapsuleGeometry(0.09, 0.6, 4, 8), -0.22, -1.45, 0],
-    ['legR_u', new THREE.CapsuleGeometry(0.12, 0.6, 4, 8), 0.22, -0.85, 0],
-    ['legR_l', new THREE.CapsuleGeometry(0.09, 0.6, 4, 8), 0.22, -1.45, 0]
-  ];
-
-  structures.forEach(([name, geo, x, y, z]) => {
-    const mesh = new THREE.Mesh(geo, bodyMat);
-    mesh.position.set(x, y, z);
-    bodyGroup.add(mesh);
-    organMeshes[name] = mesh;
-  });
-
-  // Toroidal Auric Field Boundaries
-  const auricMat = new THREE.ShaderMaterial({
-    vertexShader: `
-      uniform float uTime; uniform float uCoherence; uniform int uState; varying float vFresnel;
-      void main(){
-        vec3 vNormal = normalMatrix * normal;
-        vec3 viewDir = normalize(-vec3(modelViewMatrix * vec4(position,1.0)));
-        vFresnel = pow(1.0 - abs(dot(normalize(vNormal), viewDir)), 3.0);
-        float pulse = 1.0 + sin(uTime * 2.0) * 0.03 * uCoherence;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position * pulse, 1.0);
-      }
-    `,
-    fragmentShader: `
-      uniform int uState; uniform float uCoherence; varying float vFresnel;
-      void main(){
-        vec3 c = vec3(0.0, 0.8, 1.0);
-        if(uState == 1) c = vec3(1.0, 0.1, 0.0);
-        if(uState == 2) c = vec3(0.2, 0.6, 0.1);
-        if(uState == 3) c = vec3(1.0, 0.8, 0.1);
-        gl_FragColor = vec4(c, vFresnel * 0.35 * uCoherence);
-      }
-    `,
-    uniforms: auricUniforms, transparent: true, side: THREE.BackSide, depthWrite: false, blending: THREE.AdditiveBlending
-  });
-
-  const auricGeo = new THREE.SphereGeometry(1.0, 32, 32);
-  auricGeo.scale(1.2, 2.0, 1.0);
-  auricGroup.add(new THREE.Mesh(auricGeo, auricMat));
-
-  buildSystemChakras();
-  buildCymaticsGrid();
-  buildSystemParticles();
-  buildPyramidGeometry();
-  
-  // Ambient Lighting Infrastructure
-  const dLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  dLight.position.set(5, 10, 7);
-  scene.add(dLight);
-  scene.add(new THREE.AmbientLight(0x0a1530));
-}
-
-function buildSystemChakras() {
-  const CHAKRAS = [
-    {y: 1.6, c: 0x9b59ff}, {y: 1.4, c: 0x4a9fff}, {y: 1.15, c: 0x00c8ff},
-    {y: 0.7, c: 0x00e87a}, {y: 0.3, c: 0xffdd00}, {y: -0.05, c: 0xff8c00}, {y: -0.4, c: 0xff3333}
-  ];
-  CHAKRAS.forEach(ch => {
-    const orb = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 16), new THREE.MeshBasicMaterial({ color: ch.c, transparent: true, opacity: 0.8 }));
-    orb.position.set(0, ch.y, 0.1);
-    bodyGroup.add(orb);
-    chakraOrbs.push(orb);
-  });
-}
-
-function buildCymaticsGrid() {
-  cymaticsGroup = new THREE.Group();
-  scene.add(cymaticsGroup);
-
-  cymaticsUniforms = { uTime: {value:0}, uFreq: {value:7.83}, uHarmonic: {value:1.0}, uCoherence: {value:0.5}, uState: {value:0} };
-  
-  const planeGeo = new THREE.PlaneGeometry(8, 8, 128, 128);
-  const planeMat = new THREE.ShaderMaterial({
-    vertexShader: `
-      uniform float uTime; uniform float uFreq; uniform float uHarmonic; uniform float uCoherence; uniform int uState;
-      varying vec2 vUv; varying float vHeight;
-      void main(){
-        vUv = uv;
-        vec2 p = (uv - 0.5) * 6.0;
-        float r = length(p); float theta = atan(p.y, p.x);
-        float currentFreq = uFreq * uHarmonic;
+        // --- Canvas Engine Architecture ---
+        const canvas = document.getElementById('quantumCanvas');
+        const ctx = canvas.getContext('2d');
         
-        // Pure analytical standing wave node calculation
-        float d = sin(r * (currentFreq * 0.12) - uTime * 3.0) * cos(5.0 * theta);
-        d += sin(r * (currentFreq * 0.05) - uTime * 1.5);
-        float amp = 0.18 * uCoherence;
-        if(uState == 1) amp *= 2.5;
-        if(uState == 2) amp *= 0.2;
-        
-        vHeight = d * amp;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position.x, position.y + d * amp, position.z, 1.0);
-      }
-    `,
-    fragmentShader: `
-      uniform float uCoherence; uniform int uState; varying float vHeight;
-      void main(){
-        float h = abs(vHeight) * 5.0;
-        vec3 c = mix(vec3(0.0, 0.4, 0.8), vec3(0.0, 1.0, 0.8), h);
-        if(uState == 1) c = mix(vec3(0.5, 0.0, 0.0), vec3(1.0, 0.2, 0.0), h);
-        if(uState == 2) c = vec3(0.15, 0.35, 0.08);
-        if(uState == 3) c = mix(vec3(0.4, 0.3, 0.0), vec3(1.0, 0.85, 0.1), h);
-        gl_FragColor = vec4(c, clamp(0.1 + h * 0.4, 0.0, 0.7));
-      }
-    `,
-    uniforms: cymaticsUniforms, transparent: true, side: THREE.DoubleSide, depthWrite: false, wireframe: true
-  });
+        function syncViewportResolution() {
+            const container = document.getElementById('viewport-container');
+            const dpr = window.devicePixelRatio || 1;
+            const rect = container.getBoundingClientRect();
+            
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            
+            ctx.scale(dpr, dpr);
+        }
 
-  const mesh = new THREE.Mesh(planeGeo, planeMat);
-  mesh.rotation.x = -Math.PI / 2;
-  mesh.position.y = -1.9;
-  cymaticsGroup.add(mesh);
-}
+        // --- Core Anatomical Vector Mapper ---
+        function renderHumanBiometry(ctx, cx, cy, h) {
+            ctx.save();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
+            ctx.lineWidth = 2;
 
-function buildSystemParticles() {
-  const count = 2800;
-  const positions = new Float32Array(count * 3);
-  const phases = new Float32Array(count);
-  const radii = new Float32Array(count);
-  const speeds = new Float32Array(count);
+            // Strict geometry execution to prevent blank frames across viewport styles
+            ctx.beginPath();
+            // Head
+            ctx.arc(cx, cy - h*0.35, h*0.07, 0, Math.PI * 2);
+            // Shoulders & Arms
+            ctx.moveTo(cx - h*0.02, cy - h*0.28);
+            ctx.lineTo(cx - h*0.12, cy - h*0.24);
+            ctx.lineTo(cx - h*0.15, cy + h*0.05);
+            ctx.lineTo(cx - h*0.11, cy + h*0.05);
+            ctx.lineTo(cx - h*0.08, cy - h*0.15); // Torso wall left
+            // Legs
+            ctx.lineTo(cx - h*0.06, cy + h*0.45);
+            ctx.lineTo(cx - h*0.01, cy + h*0.45);
+            ctx.lineTo(cx, cy - h*0.02); // Crotch inner axis
+            ctx.lineTo(cx + h*0.01, cy + h*0.45);
+            ctx.lineTo(cx + h*0.06, cy + h*0.45);
+            // Right Torso
+            ctx.lineTo(cx + h*0.08, cy - h*0.15);
+            ctx.lineTo(cx + h*0.11, cy + h*0.05);
+            ctx.lineTo(cx + h*0.15, cy + h*0.05);
+            ctx.lineTo(cx + h*0.12, cy - h*0.24);
+            ctx.lineTo(cx + h*0.02, cy - h*0.28);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.restore();
+        }
 
-  for(let i = 0; i < count; i++) {
-    positions[i*3] = (Math.random() - 0.5) * 2.0;
-    positions[i*3+1] = (Math.random() - 0.5) * 4.0;
-    positions[i*3+2] = (Math.random() - 0.5) * 2.0;
-    phases[i] = Math.random() * Math.PI * 2;
-    radii[i] = 0.6 + Math.random() * 1.1;
-    speeds[i] = 0.4 + Math.random() * 1.2;
-  }
+        function calculateNodeCoordinates(cx, cy, h, node) {
+            switch(node) {
+                case "brain": return { x: cx, y: cy - h * 0.35 };
+                case "heart": return { x: cx, y: cy - h * 0.15 };
+                case "gut":   return { x: cx, y: cy + h * 0.01 };
+                case "root":  return { x: cx, y: cy + h * 0.16 };
+                default:      return { x: cx, y: cy - h * 0.15 };
+            }
+        }
 
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geo.setAttribute('aPhase', new THREE.BufferAttribute(phases, 1));
-  geo.setAttribute('aRadius', new THREE.BufferAttribute(radii, 1));
-  geo.setAttribute('aSpeed', new THREE.BufferAttribute(speeds, 1));
+        // --- Main Graphic Processing Loop ---
+        function mainRenderPipeline() {
+            // Recalculate container bounding space dynamically every frame for flawless mobile/desktop rotation handling
+            const rect = canvas.getBoundingClientRect();
+            if (canvas.width !== rect.width * (window.devicePixelRatio || 1)) {
+                syncViewportResolution();
+            }
 
-  particleUniforms = { uTime: {value:0}, uCoherence: {value:0.5}, uState: {value:0}, uFreq: {value:7.83}, uHarmonic: {value:1.0} };
+            const w = rect.width;
+            const h = rect.height;
+            
+            ctx.clearRect(0, 0, w, h);
 
-  const mat = new THREE.ShaderMaterial({
-    vertexShader: particleVertGLSL,
-    fragmentShader: particleFragGLSL,
-    uniforms: particleUniforms, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
-  });
+            // Establish central metrics anchors
+            const centerX = w * 0.5;
+            const centerY = h * 0.5;
+            const biometricHeight = Math.min(w, h) * 0.8;
+            
+            state.timeTrack += 0.02 + (state.frequency * 0.00005);
 
-  fieldParticles = new THREE.Points(geo, mat);
-  scene.add(fieldParticles);
-}
+            const activeNodePos = calculateNodeCoordinates(centerX, centerY, biometricHeight, state.targetNode);
 
-function buildPyramidGeometry() {
-  const geo = new THREE.ConeGeometry(1.6, 2.6, 4);
-  const mat = new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true, transparent: true, opacity: 0.0 });
-  pyramidMesh = new THREE.Mesh(geo, mat);
-  pyramidMesh.position.y = 0.2;
-  scene.add(pyramidMesh);
-}
+            // 1. Dynamic Environment Wave Integration Layer
+            if (state.envEMFGain > 0) {
+                ctx.save();
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.02 * state.envEMFGain})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                for (let i = 0; i < w; i += 8) {
+                    let envWave = Math.sin(i * 0.02 + state.timeTrack) * 20 * state.envEMFGain;
+                    if(i === 0) ctx.moveTo(i, h - 50 + envWave);
+                    else ctx.lineTo(i, h - 50 + envWave);
+                }
+                ctx.stroke();
+                ctx.restore();
+            }
 
-// ═══════════════════════════════════════════════════════
-//  INTERACTION & TOUCH CONTROLS
-// ═══════════════════════════════════════════════════════
-function setupTouchInteractions() {
-  const container = document.getElementById('canvas-container');
-  
-  container.addEventListener('pointerdown', (e) => {
-    pointerIsDown = true;
-    previousPointerX = e.clientX;
-  });
+            // 2. Toroidal Quantum Information Field Array Renders
+            ctx.save();
+            const fieldRings = 14;
+            const coreRadius = Math.max(w, h) * 0.6;
+            
+            for (let i = 0; i < fieldRings; i++) {
+                let animationProgress = (i / fieldRings + (state.timeTrack * 0.1)) % 1;
+                let radX = animationProgress * coreRadius * 1.2;
+                let radY = animationProgress * coreRadius * 0.7;
+                
+                let baseAlpha = (1 - animationProgress) * 0.4;
+                if (state.coherence < 40) baseAlpha *= 1.8; // Brighten visual noise spikes under shock states
+                
+                ctx.strokeStyle = hexToRgba(state.fieldColor, baseAlpha);
+                ctx.lineWidth = state.coherence > 50 ? 2 * (1 - animationProgress) : 3;
 
-  window.addEventListener('pointermove', (e) => {
-    if (!pointerIsDown) return;
-    const deltaX = e.clientX - previousPointerX;
-    targetRotationY += deltaX * 0.007;
-    previousPointerX = e.clientX;
-  });
+                ctx.beginPath();
+                if (state.coherence < 30) {
+                    // Phase Coherence Collapse: Distort the field geometries completely into broken noise paths
+                    let disruptionOffset = state.entropy * 40 * Math.sin(state.timeTrack * 5 + i);
+                    ctx.arc(activeNodePos.x + disruptionOffset, activeNodePos.y + (disruptionOffset * 0.5), radY * 0.8, 0, Math.PI * 2);
+                } else {
+                    // Symmetrical Harmonic Toroids
+                    ctx.ellipse(activeNodePos.x, activeNodePos.y, radX, radY, 0, 0, Math.PI * 2);
+                    ctx.ellipse(activeNodePos.x, activeNodePos.y, radY * 0.3, radX * 1.1, 0, 0, Math.PI * 2);
+                }
+                ctx.stroke();
+            }
+            ctx.restore();
 
-  window.addEventListener('pointerup', () => { pointerIsDown = false; });
+            // 3. Vagus Nerve Transduction Vector (Brain to Gut Connection under stress)
+            if (state.vagusActive) {
+                ctx.save();
+                const brainAnchor = calculateNodeCoordinates(centerX, centerY, biometricHeight, "brain");
+                const gutAnchor = calculateNodeCoordinates(centerX, centerY, biometricHeight, "gut");
+                
+                ctx.strokeStyle = "rgba(255, 0, 100, 0.8)";
+                ctx.lineWidth = 2.5;
+                ctx.setLineDash([4, 4]);
+                
+                ctx.beginPath();
+                ctx.moveTo(brainAnchor.x, brainAnchor.y);
+                // Create erratic zig-zag path running down the spine to trace autonomic shock spikes
+                for (let currY = brainAnchor.y; currY <= gutAnchor.y; currY += 10) {
+                    let kineticSpike = Math.sin(currY * 0.1 + state.timeTrack * 12) * 8;
+                    ctx.lineTo(brainAnchor.x + kineticSpike, currY);
+                }
+                ctx.stroke();
+                ctx.restore();
+            }
 
-  // Mobile clean tap handling to minimize HUD clutter
-  container.addEventListener('click', (e) => {
-    if (e.target.tagName !== 'CANVAS') return;
-    document.getElementById('hud').classList.toggle('fade');
-  });
-}
+            // 4. Structural Human Geometry Render Execution
+            renderHumanBiometry(ctx, centerX, centerY, biometricHeight);
 
-// ═══════════════════════════════════════════════════════
-//  DYNAMIC COHERENCE STATE MATRIX
-// ═══════════════════════════════════════════════════════
-function computeCoherence() {
-  if (bodyState === 'healthy') {
-    if (frequency >= 7.0 && frequency <= 9.0) coherence = 0.92;
-    else if (frequency > 50.0) coherence = 0.42;
-    else coherence = 0.65;
-  } else if (bodyState === 'rage') {
-    coherence = 0.15;
-  } else if (bodyState === 'sick') {
-    coherence = 0.28;
-  } else if (bodyState === 'pyramid') {
-    coherence = 1.0;
-  }
+            // 5. Localized Node Node-Glow Injection Focus
+            ctx.save();
+            let pulseCycle = 12 + 8 * Math.sin(state.timeTrack * 4);
+            let dynamicRadialGlow = ctx.createRadialGradient(
+                activeNodePos.x, activeNodePos.y, 1, 
+                activeNodePos.x, activeNodePos.y, pulseCycle * 3
+            );
+            
+            dynamicRadialGlow.addColorStop(0, hexToRgba(state.fieldColor, 1.0));
+            dynamicRadialGlow.addColorStop(0.3, hexToRgba(state.fieldColor, 0.3));
+            dynamicRadialGlow.addColorStop(1, hexToRgba(state.fieldColor, 0.0));
+            
+            ctx.fillStyle = dynamicRadialGlow;
+            ctx.beginPath();
+            ctx.arc(activeNodePos.x, activeNodePos.y, pulseCycle * 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
 
-  // Update UI Elements safely
-  document.getElementById('coh-bar').style.height = `${coherence * 100}%`;
-  document.getElementById('coh-pct').innerText = `${Math.round(coherence * 100)}%`;
-  
-  // Direct pipeline injection
-  if (bodyUniforms) {
-    bodyUniforms.uCoherence.value = coherence;
-    auricUniforms.uCoherence.value = coherence;
-    cymaticsUniforms.uCoherence.value = coherence;
-    particleUniforms.uCoherence.value = coherence;
-  }
+            requestAnimationFrame(mainRenderPipeline);
+        }
 
-  updateNarrationDisplay();
-}
+        // --- UI Initialization Functions ---
+        function initializeUIPresets() {
+            const layout = document.getElementById('preset-layout');
+            layout.innerHTML = "";
+            
+            Object.keys(quantumDatabase).forEach(key => {
+                const btn = document.createElement('button');
+                btn.className = `state-btn ${key === state.activeKey ? 'active' : ''}`;
+                btn.innerText = quantumDatabase[key].name;
+                btn.onclick = (e) => executeModalityShift(key, e.target);
+                layout.appendChild(btn);
+            });
+        }
 
-function updateFrequency(val) {
-  const f = parseFloat(val);
-  if (isNaN(f) || f <= 0) return;
-  frequency = f;
-  
-  if (bodyUniforms) {
-    bodyUniforms.uFreq.value = frequency;
-    cymaticsUniforms.uFreq.value = frequency;
-    particleUniforms.uFreq.value = frequency;
-  }
-  computeCoherence();
-  if (isRunning) syncAudioEngine();
-}
+        function executeModalityShift(key, element) {
+            state.activeKey = key;
+            const targetData = quantumDatabase[key];
+            
+            state.frequency = targetData.frequency;
+            state.targetNode = targetData.targetNode;
+            state.coherence = targetData.coherence;
+            state.entropy = targetData.entropy;
+            state.fieldColor = targetData.primaryColor;
+            state.vagusActive = targetData.vagusNerveActive;
 
-function updateHarmonics(val) {
-  const h = parseFloat(val);
-  harmonicOrder = h;
-  document.getElementById('harmonicsVal').innerText = `${h.toFixed(1)}x`;
+            document.getElementById('freq-override').value = state.frequency;
+            
+            document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
+            if(element) element.classList.add('active');
 
-  if (bodyUniforms) {
-    bodyUniforms.uHarmonic.value = harmonicOrder;
-    cymaticsUniforms.uHarmonic.value = harmonicOrder;
-    particleUniforms.uHarmonic.value = harmonicOrder;
-  }
-  if (isRunning) syncAudioEngine();
-}
+            renderInterfaceTelemetry(targetData.title, targetData.analysis);
+        }
 
-function applyPreset(val) {
-  const f = parseFloat(val);
-  document.getElementById('freqInput').value = f;
-  updateFrequency(f);
-}
+        function executeManualInput() {
+            document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
+            state.activeKey = "manual";
+            
+            const rawFreq = parseFloat(document.getElementById('freq-override').value) || 0;
+            state.frequency = rawFreq;
+            state.vagusActive = false;
 
-function setState(state) {
-  bodyState = state;
-  const btns = document.querySelectorAll('.state-btn');
-  btns.forEach(b => b.classList.remove('active-state', 'rage-active', 'sick-active', 'gold-active'));
+            // Diagnostic algorithms to map structural coordinates from raw frequency vectors
+            if (rawFreq <= 150) {
+                state.targetNode = "brain";
+                state.fieldColor = "#a855f7";
+                state.coherence = 80; state.entropy = 0.22;
+            } else if (rawFreq > 150 && rawFreq <= 250) {
+                state.targetNode = "gut";
+                state.fieldColor = "#ff0055";
+                state.vagusActive = true; // High-tension autonomic processing band
+                state.coherence = 30; state.entropy = 0.80;
+            } else if (rawFreq > 250 && rawFreq <= 450) {
+                state.targetNode = "root";
+                state.fieldColor = "#f59e0b";
+                state.coherence = 75; state.entropy = 0.35;
+            } else {
+                state.targetNode = "heart";
+                state.fieldColor = "#00f2fe";
+                state.coherence = 92; state.entropy = 0.08;
+            }
 
-  const activeBtn = document.getElementById(`btn${state.charAt(0).toUpperCase() + state.slice(1)}`);
-  if (state === 'healthy') activeBtn.classList.add('active-state');
-  if (state === 'rage') activeBtn.classList.add('rage-active');
-  if (state === 'sick') activeBtn.classList.add('sick-active');
-  if (state === 'pyramid') activeBtn.classList.add('gold-active');
+            renderInterfaceTelemetry(
+                `Manual Vector Injection: ${rawFreq} Hz`,
+                `Custom analytical frequency detected. System topology mapping directly to the ${state.targetNode.toUpperCase()} array field profile. Phase shifts and bio-structural responses are actively calculated.`
+            );
+        }
 
-  const stateMap = { healthy: 0, rage: 1, sick: 2, pyramid: 3 };
-  const stateCode = stateMap[state];
+        function renderInterfaceTelemetry(title, description) {
+            document.getElementById('val-coherence').innerText = `${state.coherence.toFixed(1)}%`;
+            document.getElementById('val-entropy').innerText = state.entropy.toFixed(2);
+            
+            const coherenceNode = document.getElementById('node-coherence');
+            if (state.coherence < 40) {
+                document.getElementById('val-coherence').style.color = "var(--accent-magenta)";
+                coherenceNode.style.borderColor = "rgba(255, 0, 85, 0.3)";
+            } else {
+                document.getElementById('val-coherence').style.color = "var(--accent-cyan)";
+                coherenceNode.style.borderColor = "rgba(255, 255, 255, 0.05)";
+            }
 
-  bodyUniforms.uState.value = stateCode;
-  auricUniforms.uState.value = stateCode;
-  cymaticsUniforms.uState.value = stateCode;
-  particleUniforms.uState.value = stateCode;
+            document.getElementById('quantum-analysis-box').innerHTML = `
+                <h3><span style="display:inline-block; width:8px; height:8px; background:${state.fieldColor}; border-radius:50%;"></span> ${title}</h3>
+                <p>${description}</p>
+            `;
+        }
 
-  // Modify structural visibilities based on state parameters
-  pyramidMesh.material.opacity = (state === 'pyramid') ? 0.25 : 0.0;
+        // --- Hardware Simulation Engine (Prepped for real data streams) ---
+        function executeHardwareTrackingLoop() {
+            setInterval(() => {
+                // Generates organic micro-fluctuations mimicking lived real-world physical shifts
+                if (state.activeKey !== "manual") {
+                    const baseline = quantumDatabase[state.activeKey];
+                    const fluctuation = (Math.random() - 0.5) * 1.5;
+                    state.coherence = Math.max(5, Math.min(100, baseline.coherence + fluctuation));
+                    state.entropy = Math.max(0.01, Math.min(1.5, baseline.entropy + (fluctuation * -0.01)));
+                    
+                    document.getElementById('val-coherence').innerText = `${state.coherence.toFixed(1)}%`;
+                    document.getElementById('val-entropy').innerText = state.entropy.toFixed(2);
+                }
+            }, 1000);
+        }
 
-  computeCoherence();
-}
+        // --- Structural Utility Components ---
+        function hexToRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
 
-function updateNarrationDisplay() {
-  const dataset = NARRATION_DIRECTORY[bodyState];
-  const badge = document.getElementById('narr-badge');
-  
-  badge.className = `narr-badge ${dataset.class}`;
-  badge.innerText = dataset.badge;
-  
-  document.getElementById('narr-title').innerText = dataset.title;
-  document.getElementById('narr-text').innerText = dataset.text;
-  document.getElementById('narr-science').innerText = dataset.science;
-}
+        // --- System Boot Sequences ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeUIPresets();
+            syncViewportResolution();
+            
+            // Set initial application default engine profiles
+            executeModalityShift("cellular-optimization", document.querySelector('.state-btn'));
+            
+            // Register UI action intercept listeners
+            document.getElementById('freq-override').addEventListener('input', executeManualInput);
+            document.getElementById('env-gain').addEventListener('input', (e) => {
+                const value = e.target.value;
+                state.envEMFGain = value / 100;
+                document.getElementById('gain-lbl').innerText = `${value}%`;
+            });
 
-// ═══════════════════════════════════════════════════════
-//  HIGH-END AUDIO SYNTHESIS ENGINE (MONITOR GRADE)
-// ═══════════════════════════════════════════════════════
-function initAudioEngine() {
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  structuralGain = audioCtx.createGain();
-  structuralGain.gain.setValueAtTime(0.0, audioCtx.currentTime);
-  structuralGain.connect(audioCtx.destination);
-
-  fundamentalOsc = audioCtx.createOscillator();
-  fundamentalOsc.type = 'sine';
-  fundamentalOsc.connect(structuralGain);
-  fundamentalOsc.start();
-
-  // Pre-allocate discrete mathematical harmonic tracks
-  for(let i = 0; i < 3; i++) {
-    const hOsc = audioCtx.createOscillator();
-    hOsc.type = 'sine';
-    const hGain = audioCtx.createGain();
-    hGain.gain.setValueAtTime(0.0, audioCtx.currentTime);
-    hOsc.connect(hGain);
-    hGain.connect(structuralGain);
-    hOsc.start();
-    harmonicOscs.push({ osc: hOsc, gain: hGain, orderMultiplier: i + 2 });
-  }
-}
-
-function syncAudioEngine() {
-  if (!audioCtx) return;
-  const t = audioCtx.currentTime;
-  
-  // Safe downscaling for tracking frequencies on low-end hardware
-  let baseFreq = frequency;
-  if (baseFreq > 800) baseFreq = 440 + (baseFreq % 360);
-
-  fundamentalOsc.frequency.setTargetAtTime(baseFreq, t, 0.1);
-
-  harmonicOscs.forEach(h => {
-    const multiFreq = baseFreq * h.orderMultiplier * (harmonicOrder * 0.5);
-    h.osc.frequency.setTargetAtTime(Math.min(multiFreq, 18000), t, 0.1);
-    
-    // Smooth dynamic fade layers based on harmonic parameters
-    const targetHarmonicVolume = (0.06 / h.orderMultiplier) * (harmonicOrder / 4.0);
-    h.gain.gain.setTargetAtTime(isRunning ? targetHarmonicVolume : 0.0, t, 0.2);
-  });
-}
-
-function toggleField() {
-  const btn = document.getElementById('activateBtn');
-  const wave = document.getElementById('narr-wave');
-  
-  if (!audioCtx) initAudioEngine();
-
-  if (!isRunning) {
-    isRunning = true;
-    btn.innerText = "Terminate Resonance Field";
-    btn.classList.add('on');
-    wave.classList.remove('off');
-    
-    bodyUniforms.uIntensity.value = 1.0;
-    
-    audioCtx.resume();
-    structuralGain.gain.setTargetAtTime(0.18, audioCtx.currentTime, 0.3);
-    syncAudioEngine();
-  } else {
-    isRunning = false;
-    btn.innerText = "Initiate Field Resonance";
-    btn.classList.remove('on');
-    wave.classList.add('off');
-    
-    bodyUniforms.uIntensity.value = 0.3;
-    
-    structuralGain.gain.setTargetAtTime(0.0, audioCtx.currentTime, 0.2);
-    harmonicOscs.forEach(h => h.gain.gain.setTargetAtTime(0.0, audioCtx.currentTime, 0.1));
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-//  SPEECH SYNTHESIS ENGINE
-// ═══════════════════════════════════════════════════════
-function speakNarration() {
-  const btn = document.getElementById('speakBtn');
-  if ('speechSynthesis' in window) {
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-      btn.classList.remove('speaking');
-      return;
-    }
-    const txt = document.getElementById('narr-text').innerText;
-    const utterance = new SpeechSynthesisUtterance(txt);
-    utterance.rate = 0.95;
-    utterance.pitch = 1.0;
-    
-    utterance.onend = () => { btn.classList.remove('speaking'); };
-    btn.classList.add('speaking');
-    window.speechSynthesis.speak(utterance);
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-//  HIGH-PERFORMANCE EXECUTION LOOP
-// ═══════════════════════════════════════════════════════
-function animatePipeline() {
-  requestAnimationFrame(animatePipeline);
-  
-  const elapsed = clock.getElapsedTime();
-
-  // Inject standard running clocks into shader stages
-  if (bodyUniforms) bodyUniforms.uTime.value = elapsed;
-  if (auricUniforms) auricUniforms.uTime.value = elapsed;
-  if (cymaticsUniforms) cymaticsUniforms.uTime.value = elapsed;
-  if (particleUniforms) particleUniforms.uTime.value = elapsed;
-
-  // Smooth rotation decay for mobile touch events
-  currentRotationY += (targetRotationY - currentRotationY) * 0.08;
-  
-  if (bodyGroup) bodyGroup.rotation.y = currentRotationY;
-  if (auricGroup) auricGroup.rotation.y = currentRotationY;
-  if (fieldParticles) fieldParticles.rotation.y = currentRotationY * 0.5;
-  if (pyramidMesh) pyramidMesh.rotation.y = currentRotationY;
-
-  // Soft dynamic breathing cycles for baseline states
-  if (bodyState === 'healthy' && chakraOrbs.length > 0) {
-    chakraOrbs.forEach((orb, index) => {
-      const scale = 1.0 + Math.sin(elapsed * 2.5 + index) * 0.08;
-      orb.scale.set(scale, scale, scale);
-    });
-  }
-
-  renderer.render(scene, camera);
-}
-</script>
+            window.addEventListener('resize', syncViewportResolution);
+            
+            // Fire hardware and core graphic pipelines
+            executeHardwareTrackingLoop();
+            requestAnimationFrame(mainRenderPipeline);
+        });
+    </script>
 </body>
 </html>
