@@ -1,98 +1,302 @@
-{
-  "meta": {
-    "version": "2.0",
-    "description": "Educational speculative resonance library for symbolic simulation and consciousness-inspired exploration."
+[
+  {
+    "frequency": "432",
+    "name": "Grounding Resonance",
+    "description": "Symbolically associated with calmness, reflection, and emotional balance in many sound-healing communities.",
+    "simpleExplanation": "This frequency is often used to help people feel calmer and more centered."
   },
-  "frequencies": [
-    {
-      "hz": 0.5,
-      "title": "Delta Restoration",
-      "category": "Consciousness & Resonance",
-      "simpleExplanation": "Deep restorative resonance associated with stillness and recovery.",
-      "advancedExplanation": "Delta Restoration is represented as an educational resonance profile within this symbolic simulation environment. The visualization is speculative and intended for exploration rather than scientific proof.",
-      "environmentalEffect": "calming",
-      "particleBehavior": "coherent",
-      "humanFieldEffect": "increased synchronization"
-    },
-    {
-      "hz": 4,
-      "title": "Theta Imagination",
-      "category": "Consciousness & Resonance",
-      "simpleExplanation": "Associated with dreamlike states, creativity, and symbolic processing.",
-      "advancedExplanation": "Theta Imagination is represented as an educational resonance profile within this symbolic simulation environment. The visualization is speculative and intended for exploration rather than scientific proof.",
-      "environmentalEffect": "calming",
-      "particleBehavior": "coherent",
-      "humanFieldEffect": "increased synchronization"
-    },
-    {
-      "hz": 7.83,
-      "title": "Schumann Resonance",
-      "category": "Consciousness & Resonance",
-      "simpleExplanation": "Earth-ionosphere resonance often referenced in speculative coherence models.",
-      "advancedExplanation": "Schumann Resonance is represented as an educational resonance profile within this symbolic simulation environment. The visualization is speculative and intended for exploration rather than scientific proof.",
-      "environmentalEffect": "calming",
-      "particleBehavior": "coherent",
-      "humanFieldEffect": "increased synchronization"
-    },
-    {
-      "hz": 40,
-      "title": "Gamma Synchrony",
-      "category": "Consciousness & Resonance",
-      "simpleExplanation": "Associated with focused awareness and cognitive integration.",
-      "advancedExplanation": "Gamma Synchrony is represented as an educational resonance profile within this symbolic simulation environment. The visualization is speculative and intended for exploration rather than scientific proof.",
-      "environmentalEffect": "calming",
-      "particleBehavior": "coherent",
-      "humanFieldEffect": "increased synchronization"
-    },
-    {
-      "hz": 110,
-      "title": "Grounding Tone",
-      "category": "Consciousness & Resonance",
-      "simpleExplanation": "A low harmonic used in many meditative sound practices.",
-      "advancedExplanation": "Grounding Tone is represented as an educational resonance profile within this symbolic simulation environment. The visualization is speculative and intended for exploration rather than scientific proof.",
-      "environmentalEffect": "calming",
-      "particleBehavior": "coherent",
-      "humanFieldEffect": "increased synchronization"
-    },
-    {
-      "hz": 432,
-      "title": "Harmonic Balance",
-      "category": "Consciousness & Resonance",
-      "simpleExplanation": "A symbolic frequency often associated with natural resonance.",
-      "advancedExplanation": "Harmonic Balance is represented as an educational resonance profile within this symbolic simulation environment. The visualization is speculative and intended for exploration rather than scientific proof.",
-      "environmentalEffect": "calming",
-      "particleBehavior": "coherent",
-      "humanFieldEffect": "increased synchronization"
-    },
-    {
-      "hz": 528,
-      "title": "Transformative Resonance",
-      "category": "Consciousness & Resonance",
-      "simpleExplanation": "Frequently discussed in alternative resonance frameworks.",
-      "advancedExplanation": "Transformative Resonance is represented as an educational resonance profile within this symbolic simulation environment. The visualization is speculative and intended for exploration rather than scientific proof.",
-      "environmentalEffect": "calming",
-      "particleBehavior": "coherent",
-      "humanFieldEffect": "increased synchronization"
-    },
-    {
-      "hz": 741,
-      "title": "Clarity Field",
-      "category": "Consciousness & Resonance",
-      "simpleExplanation": "Associated with insight, intuition, and mental clarity.",
-      "advancedExplanation": "Clarity Field is represented as an educational resonance profile within this symbolic simulation environment. The visualization is speculative and intended for exploration rather than scientific proof.",
-      "environmentalEffect": "calming",
-      "particleBehavior": "coherent",
-      "humanFieldEffect": "increased synchronization"
-    },
-    {
-      "hz": 963,
-      "title": "Unity Resonance",
-      "category": "Consciousness & Resonance",
-      "simpleExplanation": "Symbolically linked to expanded awareness and coherence.",
-      "advancedExplanation": "Unity Resonance is represented as an educational resonance profile within this symbolic simulation environment. The visualization is speculative and intended for exploration rather than scientific proof.",
-      "environmentalEffect": "calming",
-      "particleBehavior": "coherent",
-      "humanFieldEffect": "increased synchronization"
-    }
-  ]
-}
+  {
+    "frequency": "528",
+    "name": "Transformational Tone",
+    "description": "Popular in wellness communities as a symbolic frequency for emotional renewal and inner harmony.",
+    "simpleExplanation": "People use this tone during meditation to create a peaceful mental state."
+  },
+  {
+    "frequency": "121",
+    "name": "Resonance Pattern 3",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "128",
+    "name": "Resonance Pattern 4",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "135",
+    "name": "Resonance Pattern 5",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "142",
+    "name": "Resonance Pattern 6",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "149",
+    "name": "Resonance Pattern 7",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "156",
+    "name": "Resonance Pattern 8",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "163",
+    "name": "Resonance Pattern 9",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "170",
+    "name": "Resonance Pattern 10",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "177",
+    "name": "Resonance Pattern 11",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "184",
+    "name": "Resonance Pattern 12",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "191",
+    "name": "Resonance Pattern 13",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "198",
+    "name": "Resonance Pattern 14",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "205",
+    "name": "Resonance Pattern 15",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "212",
+    "name": "Resonance Pattern 16",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "219",
+    "name": "Resonance Pattern 17",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "226",
+    "name": "Resonance Pattern 18",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "233",
+    "name": "Resonance Pattern 19",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "240",
+    "name": "Resonance Pattern 20",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "247",
+    "name": "Resonance Pattern 21",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "254",
+    "name": "Resonance Pattern 22",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "261",
+    "name": "Resonance Pattern 23",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "268",
+    "name": "Resonance Pattern 24",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "275",
+    "name": "Resonance Pattern 25",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "282",
+    "name": "Resonance Pattern 26",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "289",
+    "name": "Resonance Pattern 27",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "296",
+    "name": "Resonance Pattern 28",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "303",
+    "name": "Resonance Pattern 29",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "310",
+    "name": "Resonance Pattern 30",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "317",
+    "name": "Resonance Pattern 31",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "324",
+    "name": "Resonance Pattern 32",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "331",
+    "name": "Resonance Pattern 33",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "338",
+    "name": "Resonance Pattern 34",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "345",
+    "name": "Resonance Pattern 35",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "352",
+    "name": "Resonance Pattern 36",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "359",
+    "name": "Resonance Pattern 37",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "366",
+    "name": "Resonance Pattern 38",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "373",
+    "name": "Resonance Pattern 39",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "380",
+    "name": "Resonance Pattern 40",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "387",
+    "name": "Resonance Pattern 41",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "394",
+    "name": "Resonance Pattern 42",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "401",
+    "name": "Resonance Pattern 43",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "408",
+    "name": "Resonance Pattern 44",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "415",
+    "name": "Resonance Pattern 45",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "422",
+    "name": "Resonance Pattern 46",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "429",
+    "name": "Resonance Pattern 47",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "436",
+    "name": "Resonance Pattern 48",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "443",
+    "name": "Resonance Pattern 49",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  },
+  {
+    "frequency": "450",
+    "name": "Resonance Pattern 50",
+    "description": "A symbolic educational frequency used in the sandbox to explore environmental influence, emotional synchronization, and collective field visualization.",
+    "simpleExplanation": "This setting changes how the humans and particles visually interact in the simulation."
+  }
+]

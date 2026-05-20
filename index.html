@@ -1,113 +1,175 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quantum Sandbox Engine V2</title>
+<title>Quantum Resonance Sandbox</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-body {
-    margin: 0;
-    overflow: hidden;
-    background: radial-gradient(circle at center, #08111f 0%, #010409 100%);
-    color: white;
-    font-family: Inter, sans-serif;
-}
-canvas {
-    display:block;
-}
-#overlay {
-    position:absolute;
-    top:20px;
-    left:20px;
-    width:360px;
-    background:rgba(0,0,0,0.55);
-    border:1px solid rgba(255,255,255,0.1);
-    padding:20px;
-    border-radius:16px;
-    backdrop-filter: blur(10px);
-}
-#overlay h1 {
-    margin-top:0;
-    font-size:28px;
-}
-#tooltip {
-    margin-top:12px;
-    line-height:1.5;
-    font-size:15px;
-    color:#d8e7ff;
-}
-#controls {
-    margin-top:20px;
-}
-button {
-    background:#0f203d;
-    border:1px solid rgba(255,255,255,0.15);
-    color:white;
-    padding:10px 14px;
-    border-radius:10px;
-    cursor:pointer;
-}
+*{box-sizing:border-box}
+body{
+margin:0;overflow:hidden;font-family:Inter,sans-serif;
+background:radial-gradient(circle at top,#13233f 0%,#050816 60%,#010205 100%);
+color:#fff}
+canvas{display:block}
+#ui{
+position:absolute;inset:0;pointer-events:none}
+.panel{
+pointer-events:auto;
+position:absolute;top:18px;left:18px;width:380px;
+background:rgba(8,15,28,.72);
+border:1px solid rgba(120,180,255,.2);
+backdrop-filter:blur(18px);
+border-radius:24px;padding:22px;
+box-shadow:0 0 50px rgba(0,0,0,.45)}
+h1{margin:0 0 10px;font-size:30px}
+.desc{font-size:14px;line-height:1.6;color:#c6d5f2}
+.controls{display:grid;gap:12px;margin-top:18px}
+label{font-size:13px;color:#9eb3da}
+select,button{
+width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
+background:#12213c;color:white;font-size:14px}
+button{cursor:pointer;background:linear-gradient(90deg,#204a8f,#3d7cff)}
+#tooltip{
+margin-top:16px;min-height:150px;padding:16px;border-radius:16px;
+background:rgba(255,255,255,.05);line-height:1.7;font-size:14px}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:rgba(90,150,255,.2);font-size:12px;margin-bottom:10px}
+#legend{
+position:absolute;right:18px;top:18px;width:320px;
+background:rgba(5,10,20,.65);padding:18px;border-radius:22px;
+border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(12px);
+pointer-events:auto}
+.legend-item{margin-bottom:12px;font-size:13px;line-height:1.5;color:#d2dfff}
+.legend-color{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px}
 </style>
 </head>
 <body>
-<div id="overlay">
-    <h1>Quantum Sandbox Engine</h1>
-    <p>Educational symbolic simulation environment exploring resonance, interaction, and collective field dynamics.</p>
-    <div id="tooltip">
-        Hover explanations and simulation overlays will appear here in future updates.
-    </div>
-    <div id="controls">
-        <button id="simulationBtn">Activate Simulation</button>
-    </div>
+<div id="ui">
+<div class="panel">
+<div class="badge">Educational Quantum Sandbox</div>
+<h1>Quantum Resonance Engine</h1>
+<div class="desc">A symbolic visualization environment exploring resonance, emotional synchronization, collective fields, and environmental interaction through animated human energy models.</div>
+
+<div class="controls">
+<div>
+<label>Frequency Scenario</label>
+<select id="frequencySelect"></select>
+</div>
+
+<div>
+<label>Environment Module</label>
+<select id="environmentSelect">
+<option>Forest Coherence</option>
+<option>Urban Stress Field</option>
+<option>Concert Synchronization</option>
+<option>Classroom Focus</option>
+<option>Hospital Recovery</option>
+<option>Sacred Geometry Chamber</option>
+</select>
+</div>
+
+<button id="toggleSim">Activate Simulation</button>
+</div>
+
+<div id="tooltip">
+Hover over a human field to explore symbolic explanations about resonance, emotional synchronization, interference patterns, and collective coherence.
+</div>
+</div>
+
+<div id="legend">
+<h3>Visualization Guide</h3>
+<div class="legend-item"><span class="legend-color" style="background:#70d6ff"></span>Blue particles represent calm coherent field motion.</div>
+<div class="legend-item"><span class="legend-color" style="background:#ff7aa2"></span>Red particles represent stress amplification and emotional turbulence.</div>
+<div class="legend-item"><span class="legend-color" style="background:#ffe680"></span>Golden particles represent synchronized resonance states.</div>
+<div class="legend-item"><span class="legend-color" style="background:#b78cff"></span>Purple arcs represent symbolic entanglement between nearby humans.</div>
+</div>
 </div>
 
 <canvas id="scene"></canvas>
-
 <script type="module">
 import { HumanRenderer } from './humanRenderer.js';
 import { SimulationEngine } from './simulationEngine.js';
-import { TooltipSystem } from './tooltipSystem.js';
 
 const canvas = document.getElementById('scene');
 const ctx = canvas.getContext('2d');
+const tooltip = document.getElementById('tooltip');
+const frequencySelect = document.getElementById('frequencySelect');
+
+let catalog = [];
+
+async function loadCatalog(){
+ const response = await fetch('./frequencyCatalog.json');
+ catalog = await response.json();
+ catalog.forEach(item=>{
+   const opt=document.createElement('option');
+   opt.value=item.name;
+   opt.textContent=`${item.frequency}Hz — ${item.name}`;
+   frequencySelect.appendChild(opt);
+ });
+}
+await loadCatalog();
 
 function resize(){
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+ canvas.width=window.innerWidth;
+ canvas.height=window.innerHeight;
 }
-window.addEventListener('resize', resize);
+window.addEventListener('resize',resize);
 resize();
 
 const humans = [
-    new HumanRenderer(canvas.width * 0.35, canvas.height * 0.55),
-    new HumanRenderer(canvas.width * 0.65, canvas.height * 0.55)
+ new HumanRenderer(canvas.width*0.35, canvas.height*0.62, '#70d6ff'),
+ new HumanRenderer(canvas.width*0.65, canvas.height*0.62, '#ffe680')
 ];
 
 const engine = new SimulationEngine(humans);
-const tooltip = new TooltipSystem(document.getElementById('tooltip'));
 
-document.getElementById('simulationBtn').addEventListener('click', () => {
-    engine.toggleSimulation();
+document.getElementById('toggleSim').onclick=()=>{
+ engine.toggleSimulation();
+};
+
+frequencySelect.addEventListener('change',()=>{
+ const selected = catalog.find(x=>x.name===frequencySelect.value);
+ if(selected){
+   tooltip.innerHTML = `<strong>${selected.name}</strong><br><br>${selected.description}<br><br><em>Plain-language explanation:</em> ${selected.simpleExplanation}`;
+ }
+});
+
+canvas.addEventListener('mousemove',(e)=>{
+ humans.forEach(h=>{
+   const dx=e.clientX-h.x;
+   const dy=e.clientY-h.y;
+   const d=Math.sqrt(dx*dx+dy*dy);
+   if(d<h.fieldRadius){
+     tooltip.innerHTML = `
+     <strong>Field Interaction Detected</strong><br><br>
+     The glowing particles symbolize how emotional states and environmental conditions can influence human behavior and perception. In this simulation, overlapping fields represent symbolic resonance and social influence rather than proven quantum entanglement.<br><br>
+     <em>Simple explanation:</em> people affect each other's mood, focus, and energy when they spend time near one another.
+     `;
+   }
+ })
 });
 
 function animate(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+ ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    engine.update();
+ const grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 100, canvas.width/2, canvas.height/2, canvas.height);
+ grad.addColorStop(0,'rgba(35,55,110,.25)');
+ grad.addColorStop(1,'rgba(0,0,0,.92)');
+ ctx.fillStyle=grad;
+ ctx.fillRect(0,0,canvas.width,canvas.height);
 
-    humans.forEach(human => {
-        human.update();
-        human.draw(ctx);
-    });
+ engine.update();
 
-    tooltip.update(engine);
+ humans.forEach(h=>{
+   h.update();
+   h.draw(ctx);
+ });
 
-    requestAnimationFrame(animate);
+ engine.drawConnections(ctx);
+
+ requestAnimationFrame(animate);
 }
-
 animate();
 </script>
 </body>
