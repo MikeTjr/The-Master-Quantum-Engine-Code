@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Resonance: Unified Toroidal Matrix Engine</title>
+    <title>Resonance: True 3D Toroidal Matrix Engine</title>
     <style>
         :root {
             --bg-deep: #020306;
@@ -160,11 +160,6 @@
         .quantum-dropdown option {
             background: #090e1a;
             color: #fff;
-        }
-
-        .quantum-dropdown:hover, .quantum-dropdown:focus {
-            border-color: var(--gold-pure);
-            box-shadow: 0 0 15px var(--gold-glow);
         }
 
         .cosmic-amplifier-btn {
@@ -329,17 +324,6 @@
             pointer-events: auto;
         }
 
-        #ui-restorer-btn:hover {
-            transform: scale(1.08);
-            border-color: var(--gold-pure);
-        }
-
-        #ui-restorer-btn svg {
-            width: 14px;
-            height: 14px;
-            fill: #fff;
-        }
-
         .rotate-prompt-layer {
             display: none;
         }
@@ -497,7 +481,7 @@
             };
         }
 
-        // --- Core Application State Controls ---
+        // --- Core Control States ---
         let appState = {
             activeKey: "bio-schumann",
             phaseState: "before", 
@@ -510,22 +494,26 @@
 
         const canvas = document.getElementById('quantum-stage');
         const ctx = canvas.getContext('2d');
-        let particles = [];
-        const baseParticleCount = 5000; 
+        
+        // One unified global pool where EVERYTHING is an individual particle node
+        let globalParticlePool = [];
+        const totalSystemNodes = 7000; 
 
-        function initParticleCloud() {
-            particles = [];
+        function initUnifiedMatrix() {
+            globalParticlePool = [];
             const w = window.innerWidth;
             const h = window.innerHeight;
-            for (let i = 0; i < baseParticleCount; i++) {
-                particles.push({
-                    x: Math.random() * w,
-                    y: Math.random() * h,
-                    vx: 0,
-                    vy: 0,
-                    alpha: Math.random() * 0.6 + 0.2,
-                    size: Math.random() * 1.5 + 0.4,
-                    seed: Math.random() * 100
+            
+            for (let i = 0; i < totalSystemNodes; i++) {
+                // Distribute nodes randomly in a true virtual 3D coordinate space box
+                globalParticlePool.push({
+                    x3d: (Math.random() - 0.5) * 800,
+                    y3d: (Math.random() - 0.5) * 800,
+                    z3d: (Math.random() - 0.5) * 800,
+                    seed: Math.random() * 100,
+                    speedFactor: Math.random() * 0.02 + 0.005,
+                    size: Math.random() * 1.6 + 0.4,
+                    alpha: Math.random() * 0.6 + 0.2
                 });
             }
         }
@@ -535,247 +523,202 @@
             canvas.width = window.innerWidth * dpr;
             canvas.height = window.innerHeight * dpr;
             ctx.scale(dpr, dpr);
-            initParticleCloud();
+            initUnifiedMatrix();
         }
 
-        // --- Overhauled Volumetric Toroidal Being Engine ---
-        function drawTrueToroidalEntity(ctx, cx, cy, scaleSize, coherence, activeColor) {
-            ctx.save();
-            ctx.shadowBlur = 0;
-
-            const t = appState.timeVector;
-            const heartY = cy - scaleSize * 0.12;
+        // --- Core 3D Matrix Camera Projection Equation ---
+        // Project math coordinates (X, Y, Z) smoothly onto a 2D viewport canvas screen
+        function project3DToScreen(x3d, y3d, z3d, viewCenterX, viewCenterY, cameraRotationRad) {
+            // Spin camera angle along the vertical axis for responsive panning depth
+            const cosRot = Math.cos(cameraRotationRad);
+            const sinRot = Math.sin(cameraRotationRad);
             
-            // 1. DENSE BODY MESH GENERATION (No outlines. Pure woven energy threads)
-            const horizontalSlices = 45;
-            for (let i = 0; i < horizontalSlices; i++) {
-                // Determine vertical distribution down the body axis
-                let pct = i / (horizontalSlices - 1);
-                let yPos = (cy - scaleSize * 0.45) + (pct * scaleSize * 0.9);
-                
-                // Mathematical Body Radius Envelope Mapping
-                let bodyWidth = 0;
-                
-                if (pct < 0.15) { 
-                    // Head Profile Radius Curve
-                    let headPct = pct / 0.15;
-                    bodyWidth = scaleSize * 0.06 * Math.sqrt(1 - Math.pow((headPct - 0.5) / 0.5, 2));
-                } else if (pct >= 0.15 && pct < 0.22) { 
-                    // Neck Narrowing
-                    bodyWidth = scaleSize * 0.035;
-                } else if (pct >= 0.22 && pct < 0.55) { 
-                    // Shoulders & Thorax Core Torus Anchor Location
-                    let torsoPct = (pct - 0.22) / 0.33;
-                    bodyWidth = scaleSize * (0.13 - 0.03 * Math.pow(torsoPct, 2));
-                } else if (pct >= 0.55 && pct < 0.75) { 
-                    // Hips profile
-                    let hipPct = (pct - 0.55) / 0.20;
-                    bodyWidth = scaleSize * (0.09 + 0.02 * Math.sin(hipPct * Math.PI));
-                } else { 
-                    // Dual Leg Splitting Projection Waves
-                    let legPct = (pct - 0.75) / 0.25;
-                    bodyWidth = scaleSize * 0.08 * (1.0 - legPct * 0.4);
-                }
-
-                if (bodyWidth <= 0) continue;
-
-                // Render Concentric Structural Mesh Strands per slice
-                let threadCount = 4;
-                for (let j = 0; j < threadCount; j++) {
-                    let dynamicNoise = Math.sin(i * 0.4 + t * 4 + j) * 2.5 * (1.1 - coherence);
-                    let finalW = bodyWidth + (dynamicNoise * 0.3);
-                    
-                    ctx.lineWidth = coherence > 0.4 ? 0.65 : 0.35;
-                    ctx.strokeStyle = coherence > 0.4 
-                        ? hexToRgba(activeColor, (0.28 * coherence) / (j + 1)) 
-                        : 'rgba(239, 68, 68, 0.08)';
-
-                    // Render front-facing volumetric arc overlays
-                    ctx.beginPath();
-                    if (pct > 0.75) {
-                        // Separate strands into two discrete column flows for legs
-                        let leftCenter = cx - finalW * 0.5;
-                        let rightCenter = cx + finalW * 0.5;
-                        let legRadius = finalW * 0.35;
-                        ctx.arc(leftCenter, yPos, legRadius, Math.PI, 0, false);
-                        ctx.arc(rightCenter, yPos, legRadius, Math.PI, 0, false);
-                    } else {
-                        // Single coherent cylindrical torso loop arc
-                        ctx.ellipse(cx, yPos, finalW, finalW * 0.35 * Math.sin(t + i*0.1), 0, Math.PI, 0, false);
-                    }
-                    ctx.stroke();
-                }
-            }
-
-            // 2. CENTRAL LUNAR RADIANT LIGHT LINE (Breaks out across the heart center)
-            const glowGradient = ctx.createLinearGradient(cx - scaleSize * 0.9, heartY, cx + scaleSize * 0.9, heartY);
-            glowGradient.addColorStop(0, 'rgba(255,255,255,0)');
-            glowGradient.addColorStop(0.3, hexToRgba(activeColor, 0.15 * coherence));
-            glowGradient.addColorStop(0.5, '#ffffff');
-            glowGradient.addColorStop(0.7, hexToRgba(activeColor, 0.15 * coherence));
-            glowGradient.addColorStop(1, 'rgba(255,255,255,0)');
-
-            ctx.lineWidth = 2.0;
-            ctx.strokeStyle = glowGradient;
-            ctx.beginPath();
-            ctx.moveTo(cx - scaleSize * 0.85, heartY + Math.sin(t * 3) * 2);
-            ctx.lineTo(cx + scaleSize * 0.85, heartY + Math.sin(t * 3) * 2);
-            ctx.stroke();
-
-            // 3. SEAMLESS TOROIDAL CORE SHELL RADIUS FIELDS (Wrapping around the body form)
-            const masterLoops = 14;
-            for (let i = 0; i < masterLoops; i++) {
-                let waveSweep = (t * 0.5) + (i * Math.PI / masterLoops);
-                let xRadius = scaleSize * 0.90 * (0.88 + 0.12 * Math.sin(t * 2 + i));
-                let yRadius = scaleSize * 0.60 * (0.88 + 0.12 * Math.cos(t * 2 + i));
-
-                ctx.lineWidth = 0.9;
-                ctx.strokeStyle = coherence > 0.4 ? hexToRgba(activeColor, 0.08 * coherence) : 'rgba(220, 38, 38, 0.04)';
-                
-                // Primary looping transverse lines
-                ctx.beginPath();
-                ctx.ellipse(cx, heartY, xRadius, yRadius, waveSweep, 0, Math.PI * 2);
-                ctx.stroke();
-
-                // Intersecting long-axis vertical loops passing back through core axis
-                ctx.beginPath();
-                ctx.ellipse(cx, heartY, xRadius * 0.3, yRadius * 1.55, -waveSweep * 0.7, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-
-            ctx.restore();
+            const rotatedX = x3d * cosRot - z3d * sinRot;
+            const rotatedZ = x3d * sinRot + z3d * cosRot;
+            
+            // Camera position configuration parameters
+            const focalLength = 480; 
+            const cameraDistance = 550;
+            const perspectiveScale = focalLength / (cameraDistance + rotatedZ);
+            
+            return {
+                x: viewCenterX + rotatedX * perspectiveScale,
+                y: viewCenterY + y3d * perspectiveScale,
+                scale: perspectiveScale,
+                depth: rotatedZ // Retained to filter drawing priorities
+            };
         }
 
-        // --- Universe Loop & Entanglement Engine Pipeline ---
+        // --- Pipeline Processing Loop ---
         function runUniversePipeline() {
             const w = window.innerWidth;
             const h = window.innerHeight;
             
-            ctx.fillStyle = 'rgba(2, 3, 6, 0.09)';
+            // Fluid volumetric space clearing parameters
+            ctx.fillStyle = 'rgba(2, 3, 6, 0.12)';
             ctx.fillRect(0, 0, w, h);
 
-            appState.timeVector += 0.016;
+            appState.timeVector += 0.014;
+            const t = appState.timeVector;
             
             const currentData = frequencyCatalog[appState.activeKey];
-            const sizeMetric = Math.min(w, h) * 0.62;
-
+            
             let coherence = appState.amplifierActive ? 1.0 : parseFloat(currentData.coherence);
             if (appState.phaseState === 'after') coherence = Math.min(1.0, coherence + 0.35);
             if (appState.phaseState === 'before' && coherence > 0.5) coherence *= 0.35;
 
-            // Environmental Horizon Wire Grids (Woven from the exact same substance)
-            const horizonY = h * 0.70;
-            ctx.lineWidth = 0.4;
-            ctx.strokeStyle = hexToRgba(currentData.color, 0.14 * coherence);
-            
-            for(let i = -10; i <= 20; i++) {
-                ctx.beginPath();
-                ctx.moveTo(w / 2 + (i * w * 0.1), horizonY);
-                ctx.lineTo(w / 2 + (i * w * 0.35), h);
-                ctx.stroke();
-            }
-            for(let j = 0; j < 9; j++) {
-                let currentY = horizonY + (j * (h - horizonY) * 0.12);
-                let waveRipple = Math.sin(j * 0.5 - appState.timeVector * 2.5) * 5 * coherence;
-                ctx.beginPath();
-                ctx.moveTo(0, currentY + waveRipple);
-                ctx.lineTo(w, currentY + waveRipple);
-                ctx.stroke();
-            }
+            const cx = w / 2;
+            const cy = h * 0.45;
+            // Slowly oscillate camera rotation back and forth over time to show volume depth
+            const camAngle = Math.sin(t * 0.15) * 0.35; 
 
-            // Calculate Entity Positions
-            let positions = [];
-            const yCenter = h * 0.44;
-            
+            // Calculate active multi-body coordinates inside our 3D block
+            let bodies = [];
             if (appState.proximityCount === 1) {
-                positions.push({ x: w / 2, y: yCenter, scale: sizeMetric });
+                bodies.push({ xOffset: 0 });
             } else if (appState.proximityCount === 2) {
-                positions.push({ x: w / 2 - sizeMetric * 0.45, y: yCenter, scale: sizeMetric * 0.88 });
-                positions.push({ x: w / 2 + sizeMetric * 0.45, y: yCenter, scale: sizeMetric * 0.88 });
+                bodies.push({ xOffset: -180 });
+                bodies.push({ xOffset: 180 });
             } else {
-                positions.push({ x: w / 2 - sizeMetric * 0.65, y: yCenter, scale: sizeMetric * 0.78 });
-                positions.push({ x: w / 2, y: yCenter, scale: sizeMetric * 0.78 });
-                positions.push({ x: w / 2 + sizeMetric * 0.65, y: yCenter, scale: sizeMetric * 0.78 });
+                bodies.push({ xOffset: -240 });
+                bodies.push({ xOffset: 0 });
+                bodies.push({ xOffset: 240 });
             }
 
-            // Render True Mesh Entities
-            positions.forEach(pos => {
-                drawTrueToroidalEntity(ctx, pos.x, pos.y, pos.scale, coherence, currentData.color);
-            });
-
-            // Process Particle Networks
-            for (let i = 0; i < particles.length; i++) {
-                let p = particles[i];
-                let closestNode = null;
-                let minDist = 999999;
+            // Loop and process individual spatial projection mechanics for all nodes
+            for (let i = 0; i < globalParticlePool.length; i++) {
+                let p = globalParticlePool[i];
                 
-                positions.forEach(pos => {
-                    let hX = pos.x;
-                    let hY = pos.y - pos.scale * 0.12; 
-                    let dx = p.x - hX;
-                    let dy = p.y - hY;
-                    let d = Math.sqrt(dx*dx + dy*dy);
-                    if (d < minDist) {
-                        minDist = d;
-                        closestNode = { x: hX, y: hY, scale: pos.scale };
-                    }
-                });
+                // Segment the master node array pool into structural functions matching your snapshot
+                let functionalIndex = i % 3; 
 
-                let dx = p.x - closestNode.x;
-                let dy = p.y - closestNode.y;
-                let r = Math.sqrt(dx * dx + dy * dy);
-                let angle = Math.atan2(dy, dx);
-
-                let targetX = p.x;
-                let targetY = p.y;
-
-                if (coherence > 0.4) {
-                    let loopPulse = Math.sin(r * 0.022 - appState.timeVector * 3.5) * Math.cos(angle * currentData.complexity);
-                    targetX += Math.cos(angle + Math.PI / 2) * loopPulse * 2.5;
-                    targetY += Math.sin(angle + Math.PI / 2) * loopPulse * 2.5;
+                if (functionalIndex === 0) {
+                    // --- FUNCTION 1: COHERENT HUMAN GEOMETRIC CORE MESH ---
+                    // Nodes dynamically map down a vertical structural shell
+                    let targetBody = bodies[i % bodies.length];
                     
-                    let suctionForce = Math.sin(r * 0.012 - appState.timeVector * 1.8) * 0.9;
-                    targetX -= Math.cos(angle) * suctionForce;
-                    targetY -= Math.sin(angle) * suctionForce;
+                    let bodyHeightPct = (i % 100) / 99; // 0 (Head top) down to 1 (feet base)
+                    let baseHeightY = -160 + (bodyHeightPct * 320); 
+                    
+                    // Complex 3D biometric circumference equations
+                    let bodyRadius = 0;
+                    if (bodyHeightPct < 0.12) {
+                        let headPct = bodyHeightPct / 0.12;
+                        bodyRadius = 24 * Math.sqrt(1 - Math.pow((headPct - 0.5)/0.5, 2));
+                    } else if (bodyHeightPct >= 0.12 && bodyHeightPct < 0.18) {
+                        bodyRadius = 14; // Neck structure
+                    } else if (bodyHeightPct >= 0.18 && bodyHeightPct < 0.52) {
+                        let torsoPct = (bodyHeightPct - 0.18) / 0.34;
+                        bodyRadius = 45 - 12 * Math.pow(torsoPct, 2); // Chest & Rib volume
+                    } else if (bodyHeightPct >= 0.52 && bodyHeightPct < 0.72) {
+                        bodyRadius = 32 + Math.sin(bodyHeightPct * 12) * 4; // Pelvis
+                    } else {
+                        bodyRadius = 20 * (1.1 - bodyHeightPct); // Lower legs tapering
+                    }
+
+                    // Helix orbital geometry track assignments
+                    let orbitalAngle = (i * 0.25) + (t * 2.5 * p.speedFactor * 60);
+                    let targetX = targetBody.xOffset + Math.cos(orbitalAngle) * bodyRadius;
+                    let targetZ = Math.sin(orbitalAngle) * bodyRadius;
+                    let targetY = baseHeightY;
+
+                    // If legs split, adjust structural X parameters based on depth
+                    if (bodyHeightPct > 0.72) {
+                        let legDirection = (i % 2 === 0) ? -1 : 1;
+                        targetX += legDirection * 15;
+                    }
+
+                    // Interpolate point locations down into physical coordinates box
+                    p.x3d += (targetX - p.x3d) * 0.12;
+                    p.y3d += (targetY - p.y3d) * 0.12;
+                    p.z3d += (targetZ - p.z3d) * 0.12;
+
+                } else if (functionalIndex === 1) {
+                    // --- FUNCTION 2: MASSIVE PULSING TOROIDAL FIELD ENVELOPE ---
+                    // Nodes track through concentric loop channels spinning outward from core center
+                    let targetBody = bodies[i % bodies.length];
+                    
+                    let ringIndex = i % 14;
+                    let loopAngle = ((i * 0.05) + t * 0.8) % (Math.PI * 2);
+                    let shellAngle = (ringIndex * Math.PI) / 14; 
+
+                    // Standard Torus Formula Coordinates System mapping
+                    let torusMajorR = 140 + Math.sin(t * 1.5 + ringIndex) * 20 * coherence; 
+                    let torusMinorR = 45 + Math.cos(t * 2.0 + i) * 10 * coherence;
+
+                    if (coherence < 0.4) {
+                        // Artificial noise models fracture regular torus coordinates outwards
+                        torusMajorR += Math.sin(i + t * 5) * 60 * (1 - coherence);
+                        torusMinorR += Math.cos(i - t * 5) * 30 * (1 - coherence);
+                    }
+
+                    let targetX = targetBody.xOffset + (torusMajorR + torusMinorR * Math.cos(loopAngle)) * Math.cos(shellAngle);
+                    let targetY = -20 + (torusMinorR * Math.sin(loopAngle));
+                    let targetZ = (torusMajorR + torusMinorR * Math.cos(loopAngle)) * Math.sin(shellAngle);
+
+                    p.x3d += (targetX - p.x3d) * 0.08;
+                    p.y3d += (targetY - p.y3d) * 0.08;
+                    p.z3d += (targetZ - p.z3d) * 0.08;
+
                 } else {
-                    let jitter = Math.sin(r * 0.15 + appState.timeVector * 12) * currentData.complexity * 0.12;
-                    targetX += Math.cos(angle * 4) * jitter;
-                    targetY += Math.sin(angle * 4) * jitter;
+                    // --- FUNCTION 3: INTERCONNECTED LANDSCAPE HORIZON GRID ---
+                    // Nodes lock to flat horizontal sheets that mirror frequency ripple heights
+                    let gridX = ((i * 17) % 1200) - 600;
+                    let gridZ = ((i * 23) % 1200) - 600;
+                    
+                    // Ground level index position
+                    let targetY = 160; 
+                    
+                    // Ripple equation driven by identical quantum color parameters
+                    let radialDistance = Math.sqrt(gridX*gridX + gridZ*gridZ);
+                    let rippleWave = Math.sin(radialDistance * 0.02 - t * 3.5) * 25 * coherence;
+                    
+                    if (coherence < 0.4) {
+                        // Jagged technical spikes break standard environmental waves
+                        rippleWave += Math.cos(gridX * 0.1) * currentData.complexity * 0.4;
+                    }
+
+                    targetY += rippleWave;
+
+                    p.x3d += (gridX - p.x3d) * 0.1;
+                    p.y3d += (targetY - p.y3d) * 0.1;
+                    p.z3d += (gridZ - p.z3d) * 0.1;
                 }
 
-                if (appState.amplifierActive) {
-                    let ampWave = Math.cos(r * 0.025 - angle * 4 - appState.timeVector * 3);
-                    targetX += Math.cos(angle + Math.PI / 4) * ampWave * 2.2;
-                    targetY += Math.sin(angle + Math.PI / 4) * ampWave * 2.2;
+                // Crystalline Amplifier injection modifications
+                if (appState.amplifierActive && functionalIndex !== 2) {
+                    p.x3d += Math.sin(p.seed + t * 4) * 8;
+                    p.y3d += Math.cos(p.seed - t * 4) * 8;
                 }
 
-                p.vx += (targetX - p.x) * 0.06;
-                p.vy += (targetY - p.y) * 0.06;
-                p.vx *= 0.78;
-                p.vy *= 0.78;
-                p.x += p.vx;
-                p.y += p.vy;
+                // Execute 3D math projections onto actual flat pixel screens
+                let screenProjected = project3DToScreen(p.x3d, p.y3d, p.z3d, cx, cy, camAngle);
 
-                if (p.x < 0 || p.x > w || p.y < 0 || p.y > h) {
-                    p.x = Math.random() * w;
-                    p.y = Math.random() * h;
-                    p.vx = 0;
-                    p.vy = 0;
+                // Filter boundary clipping safety guards
+                if (screenProjected.scale > 0) {
+                    let finalSize = p.size * screenProjected.scale;
+                    if (finalSize < 0.1) finalSize = 0.1;
+
+                    // Color assignment values parsed directly from item vectors
+                    if (functionalIndex === 0) {
+                        // Human core features higher brightness tracking values
+                        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha * coherence * 1.2})`;
+                    } else if (appState.amplifierActive && Math.random() > 0.7) {
+                        ctx.fillStyle = `rgba(212, 175, 55, ${p.alpha * coherence})`;
+                    } else {
+                        ctx.fillStyle = hexToRgba(currentData.color, p.alpha * coherence * Math.min(1.0, screenProjected.scale * 1.1));
+                    }
+
+                    ctx.beginPath();
+                    ctx.arc(screenProjected.x, screenProjected.y, finalSize, 0, Math.PI * 2);
+                    ctx.fill();
                 }
-
-                ctx.fillStyle = appState.amplifierActive && Math.random() > 0.55 
-                    ? `rgba(255, 255, 255, ${p.alpha * coherence})` 
-                    : hexToRgba(currentData.color, p.alpha * coherence);
-                
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fill();
             }
 
             requestAnimationFrame(runUniversePipeline);
         }
 
-        // --- UI Control Automations ---
+        // --- Control Panels Automations ---
         function triggerUIFadeSequence() {
             clearTimeout(appState.uiTimer);
             if (!appState.uiVisible) {
