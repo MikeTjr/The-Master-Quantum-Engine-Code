@@ -1144,6 +1144,690 @@ window.addEventListener('DOMContentLoaded',()=>{
   // Hint strip visible initially
   document.getElementById('ui-hint-strip').style.opacity='1';
 });
+cat > /mnt/user-data/outputs/resonance.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>Resonance: Heart Toroidal Field Matrix Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg-deep:#020409;--gold-pure:#c8a84b;--gold-glow:rgba(200,168,75,0.30);--gold-dim:#8a6e2f;--ice-blue:#7eb8d4;--ice-glow:rgba(126,184,212,0.25);--text-light:#eef4f8;--text-muted:#4a6070;--panel-bg:rgba(3,8,18,0.88);--border-subtle:rgba(255,255,255,0.06);--border-gold:rgba(200,168,75,0.35);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body,html{background:var(--bg-deep);color:var(--text-light);font-family:'Space Mono',monospace;overflow:hidden;height:100vh;width:100vw;-webkit-user-select:none;user-select:none;}
+#quantum-stage{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;touch-action:none;cursor:grab;}
+#quantum-stage:active{cursor:grabbing;}
+.immersive-ui{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:20px;transition:opacity 0.8s ease,visibility 0.8s ease;}
+.immersive-ui.hidden{opacity:0;visibility:hidden;}
+.immersive-ui *{pointer-events:auto;}
+#hover-trigger-zone{position:fixed;bottom:0;left:0;right:0;height:90px;z-index:9;pointer-events:auto;}
+#hover-trigger-top{position:fixed;top:0;left:0;right:0;height:90px;z-index:9;pointer-events:auto;}
+header{display:flex;justify-content:space-between;align-items:flex-start;width:100%;gap:14px;flex-wrap:wrap;}
+.brand-block h1{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;letter-spacing:6px;text-transform:uppercase;color:#fff;text-shadow:0 0 30px rgba(126,184,212,0.5),0 0 60px rgba(126,184,212,0.2);}
+.brand-block p{font-size:0.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold-pure);margin-top:4px;opacity:0.85;}
+.header-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.proximity-dock{display:flex;flex-direction:column;gap:5px;background:var(--panel-bg);border:1px solid var(--border-subtle);padding:9px 13px;border-radius:14px;backdrop-filter:blur(16px);}
+.proximity-dock label{font-size:0.56rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold-pure);}
+.proximity-slider{-webkit-appearance:none;appearance:none;width:90px;height:2px;background:rgba(255,255,255,0.08);border-radius:2px;outline:none;}
+.proximity-slider::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--ice-blue);cursor:pointer;box-shadow:0 0 10px var(--ice-blue),0 0 20px rgba(126,184,212,0.4);}
+.quantum-dropdown{background:var(--panel-bg);border:1px solid var(--border-subtle);color:#fff;padding:9px 16px;border-radius:28px;font-family:'Space Mono',monospace;font-size:0.70rem;letter-spacing:0.3px;outline:none;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.6);max-width:380px;transition:border-color 0.3s;}
+.quantum-dropdown:hover{border-color:var(--border-gold);}
+.quantum-dropdown optgroup{background:#050c1a;color:#4a6070;font-size:0.7rem;}
+.quantum-dropdown option{background:#070f20;color:#fff;}
+.gold-amplifier-btn{background:rgba(0,0,0,0.6);border:1px solid var(--gold-dim);padding:9px 14px;border-radius:36px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.35s ease;}
+.gold-amplifier-btn.active{background:linear-gradient(135deg,rgba(200,168,75,0.22),rgba(0,0,0,0.85));border-color:var(--gold-pure);box-shadow:0 0 22px var(--gold-glow),inset 0 0 12px rgba(200,168,75,0.1);}
+.gold-amplifier-btn .indicator{width:7px;height:7px;background:var(--text-muted);border-radius:50%;transition:all 0.3s;}
+.gold-amplifier-btn.active .indicator{background:var(--gold-pure);box-shadow:0 0 12px var(--gold-pure);}
+.gold-amplifier-btn span{font-size:0.63rem;text-transform:uppercase;letter-spacing:1.8px;color:var(--text-light);}
+.entanglement-badge{display:flex;align-items:center;gap:8px;background:var(--panel-bg);border:1px solid var(--border-subtle);padding:9px 13px;border-radius:28px;backdrop-filter:blur(16px);}
+.entanglement-badge label{font-size:0.56rem;text-transform:uppercase;letter-spacing:2px;color:var(--ice-blue);}
+.entanglement-dots{display:flex;gap:5px;}
+.entanglement-dot{width:8px;height:8px;border-radius:50%;border:1px solid rgba(126,184,212,0.3);background:transparent;transition:all 0.4s ease;}
+.entanglement-dot.lit{background:var(--ice-blue);box-shadow:0 0 8px var(--ice-blue),0 0 16px rgba(126,184,212,0.4);}
+.state-shifter-belt{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.phase-toggle{background:rgba(3,8,18,0.65);border:1px solid var(--border-subtle);color:var(--text-muted);padding:8px 14px;border-radius:28px;font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:1.8px;cursor:pointer;transition:all 0.3s ease;}
+.phase-toggle.active{background:rgba(255,255,255,0.07);color:#fff;border-color:var(--gold-pure);text-shadow:0 0 12px rgba(200,168,75,0.6);}
+.insight-dock{display:grid;grid-template-columns:1fr 340px;gap:20px;width:100%;background:var(--panel-bg);border:1px solid var(--border-subtle);border-radius:18px;padding:18px;backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 20px 60px rgba(0,0,0,0.85),inset 0 1px 0 rgba(255,255,255,0.04);}
+.analysis-text h2{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;letter-spacing:1.5px;margin-bottom:3px;color:#fff;}
+.analysis-text .origin-tag{font-size:0.56rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold-pure);margin-bottom:8px;display:block;}
+.analysis-text p{font-family:'Cormorant Garamond',serif;font-size:0.86rem;line-height:1.65;color:#94aab8;}
+.atomic-panel{border-left:1px solid var(--border-subtle);padding-left:18px;display:flex;flex-direction:column;gap:12px;}
+.atomic-group h4{font-size:0.54rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-muted);margin-bottom:4px;}
+.atomic-stat-lbl{font-size:0.76rem;color:#c8d8e4;margin-bottom:6px;}
+.biophoton-bar-container{width:100%;height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;}
+.biophoton-bar{height:100%;width:50%;transition:all 0.7s cubic-bezier(0.16,1,0.3,1);}
+.coherence-ring-wrap{display:flex;align-items:center;gap:10px;}
+.coherence-ring-svg{flex-shrink:0;}
+.coherence-ring-label{font-size:0.60rem;color:#94aab8;line-height:1.5;}
+.coherence-ring-label strong{display:block;color:#fff;font-size:0.73rem;margin-bottom:2px;}
+.field-calc-panel{background:rgba(200,168,75,0.04);border:1px solid var(--border-gold);border-radius:14px;padding:14px;margin-top:10px;}
+.field-calc-panel h4{font-size:0.54rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold-pure);margin-bottom:8px;}
+.field-calc-panel .calc-result{font-size:0.76rem;color:#c8d8e4;line-height:1.6;margin-bottom:8px;}
+.field-calc-panel .calc-explanation{font-family:'Cormorant Garamond',serif;font-size:0.84rem;color:#94aab8;line-height:1.55;}
+.field-calc-badge{display:inline-block;background:rgba(200,168,75,0.12);border:1px solid var(--border-gold);border-radius:20px;padding:2px 9px;font-size:0.60rem;color:var(--gold-pure);margin-right:5px;margin-bottom:3px;}
+.field-calc-badge.neg{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.35);color:#ef4444;}
+.field-calc-badge.pos{background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.35);color:#10b981;}
+.cam-reset-hint{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:0.50rem;letter-spacing:2px;text-transform:uppercase;color:rgba(126,184,212,0.14);pointer-events:none;z-index:6;}
+#ui-restorer-btn{position:fixed;bottom:20px;right:20px;background:rgba(200,168,75,0.12);border:1px solid var(--border-gold);border-radius:50%;cursor:pointer;z-index:100;display:flex;align-items:center;justify-content:center;width:38px;height:38px;transition:opacity 0.5s,visibility 0.5s;opacity:0;visibility:hidden;pointer-events:none;box-shadow:0 4px 20px rgba(200,168,75,0.2);}
+#ui-restorer-btn.visible{opacity:1;visibility:visible;pointer-events:auto;}
+.ui-hint-strip{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);font-size:0.50rem;letter-spacing:2px;text-transform:uppercase;color:rgba(200,168,75,0.30);z-index:8;pointer-events:none;transition:opacity 0.8s;white-space:nowrap;}
+/* PORTRAIT UI */
+.portrait-overlay{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#020409;z-index:20000;flex-direction:column;align-items:center;justify-content:flex-start;padding:18px 16px 30px;overflow-y:auto;}
+.portrait-overlay.active{display:flex;}
+.portrait-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:4px;text-transform:uppercase;color:#fff;margin:14px 0 3px;text-align:center;}
+.portrait-sub{font-size:0.52rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold-pure);margin-bottom:16px;text-align:center;}
+.portrait-rotate-hint{display:flex;align-items:center;gap:10px;background:var(--panel-bg);border:1px solid var(--border-gold);border-radius:12px;padding:10px 15px;margin-bottom:14px;width:100%;font-size:0.60rem;letter-spacing:1px;color:var(--gold-pure);}
+.p-section-label{font-size:0.52rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;}
+.portrait-controls{display:flex;flex-direction:column;gap:10px;width:100%;}
+.portrait-select{width:100%;background:var(--panel-bg);border:1px solid var(--border-subtle);color:#fff;padding:10px 12px;border-radius:12px;font-family:'Space Mono',monospace;font-size:0.66rem;outline:none;margin-bottom:2px;}
+.portrait-select optgroup{background:#050c1a;color:#4a6070;}
+.portrait-select option{background:#070f20;color:#fff;}
+.portrait-row{display:flex;gap:8px;}
+.portrait-toggle-btn{flex:1;background:rgba(3,8,18,0.65);border:1px solid var(--border-subtle);color:var(--text-muted);padding:10px 6px;border-radius:12px;font-family:'Space Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all 0.25s;text-align:center;}
+.portrait-toggle-btn.active{background:rgba(255,255,255,0.07);color:#fff;border-color:var(--gold-pure);}
+.portrait-toggle-btn.body-btn.active{border-color:var(--ice-blue);color:var(--ice-blue);background:rgba(126,184,212,0.07);}
+.portrait-gold-btn{width:100%;background:rgba(200,168,75,0.06);border:1px solid var(--border-gold);color:var(--gold-pure);padding:11px;border-radius:12px;font-family:'Space Mono',monospace;font-size:0.60rem;text-transform:uppercase;letter-spacing:1.8px;cursor:pointer;transition:all 0.25s;}
+.portrait-gold-btn.active{background:rgba(200,168,75,0.18);box-shadow:0 0 16px var(--gold-glow);}
+.p-info-box{background:var(--panel-bg);border:1px solid var(--border-subtle);border-radius:12px;padding:12px;width:100%;}
+.p-info-box h3{font-family:'Cormorant Garamond',serif;font-size:0.98rem;font-weight:300;color:#fff;margin-bottom:3px;}
+.p-info-box .p-tag{font-size:0.50rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold-pure);margin-bottom:7px;display:block;}
+.p-info-box p{font-family:'Cormorant Garamond',serif;font-size:0.80rem;line-height:1.58;color:#94aab8;}
+.p-calc-box{background:rgba(200,168,75,0.04);border:1px solid var(--border-gold);border-radius:12px;padding:12px;width:100%;}
+.p-calc-box h4{font-size:0.52rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold-pure);margin-bottom:7px;}
+.p-calc-box p{font-family:'Cormorant Garamond',serif;font-size:0.80rem;line-height:1.55;color:#94aab8;}
+body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.032) 2px,rgba(0,0,0,0.032) 4px);}
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:4;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,0.70) 100%);}
+@media(max-width:960px){.insight-dock{grid-template-columns:1fr;gap:12px;padding:12px;}.atomic-panel{border-left:none;border-top:1px solid var(--border-subtle);padding-left:0;padding-top:12px;}.immersive-ui{padding:12px;overflow-y:auto;}header{flex-direction:column;gap:8px;align-items:flex-start;}.header-controls{width:100%;flex-wrap:wrap;}.quantum-dropdown{max-width:100%;width:100%;}}
+</style>
+</head>
+<body>
+
+<!-- PORTRAIT MOBILE UI -->
+<div class="portrait-overlay" id="portrait-overlay">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold-pure)" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+  <div class="portrait-title">Resonance</div>
+  <div class="portrait-sub">Heart Toroidal Field Matrix</div>
+  <div class="portrait-rotate-hint">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold-pure)" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+    Rotate to landscape for full 4K field rendering
+  </div>
+  <div class="portrait-controls">
+    <div>
+      <div class="p-section-label">Frequency Vector</div>
+      <select class="portrait-select" id="portrait-vector-select" onchange="handleDropdownShift(this.value)"></select>
+    </div>
+    <div>
+      <div class="p-section-label">Phase State</div>
+      <div class="portrait-row">
+        <button class="portrait-toggle-btn active" id="p-phase-before" onclick="togglePhaseState('before')">Interfered</button>
+        <button class="portrait-toggle-btn" id="p-phase-after" onclick="togglePhaseState('after')">Coherent</button>
+      </div>
+    </div>
+    <div>
+      <div class="p-section-label">Bodies / Entanglement</div>
+      <div class="portrait-row">
+        <button class="portrait-toggle-btn body-btn active" id="p-body-1" onclick="setProximity(1)">1</button>
+        <button class="portrait-toggle-btn body-btn" id="p-body-2" onclick="setProximity(2)">2</button>
+        <button class="portrait-toggle-btn body-btn" id="p-body-3" onclick="setProximity(3)">3</button>
+      </div>
+    </div>
+    <button class="portrait-gold-btn" id="p-gold-btn" onclick="toggleGoldAmplifier()">⬡ Gold Amplifier</button>
+    <div class="p-info-box">
+      <h3 id="p-field-title">Heart Toroidal Field</h3>
+      <span class="p-tag" id="p-field-origin">Quantum Library</span>
+      <p id="p-field-desc">Loading field data...</p>
+    </div>
+    <div class="p-calc-box" id="p-calc-box" style="display:none">
+      <h4>Collective Field Calculation</h4>
+      <p id="p-calc-text">Select multiple bodies to see entanglement effects.</p>
+    </div>
+  </div>
+</div>
+
+<canvas id="quantum-stage"></canvas>
+<div id="hover-trigger-zone"></div>
+<div id="hover-trigger-top"></div>
+
+<div class="immersive-ui hidden" id="ui-overlay">
+  <header>
+    <div class="brand-block">
+      <h1>Resonance</h1>
+      <p>Heart Toroidal Field Matrix Engine · 4K Rendering</p>
+    </div>
+    <div class="header-controls">
+      <div class="proximity-dock">
+        <label for="prox-range">Field Entanglement</label>
+        <input type="range" id="prox-range" class="proximity-slider" min="1" max="3" value="1" oninput="setProximity(parseInt(this.value))">
+      </div>
+      <div class="entanglement-badge">
+        <label>Bodies</label>
+        <div class="entanglement-dots" id="entanglement-dots">
+          <div class="entanglement-dot lit" id="dot-1"></div>
+          <div class="entanglement-dot" id="dot-2"></div>
+          <div class="entanglement-dot" id="dot-3"></div>
+        </div>
+      </div>
+      <select class="quantum-dropdown" id="vector-selector" onchange="handleDropdownShift(this.value)"></select>
+      <button class="gold-amplifier-btn" id="gold-amp" onclick="toggleGoldAmplifier()">
+        <div class="indicator"></div>
+        <span>⬡ Gold Amplifier</span>
+      </button>
+    </div>
+  </header>
+  <div>
+    <div class="state-shifter-belt">
+      <button class="phase-toggle active" id="phase-before" onclick="togglePhaseState('before')">Interfered Envelope</button>
+      <button class="phase-toggle" id="phase-after" onclick="togglePhaseState('after')">Coherent Realized Field</button>
+    </div>
+    <div class="insight-dock">
+      <div class="analysis-text">
+        <h2 id="field-title">Heart Toroidal Field Active</h2>
+        <span class="origin-tag" id="field-origin">Quantum Library Database</span>
+        <p id="field-desc">Synchronizing with cardiac toroidal axis...</p>
+        <div class="field-calc-panel" id="field-calc-panel" style="display:none">
+          <h4>⬡ Collective Field Entanglement Calculation</h4>
+          <div class="calc-result" id="calc-result-line"></div>
+          <div class="calc-explanation" id="calc-explanation"></div>
+        </div>
+      </div>
+      <div class="atomic-panel">
+        <div class="atomic-group">
+          <h4>Toroidal Field Luminescence</h4>
+          <div class="atomic-stat-lbl" id="field-photon-lbl">Emissions stable</div>
+          <div class="biophoton-bar-container"><div class="biophoton-bar" id="photon-metric-bar"></div></div>
+        </div>
+        <div class="atomic-group">
+          <h4>Coherence Index</h4>
+          <div class="coherence-ring-wrap">
+            <svg class="coherence-ring-svg" width="44" height="44" viewBox="0 0 44 44">
+              <circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+              <circle id="coherence-arc" cx="22" cy="22" r="18" fill="none" stroke="#7eb8d4" stroke-width="3" stroke-dasharray="113" stroke-dashoffset="113" stroke-linecap="round" transform="rotate(-90 22 22)" style="transition:stroke-dashoffset 0.8s ease,stroke 0.5s ease;"/>
+              <text id="coherence-pct" x="22" y="26" text-anchor="middle" fill="#fff" style="font-family:'Space Mono',monospace;font-size:9px;">0%</text>
+            </svg>
+            <div class="coherence-ring-label">
+              <strong id="coherence-label-strong">Initializing</strong>
+              <span id="field-flow-desc">Standing by...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="ui-restorer-btn" title="Restore UI">
+  <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-pure)" stroke-width="1.5" stroke-linecap="round" width="16" height="16"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+</button>
+<div class="ui-hint-strip" id="ui-hint-strip">HOVER EDGE · DRAG TO ROTATE · PINCH TO ZOOM · DOUBLE-TAP TO RESET</div>
+<div class="cam-reset-hint">DRAG — ROTATE &nbsp;|&nbsp; SHIFT+DRAG — PAN &nbsp;|&nbsp; SCROLL — ZOOM &nbsp;|&nbsp; DBL-CLICK — RESET</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  RESONANCE v2 — Heart Toroidal Field Matrix Engine
+//  GitHub Pages single-file · All upgrades included
+// ══════════════════════════════════════════════════════
+
+const FC={
+  "heart-baseline":{name:"1.2 Hz — Cardiovascular Primary Toroidal Pulse",origin:"PROVEN SCIENCE / HEART TOROIDAL FIELD ANCHOR",desc:"The human heart is not merely a pump — it is the body's most powerful electromagnetic generator, producing a field roughly 60 times the amplitude of the brain's. At resting ~72 BPM (1.2 Hz), it radiates a toroidal magnetic field measured by SQUID magnetometers extending 8–12 feet from the chest. HeartMath research demonstrates that when this field enters coherence, measurable entrainment effects appear in nearby individuals without physical contact.",photonLbl:"Maximum Volumetric Toroidal Output (100%)",flowDesc:"Rhythmic breathing wave pushes and pulls field sequentially",photonWidth:"100%",complexity:3,coherence:0.98,color:"#ef4444",polarity:"positive",domain:"cardiac"},
+  "vagus-nerve":{name:"0.1 Hz — Vagal Tone Coherence Anchor",origin:"PROVEN SCIENCE / AUTONOMIC REGULATION AXIS",desc:"At 0.1 Hz, respiratory sinus arrhythmia reaches resonant frequency with the baroreflex loop — the physiological basis of HRV coherence protocols. Vagal stimulation at this rhythm suppresses systemic inflammation via TNF-alpha, improves emotional regulation, and shifts the ANS decisively toward parasympathetic dominance. It is the body's master quieting frequency.",photonLbl:"Deep Rest Purity Saturation (96%)",flowDesc:"Adrenaline jitter drops out; clean structural field lines restored",photonWidth:"96%",complexity:1,coherence:0.99,color:"#14b8a6",polarity:"positive",domain:"cardiac"},
+  "bio-delta":{name:"0.5 Hz — Deep Ethereal Delta Baseline",origin:"BIO-ENERGETICS / NEURAL BASAL OSCILLATION",desc:"At 0.5 Hz, the brain operates at its deepest electrical rhythm — a slow sweeping tide dominating dreamless sleep. The body prioritizes cellular repair, immune recalibration, and glymphatic waste clearance. The heart's magnetic field settles into its most expansive low-frequency envelope. This represents the quiet floor of conscious biological experience.",photonLbl:"Subdued Harmonic Emission (45%)",flowDesc:"Hyper-slow, high-stability circulatory sync",photonWidth:"45%",complexity:2,coherence:0.95,color:"#1e3a8a",polarity:"positive",domain:"neural"},
+  "bio-theta":{name:"4.5 Hz — Shamanic Dream State Threshold",origin:"BIO-ENERGETICS / REM RESONANCE BOUNDARY",desc:"Theta waves define the hypnagogic gateway between waking cognition and the dreaming unconscious. Hippocampal theta bursts during memory consolidation are well-documented. At 4.5 Hz the heart's toroidal field expands its rhythmic reach and inter-hemispheric coherence rises. The boundary between self and environment becomes neurologically permeable.",photonLbl:"Expansive Luminous Radiance (78%)",flowDesc:"High feedback integration across cortical and cardiac layers",photonWidth:"78%",complexity:3,coherence:0.88,color:"#3b82f6",polarity:"positive",domain:"neural"},
+  "bio-schumann":{name:"7.83 Hz — Planetary Schumann Resonance",origin:"PROVEN SCIENCE / IONOSPHERIC STANDING WAVE",desc:"The Schumann resonance is a measurable electromagnetic standing wave produced by lightning discharges between Earth's surface and ionosphere, first calculated by W.O. Schumann in 1952. At 7.83 Hz it sits in the upper theta/lower alpha EEG band. HeartMath research suggests HRV patterns show coherence with these planetary rhythms during geomagnetic calm — the Earth's own pulse.",photonLbl:"Pristine Planetary Phase-Lock (100%)",flowDesc:"Absolute grounding synchronization with background field",photonWidth:"100%",complexity:4,coherence:1.00,color:"#10b981",polarity:"positive",domain:"planetary"},
+  "bio-alpha":{name:"10.5 Hz — Focused Gateway Mental Clarity",origin:"BIO-ENERGETICS / ALPHA COHERENCE BAND",desc:"Alpha rhythms emerge when the brain transitions from active analysis to relaxed open awareness. At 10.5 Hz, thalamocortical synchrony peaks — the idle frequency of a mind alert without anxiety. HRV biofeedback studies show the heart's inter-beat interval becomes rhythmically smooth, and the field it projects becomes geometrically ordered.",photonLbl:"Balanced Grid Coherence (88%)",flowDesc:"Clean circular feedback running across body and field layer",photonWidth:"88%",complexity:5,coherence:0.92,color:"#059669",polarity:"positive",domain:"neural"},
+  "bio-sensory":{name:"14.1 Hz — Sensory Motor Rhythm Integration",origin:"BIO-ENERGETICS / SMR COHERENCE BAND",desc:"The Sensorimotor Rhythm (SMR), identified by Barry Sterman, suppresses unnecessary motor activation — the neurological noise that manifests as restlessness or hyperactivity. At 14.1 Hz, corticospinal pathways quiet down and the body's postural energy envelope contracts into a precise still form. The heart's toroidal field becomes architecturally tight.",photonLbl:"Dense Structural Field Output (82%)",flowDesc:"Zero-noise muscular loop alignment inside the envelope",photonWidth:"82%",complexity:6,coherence:0.85,color:"#06b6d4",polarity:"positive",domain:"neural"},
+  "bio-beta":{name:"20.0 Hz — Active Analytical Thought Track",origin:"BIO-ENERGETICS / BETA COGNITION BAND",desc:"Beta waves are the signature of alert analytical thinking. Sustained beta dominance elevates cortisol and fragments the heart's normally smooth rhythmic pattern into a jagged incoherent waveform. The HRV power spectrum narrows. Extended residence here without recovery produces measurable autonomic dysregulation.",photonLbl:"Sharp Targeted Emissions (70%)",flowDesc:"Linear energy columns from skull boundary into local space",photonWidth:"70%",complexity:12,coherence:0.70,color:"#6366f1",polarity:"neutral",domain:"neural"},
+  "bio-gamma":{name:"40.0 Hz — Unified Cognitive Binder Phase",origin:"PROVEN SCIENCE / NEURAL BINDING MATRIX",desc:"40 Hz gamma synchrony binds distributed sensory representations into unified percepts (Crick & Koch). Tibetan meditators with decades of practice show elevated gamma coherence during compassion meditation, replicated by Richard Davidson's lab at Wisconsin. Advanced meditators show simultaneous heart-brain synchrony in this band — suggesting 40 Hz is a whole-body phenomenon.",photonLbl:"Hyper-Coherent Flash Bursts (95%)",flowDesc:"Synchronous operation across all micro-channels",photonWidth:"95%",complexity:16,coherence:0.96,color:"#a855f7",polarity:"positive",domain:"neural"},
+  "bio-hyper":{name:"100 Hz — Hyper-Gamma Peak Processing",origin:"THEORETICAL / ULTRA-HIGH COGNITIVE COUPLING",desc:"Above 80 Hz, intracranial recordings from epilepsy patients reveal high-frequency oscillation bursts at moments of intense neural integration. Penrose and Hameroff place consciousness-level quantum coherence effects in this ultra-gamma territory. The field at 100 Hz is a frontier: energetically intense, geometrically complex, and not yet fully mapped.",photonLbl:"Intense Crystalline Sparking (90%)",flowDesc:"High-velocity vertical streams through the central axis",photonWidth:"90%",complexity:22,coherence:0.90,color:"#ec4899",polarity:"positive",domain:"neural"},
+  "sol-396":{name:"396 Hz — Solfeggio Root Liberation Array",origin:"SPIRITUAL PRACTICE / ANCIENT TONAL SCIENCE",desc:"The first Solfeggio tone sits between G and G# producing sympathetic resonance in the lower thoracic cavity. Associated with clearing Wilhelm Reich's 'body armor' — chronic muscular contraction patterns encoding unresolved emotional states. Low tonal immersion at this frequency reliably reduces self-reported anxiety in controlled listening environments.",photonLbl:"Root Level Structural Shake (80%)",flowDesc:"Heavy low-altitude circulation anchoring the body base",photonWidth:"80%",complexity:14,coherence:0.84,color:"#f43f5e",polarity:"positive",domain:"solfeggio"},
+  "sol-417":{name:"417 Hz — Solfeggio Sacral Cleansing Vector",origin:"SPIRITUAL PRACTICE / TRANSFORMATION MATRIX",desc:"417 Hz creates interference patterns with 432 Hz (a 15 Hz difference tone) that fall in the beta/SMR boundary — a frequency known to interrupt habitual cortical loops. It sits slightly between the cracks of Western 12-tone equal temperament, giving it a perceived freshness and dissonance with conditioned patterns.",photonLbl:"Dynamic Ripple Redistribution (83%)",flowDesc:"Displaces static grid interference from the lower torso field",photonWidth:"83%",complexity:16,coherence:0.86,color:"#f97316",polarity:"positive",domain:"solfeggio"},
+  "sol-432":{name:"432 Hz — Pythagorean Natural Tuning Reference",origin:"THEORETICAL / MATHEMATICAL HARMONICS",desc:"At 432 Hz, middle A produces overtone relationships aligning with the Pythagorean comma and phi-based geometric structures. Verdi famously preferred this tuning. 432 divides cleanly into 144, 864, and 108 — each significant in astronomy, architecture, and sacred geometry. Whether physical advantage or aesthetic satisfaction is an open empirical question.",photonLbl:"Organic Geometric Expansion (98%)",flowDesc:"Clean unforced fluid motion across every energetic node",photonWidth:"98%",complexity:8,coherence:0.98,color:"#84cc16",polarity:"positive",domain:"solfeggio"},
+  "sol-528":{name:"528 Hz — Solfeggio Transformation Core",origin:"THEORETICAL / EPIGENETIC BIO-RESONANCE",desc:"528 Hz attracted scientific attention from Dr. Leonard Horowitz, citing Glen Rein's work showing audio exposures influenced in-vitro DNA winding assays. It sits at the mathematical midpoint of the audible Solfeggio series and produces the color green through cymatics — the same frequency driving chlorophyll photosynthesis.",photonLbl:"Brilliant Central Gold Ignition (100%)",flowDesc:"Total reconstruction vectors active — realigning matter into arrays",photonWidth:"100%",complexity:5,coherence:1.00,color:"#eab308",polarity:"positive",domain:"solfeggio"},
+  "sol-639":{name:"639 Hz — Solfeggio Interpersonal Connection",origin:"SPIRITUAL PRACTICE / RELATIONSHIP ENTRAINMENT",desc:"This range overlaps the acoustic band the human vocal formant is optimized to process. Sound here reaches the brainstem's superior olivary complex with high fidelity, influencing the social engagement system per Porges' Polyvagal Theory. The result is openness, receptivity, and willingness to synchronize with other nervous systems in proximity.",photonLbl:"Expansive Empathic Radiance (92%)",flowDesc:"Lateral field loops stretch to bridge space between entities",photonWidth:"92%",complexity:10,coherence:0.94,color:"#22c55e",polarity:"positive",domain:"solfeggio"},
+  "sol-741":{name:"741 Hz — Solfeggio Throat Expression Array",origin:"SPIRITUAL PRACTICE / PURIFICATION VECTOR",desc:"741 Hz is close to the second harmonic of 370.5 Hz, near the resonant frequency of the larynx cavity during certain vowel phonations. Traditionally linked to self-expression and toxin clearing. Also used in electromagnetic remediation protocols to signal interference with man-made EMF patterns — a frontier of experimental bioelectromagnetics.",photonLbl:"High-Frequency Purity Scan (89%)",flowDesc:"Drives internal debris past the boundary walls of the torus",photonWidth:"89%",complexity:18,coherence:0.89,color:"#06b6d4",polarity:"positive",domain:"solfeggio"},
+  "sol-852":{name:"852 Hz — Solfeggio Intuitive Third-Eye Beam",origin:"SPIRITUAL PRACTICE / TRANSCENDENTAL AXIS",desc:"Culturally aligned with the pineal gland — a photosensitive neuroendocrine structure Descartes called 'the seat of the soul.' The pineal's primary output is melatonin, but it also produces trace amounts of DMT under conditions not yet fully characterized. At 852 Hz practitioners report enhanced visual ideation and inner light phenomena.",photonLbl:"Piercing Vertical Flow Matrix (94%)",flowDesc:"Standing wave patterns override background environmental noise",photonWidth:"94%",complexity:24,coherence:0.93,color:"#6366f1",polarity:"positive",domain:"solfeggio"},
+  "sol-963":{name:"963 Hz — Solfeggio Crown Connection Array",origin:"SPIRITUAL PRACTICE / HIGHER DIMENSIONAL ARCHITECTURE",desc:"963 Hz resonates with the superior parietal cortex — the region whose deactivation correlates with profound boundary dissolution and mystical states. Mathematically, 963 = 528 + 432 + 3. Represents the dissolution of individual field boundaries into a larger systemic whole at the crown of conscious experience.",photonLbl:"Crown Fountain Eruption (97%)",flowDesc:"Crystalline particle streams wrap the silhouette in bright rings",photonWidth:"97%",complexity:30,coherence:0.96,color:"#a855f7",polarity:"positive",domain:"solfeggio"},
+  "anc-om":{name:"136.1 Hz — Om / Vedic Primordial Drone",origin:"SPIRITUAL PRACTICE / PRIMORDIAL SOUND CURRENT",desc:"136.1 Hz corresponds to the Earth's orbital year transposed up 32 octaves into the audible range — the frequency of the primordial 'Om' in Vedic tradition. Group chanting at this frequency produces extraordinary collective vagal activation and HRV entrainment between participants. This is the physics of why communal chanting feels physiologically different from solo practice.",photonLbl:"Primordial Harmonic Saturation (97%)",flowDesc:"Collective breath synchronization drives unified field expansion",photonWidth:"97%",complexity:4,coherence:0.97,color:"#f59e0b",polarity:"positive",domain:"ancient"},
+  "anc-prayer":{name:"8–10 Hz — Group Prayer Coherent Intention Field",origin:"PROVEN SCIENCE / COLLECTIVE CONSCIOUSNESS RESEARCH",desc:"HeartMath Institute Global Coherence Initiative data shows that during large group prayer or meditation events, local Schumann resonance sensors register measurable amplitude increases in the 8–10 Hz band. The collective heart fields of hundreds of synchronized individuals produce a measurable environmental electromagnetic perturbation — the physics of group prayer across all traditions.",photonLbl:"Unified Intention Radiance (100%)",flowDesc:"Individual fields merge into a single coherent group envelope",photonWidth:"100%",complexity:2,coherence:1.00,color:"#c8a84b",polarity:"positive",domain:"ancient"},
+  "anc-tibetan":{name:"108 Hz — Monastic Singing Bowl Fundamental",origin:"SPIRITUAL PRACTICE / COMPASSION ENTRAINMENT",desc:"108 is sacred in the Hindu-Buddhist cosmos: the mala bead count, the Earth-Sun distance in solar diameters. Tibetan singing bowls forged from seven-metal alloys produce fundamentals near 108 Hz with partials in the 432–864 Hz range — covering multiple Solfeggio reference points simultaneously. The 108 Hz tone sits at the boundary between tactile resonance felt in tissue and auditory processing.",photonLbl:"Resonant Ring Contours (88%)",flowDesc:"Wide circular waves smooth the body axis resolving rough edges",photonWidth:"88%",complexity:9,coherence:0.91,color:"#e11d48",polarity:"positive",domain:"ancient"},
+  "anc-egypt":{name:"111 Hz — Egyptian Megalithic Chamber Toning",origin:"SPIRITUAL PRACTICE / ANCIENT COGNITIVE ACOUSTICS",desc:"Archaeoacoustic researchers Devereux and Cross measured standing wave resonance inside megalithic chambers (Newgrange, Maltese hypogea, Egyptian granite chambers) finding dominant peaks at 110–112 Hz. At 111 Hz, fMRI studies showed a marked shift from left to right prefrontal cortex activation — a neural signature associated with trance and expanded pattern recognition.",photonLbl:"Deep Chamber Standing Waves (93%)",flowDesc:"Field holds steady as stone architecture against outside noise",photonWidth:"93%",complexity:7,coherence:0.94,color:"#f59e0b",polarity:"positive",domain:"ancient"},
+  "anc-david":{name:"211 Hz — Davidic Reconstructive Harp Signature",origin:"BIBLICAL MECHANICS / NERVOUS SYSTEM COMFORT",desc:"David's harp music for Saul (1 Samuel 16:23) is history's earliest documented music therapy intervention. The kinnor tuned to ancient Semitic temperament produced fundamentals in 150–250 Hz. At 211 Hz, acoustic output passes through the chest cavity near its primary longitudinal resonant mode — a proprioceptive vibration the vagal system registers as profoundly soothing.",photonLbl:"Soothed Restorative Shimmer (91%)",flowDesc:"Smooths adrenaline-driven micro-jitter across cellular fluid walls",photonWidth:"91%",complexity:6,coherence:0.95,color:"#d946ef",polarity:"positive",domain:"ancient"},
+  "anc-jericho":{name:"144 Hz — Archaeological Jericho Shatter Array",origin:"BIBLICAL MECHANICS / SONIC STRUCTURAL BREAKDOWN",desc:"Near 144 Hz, sustained resonance can induce stress oscillations in masonry — the same principle as soldiers breaking step on bridges. 144 is 12² and embedded in sacred mathematics. Whether the Jericho account is acoustic or metaphorical, 144 Hz represents focused disruptive power that fractures coherent standing structures.",photonLbl:"Violent Disruption Shockwaves (35%)",flowDesc:"Grid lines fracture into sharp chaotic explosion points",photonWidth:"35%",complexity:40,coherence:0.12,color:"#ef4444",polarity:"negative",domain:"ancient"},
+  "anc-war":{name:"230–280 Hz — Tribal War Drum Threshold",origin:"SPIRITUAL PRACTICE / CONFLICT AROUSAL ACOUSTICS",desc:"War drums across cultures converge on 2–4 Hz rhythmic patterns with fundamental tones at 230–280 Hz — the chest cavity fight-or-flight arousal band. Sustained exposure elevates cortisol, suppresses prefrontal inhibition, and shifts HRV into sympathetic dominance. Groups exposed collectively show synchronized aggressive arousal — the neuroacoustics of collective warfare and crowd violence.",photonLbl:"Aggressive Arousal Cascade (25%)",flowDesc:"Field contracts into survival geometry, lateral loops collapse inward",photonWidth:"25%",complexity:45,coherence:0.18,color:"#b91c1c",polarity:"negative",domain:"ancient"},
+  "media-horror":{name:"18–19 Hz — Infrasonic Horror Response",origin:"PROVEN SCIENCE / PSYCHOACOUSTIC FEAR INDUCTION",desc:"Researcher Vic Tandy discovered 19 Hz infrasound — below hearing threshold but felt as pressure — produces anxiety, unease, peripheral vision disturbance, and the sensation of presence. Horror films deliberately embed 18–19 Hz in their soundtracks. In a shared viewing environment, this frequency synchronously destabilizes ALL HRV patterns in the room — a collective field degradation amplified by emotional contagion between entangled individuals.",photonLbl:"Subliminal Terror Wave (15%)",flowDesc:"Invisible pressure collapses torus from all directions simultaneously",photonWidth:"15%",complexity:70,coherence:0.08,color:"#450a0a",polarity:"negative",domain:"media"},
+  "media-pop":{name:"440 Hz — Modern Western Concert Pitch",origin:"THEORETICAL / CULTURAL TUNING STANDARD",desc:"The 1939 international standard set A=440 Hz, replacing earlier conventions including A=432 Hz. Some researchers argue 440 Hz creates subtle psychoacoustic tension, contributing to the stimulating quality of modern pop music. Its field geometry is active and outward-projecting rather than self-referencing. Emotional contagion in shared listening contexts amplifies whatever state the music induces.",photonLbl:"Cultural Grid Standard (65%)",flowDesc:"Active stimulation pattern; moderate field coherence",photonWidth:"65%",complexity:18,coherence:0.65,color:"#8b5cf6",polarity:"neutral",domain:"media"},
+  "tech-60hz":{name:"60 Hz — AC Power Grid Electromagnetic Smog",origin:"PROVEN SCIENCE / HOUSEHOLD INFRASTRUCTURE FIELD",desc:"Every powered North American building radiates a 60 Hz ELF field. Epidemiological studies (Wertheimer & Leeper 1979; BioInitiative Report 2012) associate chronic high-level exposure with disrupted melatonin synthesis, altered HRV, and elevated cancer risk. At 60 Hz, the oscillation falls within the brain's beta band — biologically non-neutral at the cellular signaling level.",photonLbl:"Heavy Contamination Jitter (20%)",flowDesc:"Natural torus rhythm displaced by jagged artificial corners",photonWidth:"20%",complexity:50,coherence:0.10,color:"#b91c1c",polarity:"negative",domain:"tech"},
+  "tech-wifi":{name:"2.4 GHz — Consumer WiFi Transceiver Field",origin:"PROVEN SCIENCE / WIRELESS DATA NETWORK RADIATION",desc:"WiFi at 2.4 GHz operates in the same microwave band as microwave ovens, at power levels billions of times lower. At ambient densities, thermal effects are considered negligible. However Martin Pall at Washington State University documents disruption of voltage-gated calcium channels at these frequencies, with downstream effects on oxidative stress markers.",photonLbl:"Scattered Micro-Fractures (25%)",flowDesc:"Tiny chaotic holes perforating the field's protective layers",photonWidth:"25%",complexity:65,coherence:0.15,color:"#ea580c",polarity:"negative",domain:"tech"},
+  "tech-5g":{name:"28 GHz — mmWave Cellular Array Field",origin:"PROVEN SCIENCE / NEXT-GEN NETWORK DENSITY",desc:"5G millimeter wave at 28 GHz is absorbed in the outermost 0.5mm of tissue. Biophysicist Yuri Grigoriev flagged that the sweat duct, whose helical geometry acts as a dielectric waveguide, may exhibit resonant absorption specifically at mmWave frequencies — a structural vulnerability requiring dedicated study before mass deployment.",photonLbl:"Dense Technical Grid Interference (18%)",flowDesc:"Field collapses inward into tight high-stress energy clusters",photonWidth:"18%",complexity:80,coherence:0.08,color:"#dc2626",polarity:"negative",domain:"tech"},
+  "tech-bluetooth":{name:"2.48 GHz — Bluetooth Personal Area Mesh",origin:"PROVEN SCIENCE / WEARABLE PROXIMITY RADIATION",desc:"Bluetooth at 2.4–2.485 GHz via frequency-hopping across 79 channels. Wearables maintain constant millimeter-range skin contact. A 2022 Reviews on Environmental Health review collated 29 studies showing statistically significant neurological effects from Bluetooth-range exposures in animal models, including blood-brain barrier permeability changes.",photonLbl:"Localized Cranial Area Noise (40%)",flowDesc:"Rapid high-frequency buzz injected into upper field layer",photonWidth:"40%",complexity:45,coherence:0.42,color:"#2563eb",polarity:"negative",domain:"tech"},
+  "tech-led":{name:"400 THz — Smart LED Driver Pulsed Flicker",origin:"PROVEN SCIENCE / SOLID STATE LIGHTING ARTIFACT",desc:"LED lighting driven by switching power supplies flickers at PWM rates of 100–400 Hz. The IEEE P1789 standard identifies flicker below 3% as safe, but many commercial LEDs exceed 50% flicker depth when dimmed. Invisible flicker drives retinal ganglion cells and their projections to the suprachiasmatic nucleus — the circadian master clock — causing headache, visual fatigue, and circadian disruption.",photonLbl:"Stroboscopic Signal Splitting (45%)",flowDesc:"Organic flow structures split into disconnected horizontal bands",photonWidth:"45%",complexity:55,coherence:0.38,color:"#ca8a04",polarity:"negative",domain:"tech"},
+  "tech-smart":{name:"915 MHz — Smart Meter Automated Radio Pulse",origin:"PROVEN SCIENCE / UTILITY METER RF PULSATION",desc:"Smart meters transmit at 915 MHz with 0.5–5% duty cycles repeated every 30 seconds to 15 minutes. Their sharp-rise-time pulse characteristics are bioelectromagnetically distinct from equivalent continuous exposures. California's CPUC documented over 2,300 health complaints specifically from smart meter installations in 2012–2013.",photonLbl:"Periodic Grid Spikes (30%)",flowDesc:"Sudden expansion snaps break up natural breathing cycles",photonWidth:"30%",complexity:60,coherence:0.22,color:"#991b1b",polarity:"negative",domain:"tech"},
+  "tech-haarp":{name:"3.25 MHz — Ionospheric Heater Research Wave",origin:"THEORETICAL / HIGH-FREQUENCY ATMOSPHERIC MODIFICATION",desc:"HAARP and similar ionospheric heaters transmit megawatt-class HF signals in the 2.8–10 MHz range. Their scientific outputs are published and peer-reviewed. What remains genuinely open is whether large-scale ionospheric perturbation has downstream effects on the Schumann resonance — and through it, on biological systems that appear to entrain to those planetary standing waves.",photonLbl:"Heavy Spatial Compression (35%)",flowDesc:"Flattens top and bottom torus loops limiting outward range",photonWidth:"35%",complexity:48,coherence:0.28,color:"#7f1d1d",polarity:"negative",domain:"tech"},
+  "tech-6g":{name:"100 GHz — Sub-THz 6G Prototype Array",origin:"THEORETICAL / FORWARD NETWORK INFRASTRUCTURE",desc:"6G research at 100 GHz–3 THz targets post-2030 deployment. Skin penetration under 0.2 mm. Hair follicles, sweat pore arrays, and nerve endings have dimensions in the micron-to-submillimeter range — the same scale as THz wavelengths. Effective dielectric antenna behavior of biological surface microstructures at THz is a nascent research frontier with no completed safety standard.",photonLbl:"Total Network Swarm Noise (12%)",flowDesc:"Organic energy paths replaced by rapid chaotic pixel matrix",photonWidth:"12%",complexity:95,coherence:0.04,color:"#450a0a",polarity:"negative",domain:"tech"},
+  "tech-satellite":{name:"12.5 GHz — LEO Satellite Downlink Array",origin:"PROVEN SCIENCE / SPACE-BASED DOWNLINK NETWORK",desc:"LEO satellite constellations now number in the tens of thousands, each transmitting in the Ku-band and Ka-band. The ITU has noted an unprecedented aggregate power flux density at ground level from coordinated LEO systems with no historical precedent for long-term biological exposure studies. LEO phasing ensures nearly continuous overhead exposure.",photonLbl:"Continuous Top-Down Noise (50%)",flowDesc:"Grainy noise layer across the upper field boundaries",photonWidth:"50%",complexity:38,coherence:0.45,color:"#312e81",polarity:"negative",domain:"tech"},
+  "tech-ev":{name:"10 kHz — High-Voltage EV Inverter Hum",origin:"PROVEN SCIENCE / AUTOMOTIVE INVERTER RADIATION",desc:"EV drivetrain inverters switch DC to AC at 5–20 kHz, producing magnetic fields of 0.1–25 µT in the passenger compartment — up to 25 times background residential levels. Animal studies show chronic exposure to comparable ELF-intermediate fields alters hippocampal neurogenesis rates. The key exposure vector is duration (commute time) rather than peak intensity.",photonLbl:"Bottom-Heavy Field Drag (38%)",flowDesc:"Field loops pulled downward into heavy pooling at the feet",photonWidth:"38%",complexity:42,coherence:0.30,color:"#1e1b4b",polarity:"negative",domain:"tech"}
+};
+
+// Fill quantum slots
+for(let i=1;i<=60;i++){
+  const hz=(i*13.7).toFixed(1);
+  const co=parseFloat((0.35+Math.random()*0.55).toFixed(2));
+  const pw=Math.floor(42+Math.random()*48);
+  FC[`gen-slot-${i}`]={
+    name:`${hz} Hz — Quantum Matrix Field Element #${i+30}`,
+    origin:"THEORETICAL / QUANTUM FIELD PARAMETER DATABASE",
+    desc:`At ${hz} Hz, the engine samples a calculated resonance node from the experimental quantum field archive. Harmonic analysis reveals ${Math.floor(i*1.3+2)} overtone relationships within the audible spectrum. Fundamental wavelength at standard air temperature spans ${(343/(i*13.7)).toFixed(2)} meters — a scale resonating with certain macroscopic anatomical dimensions.`,
+    photonLbl:`Calculated Density Parameter (${pw}%)`,flowDesc:`Slot #${i} stabilization holding`,photonWidth:`${pw}%`,complexity:Math.floor(4+(i%24)),coherence:co,color:`hsl(${(i*19)%360},70%,58%)`,polarity:co>0.6?"positive":co>0.4?"neutral":"negative",domain:"quantum"
+  };
+}
+
+// ── APP STATE ─────────────────────────────────────────
+const S={
+  activeKey:"heart-baseline",phase:"before",goldActive:false,proximityCount:1,
+  t:0,uiVisible:false,
+  camRotX:0,camRotY:0,zoom:1.0,panX:0,panY:0,
+  isDragging:false,lastX:0,lastY:0,pinchDist:0,touchStart:0
+};
+
+const canvas=document.getElementById('quantum-stage');
+const ctx=canvas.getContext('2d');
+let pool=[];
+const N=10000;
+
+function initPool(){
+  pool=[];
+  for(let i=0;i<N;i++){
+    pool.push({
+      x3d:(Math.random()-0.5)*1000,y3d:(Math.random()-0.5)*1000,z3d:(Math.random()-0.5)*1000,
+      seed:Math.random()*Math.PI*2,seed2:Math.random()*Math.PI*2,
+      spd:Math.random()*0.022+0.004,sz:Math.random()*1.9+0.3,
+      al:Math.random()*0.55+0.2,lat:Math.random(),mer:Math.floor(Math.random()*24)
+    });
+  }
+}
+
+function resize(){
+  const dpr=window.devicePixelRatio||1;
+  canvas.width=window.innerWidth*dpr;
+  canvas.height=window.innerHeight*dpr;
+  ctx.scale(dpr,dpr);
+  initPool();
+}
+
+function project(x,y,z,cx,cy){
+  const cY=Math.cos(S.camRotY),sY=Math.sin(S.camRotY);
+  const rx=x*cY-z*sY,rz=x*sY+z*cY;
+  const cX=Math.cos(S.camRotX),sX=Math.sin(S.camRotX);
+  const ry=y*cX-rz*sX,rz2=y*sX+rz*cX;
+  const sc=(520/(600+rz2))*S.zoom;
+  return{x:cx+rx*sc+S.panX,y:cy+ry*sc+S.panY,sc,depth:rz2};
+}
+
+function bodyR(pct){
+  if(pct<0.07){const h=pct/0.07;return 22*Math.sqrt(Math.max(0,1-((h-0.45)/0.55)**2));}
+  if(pct<0.12)return 9+Math.sin((pct-0.07)/0.05*Math.PI)*3;
+  if(pct<0.20){const s=(pct-0.12)/0.08;return 14+30*Math.sin(s*Math.PI)*0.9;}
+  if(pct<0.30)return 44-4*(pct-0.20)/0.10;
+  if(pct<0.42)return 40-12*(pct-0.30)/0.12;
+  if(pct<0.52)return 28+14*Math.sin((pct-0.42)/0.10*Math.PI)*0.8;
+  if(pct<0.62)return 32-4*(pct-0.52)/0.10;
+  if(pct<0.68)return 26-6*(pct-0.62)/0.06;
+  if(pct<0.80)return 20+Math.sin((pct-0.68)/0.12*Math.PI)*8;
+  if(pct<0.88)return 12-2*(pct-0.80)/0.08;
+  return 10*(1-(pct-0.88)/0.12);
+}
+
+function drawFace(fx,fy,sc,co,t){
+  const R=22*sc;if(R<3)return;
+  const ag=ctx.createRadialGradient(fx,fy,R*0.1,fx,fy,R*1.7);
+  ag.addColorStop(0,`rgba(180,220,255,${0.20*co})`);
+  ag.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=ag;ctx.beginPath();ctx.arc(fx,fy,R*1.7,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(fx,fy,R,0,Math.PI*2);
+  ctx.strokeStyle=`rgba(180,220,255,${0.22*co})`;ctx.lineWidth=0.7;ctx.stroke();
+  for(let m=0;m<4;m++){
+    const ang=m*Math.PI/4+t*0.12;
+    ctx.beginPath();ctx.ellipse(fx,fy,R*Math.abs(Math.cos(ang)),R,ang,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(126,200,240,${0.08*co})`;ctx.lineWidth=0.4;ctx.stroke();
+  }
+  for(let l=1;l<=3;l++){
+    const ly=fy-R*0.5+l*R*0.3;
+    const rl=Math.sqrt(Math.max(0,R*R-(ly-fy)**2));
+    if(rl>2){ctx.beginPath();ctx.ellipse(fx,ly,rl,rl*0.22,0,0,Math.PI*2);ctx.strokeStyle=`rgba(126,200,240,${0.07*co})`;ctx.lineWidth=0.4;ctx.stroke();}
+  }
+  const eyeY=fy-R*0.08;const ep=0.5+0.5*Math.sin(t*2.5);
+  [-R*0.32,R*0.32].forEach(eox=>{
+    const ex=fx+eox;
+    ctx.beginPath();ctx.ellipse(ex,eyeY,R*0.17,R*0.11,0,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(180,220,255,${0.16*co})`;ctx.lineWidth=0.5;ctx.stroke();
+    const eg=ctx.createRadialGradient(ex,eyeY,0,ex,eyeY,R*0.12);
+    eg.addColorStop(0,`rgba(200,240,255,${0.65*co*ep})`);eg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=eg;ctx.beginPath();ctx.arc(ex,eyeY,R*0.12,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=`rgba(255,255,255,${0.85*co*ep})`;ctx.beginPath();ctx.arc(ex,eyeY,R*0.04,0,Math.PI*2);ctx.fill();
+  });
+  ctx.beginPath();ctx.moveTo(fx,eyeY+R*0.08);ctx.lineTo(fx-R*0.07,eyeY+R*0.27);ctx.lineTo(fx+R*0.07,eyeY+R*0.27);
+  ctx.strokeStyle=`rgba(180,220,255,${0.10*co})`;ctx.lineWidth=0.6;ctx.stroke();
+  ctx.beginPath();ctx.arc(fx,eyeY+R*0.42,R*0.20,0.25,Math.PI-0.25);
+  ctx.strokeStyle=`rgba(180,220,255,${0.13*co})`;ctx.lineWidth=0.6;ctx.stroke();
+  [-R*0.50,R*0.50].forEach(cxo=>{
+    ctx.beginPath();ctx.arc(fx+cxo,eyeY+R*0.20,R*0.12,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(126,200,240,${0.05*co})`;ctx.lineWidth=0.4;ctx.stroke();
+  });
+  if(co>0.7){
+    const cg=ctx.createRadialGradient(fx,fy-R,0,fx,fy-R,R*0.55);
+    const cp=0.4+0.6*Math.sin(t*3.5);
+    cg.addColorStop(0,`rgba(200,168,75,${0.38*cp*co})`);cg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(fx,fy-R,R*0.55,0,Math.PI*2);ctx.fill();
+  }
+}
+
+function drawSpine(pts,co,t){
+  if(pts.length<3)return;
+  for(let i=0;i<pts.length-1;i++){
+    ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[i+1].x,pts[i+1].y);
+    ctx.strokeStyle=`rgba(180,220,255,${0.09*co*pts[i].sc})`;ctx.lineWidth=1;ctx.stroke();
+  }
+  const cc=['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#6366f1','#a855f7'];
+  const cp=[0.85,0.72,0.55,0.42,0.28,0.16,0.06];
+  cp.forEach((pos,ci)=>{
+    const idx=Math.floor(pos*(pts.length-1));
+    if(idx>=pts.length)return;
+    const pt=pts[idx];const pulse=0.5+0.5*Math.sin(t*2.8+ci*0.9);
+    const cr=3.5*pt.sc*(0.7+0.3*co*pulse);if(cr<1)return;
+    const [r,g,b]=cc[ci].slice(1).match(/../g).map(x=>parseInt(x,16));
+    const cg=ctx.createRadialGradient(pt.x,pt.y,0,pt.x,pt.y,cr*3.2);
+    cg.addColorStop(0,`rgba(${r},${g},${b},${0.75*co*pulse})`);cg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(pt.x,pt.y,cr*3.2,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=`rgba(255,255,255,${0.55*co*pulse})`;ctx.beginPath();ctx.arc(pt.x,pt.y,cr*0.45,0,Math.PI*2);ctx.fill();
+  });
+}
+
+function h2r(hex,a){
+  if(!hex)return`rgba(126,184,212,${a})`;
+  if(hex.startsWith('hsl'))return hex.replace('hsl(','hsla(').replace(')',`,${a})`);
+  if(hex.startsWith('rgba'))return hex;
+  const m=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return m?`rgba(${parseInt(m[1],16)},${parseInt(m[2],16)},${parseInt(m[3],16)},${a})`:`rgba(126,184,212,${a})`;
+}
+
+function render(){
+  const W=window.innerWidth,H=window.innerHeight;
+  ctx.fillStyle='rgba(2,4,9,0.115)';ctx.fillRect(0,0,W,H);
+  S.t+=0.012;
+  const t=S.t,d=FC[S.activeKey];
+  let co=S.goldActive?1.0:parseFloat(d.coherence);
+  if(S.phase==='after')co=Math.min(1.0,co+0.32);
+  if(S.phase==='before'&&co>0.5)co*=0.38;
+  const cx=W/2,cy=H*0.44;
+  let bodies=S.proximityCount===1?[{x:0}]:S.proximityCount===2?[{x:-215},{x:215}]:[{x:-275},{x:0},{x:275}];
+  const spines=bodies.map(()=>[]);
+
+  for(let i=0;i<pool.length;i++){
+    const p=pool[i];const fi=i%5;const bi=i%bodies.length;const br=bodies[bi];
+
+    if(fi===0){
+      const pct=p.lat,R=bodyR(pct);
+      const baseY=-172+pct*344;
+      const ma=(p.mer*(Math.PI*2/24))+t*0.22*p.spd;
+      let tx=br.x+Math.cos(ma)*R,tz=Math.sin(ma)*R*0.52,ty=baseY;
+      if(pct>0.62){const ls=p.mer%2===0?-1:1;tx+=ls*18*(pct-0.62)/0.38;}
+      if(S.goldActive){tx+=Math.sin(p.seed+t*4.5)*2;ty+=Math.cos(p.seed2+t*4)*2;}
+      if(bodies.length>1)for(const ob of bodies)if(ob!==br){tx+=(ob.x-br.x)*0.035*co*Math.sin(pct*Math.PI);}
+      p.x3d+=(tx-p.x3d)*0.14;p.y3d+=(ty-p.y3d)*0.14;p.z3d+=(tz-p.z3d)*0.14;
+      if(p.mer===0&&pct>0.05&&pct<0.95){const sp=project(p.x3d,p.y3d,p.z3d,cx,cy);if(sp.sc>0)spines[bi].push(sp);}
+      const sp=project(p.x3d,p.y3d,p.z3d,cx,cy);
+      if(sp.sc>0){
+        ctx.fillStyle=`rgba(175,218,255,${p.al*(0.52+0.48*co)*Math.min(1,sp.sc*1.3)})`;
+        ctx.beginPath();ctx.arc(sp.x,sp.y,p.sz*sp.sc*0.78,0,Math.PI*2);ctx.fill();
+      }
+    }else if(fi===1){
+      const ri=i%18;const la=((i*0.046)+t*0.78)%(Math.PI*2);const sa=(ri*Math.PI)/18;
+      const hY=-22;
+      let mR=152+Math.sin(t*1.65+ri*0.35)*19*co;
+      let mr=53+Math.cos(t*2.1+i*0.011)*10*co;
+      if(co<0.42){mR+=Math.sin(i*0.3+t*4.2)*56*(1-co);mr+=Math.cos(i*0.2-t*4.2)*27*(1-co);}
+      let tx=br.x+(mR+mr*Math.cos(la))*Math.cos(sa);
+      let ty=hY+mr*Math.sin(la);
+      let tz=(mR+mr*Math.cos(la))*Math.sin(sa);
+      if(bodies.length>1)for(const ob of bodies)if(ob!==br)tx+=(ob.x-br.x)*0.13*co*Math.abs(Math.cos(la));
+      p.x3d+=(tx-p.x3d)*0.070;p.y3d+=(ty-p.y3d)*0.070;p.z3d+=(tz-p.z3d)*0.070;
+      if(S.goldActive){p.x3d+=Math.sin(p.seed+t*2.8)*5.5;p.y3d+=Math.cos(p.seed2-t*2.8)*5.5;}
+      const sp=project(p.x3d,p.y3d,p.z3d,cx,cy);
+      if(sp.sc>0){
+        const col=(S.goldActive&&Math.random()>0.65)?`rgba(200,168,75,${p.al*co})`:h2r(d.color,p.al*co*Math.min(1,sp.sc*1.06));
+        ctx.fillStyle=col;ctx.beginPath();ctx.arc(sp.x,sp.y,p.sz*sp.sc,0,Math.PI*2);ctx.fill();
+      }
+    }else if(fi===2){
+      const ca=(i*0.040+t*0.48)%(Math.PI*2);
+      const cR=212+Math.sin(t*1.0+i*0.05)*20*co;
+      let tx=br.x+Math.cos(ca)*cR,ty=Math.sin(ca)*cR*0.28,tz=Math.sin(ca*0.72+t*0.27)*30;
+      if(co<0.4){tx+=Math.sin(i+t*5)*44*(1-co);ty+=Math.cos(i-t*5)*22*(1-co);}
+      p.x3d+=(tx-p.x3d)*0.082;p.y3d+=(ty-p.y3d)*0.082;p.z3d+=(tz-p.z3d)*0.082;
+      const sp=project(p.x3d,p.y3d,p.z3d,cx,cy);
+      if(sp.sc>0){
+        ctx.fillStyle=`rgba(126,200,240,${p.al*co*0.62*Math.min(1,sp.sc*1.35)})`;
+        ctx.beginPath();ctx.arc(sp.x,sp.y,p.sz*sp.sc*1.12,0,Math.PI*2);ctx.fill();
+      }
+    }else if(fi===3){
+      const gx=((i*17)%1600)-800,gz=((i*31)%1600)-800;
+      let gy=182;const dist=Math.sqrt(gx*gx+gz*gz);
+      gy+=Math.sin(dist*0.016-t*2.9)*30*co+(co<0.42?Math.cos(gx*0.09)*d.complexity*0.38:0);
+      p.x3d+=(gx-p.x3d)*0.088;p.y3d+=(gy-p.y3d)*0.088;p.z3d+=(gz-p.z3d)*0.088;
+      const sp=project(p.x3d,p.y3d,p.z3d,cx,cy);
+      if(sp.sc>0&&sp.sc<1.6){ctx.fillStyle=h2r(d.color,p.al*co*0.40*Math.min(1,sp.sc*1.4));ctx.beginPath();ctx.arc(sp.x,sp.y,p.sz*sp.sc*0.72,0,Math.PI*2);ctx.fill();}
+    }else{
+      if(bodies.length===1){p.x3d*=0.99;p.y3d*=0.99;p.z3d*=0.99;continue;}
+      const b0=bodies[0],b1=bodies[bodies.length-1];
+      const lt=(Math.sin(p.seed+t*p.spd)+1)*0.5;
+      const mx=b0.x+(b1.x-b0.x)*lt;
+      const ty2=-50+Math.sin(p.seed2+t*1.1)*115;
+      const tz2=Math.cos(p.seed+t*0.75)*78;
+      const sc2=(1-co)*58;
+      p.x3d+=(mx+Math.sin(p.seed2+t*1.9)*sc2-p.x3d)*0.075;
+      p.y3d+=(ty2+Math.cos(p.seed+t*1.9)*sc2*0.45-p.y3d)*0.075;
+      p.z3d+=(tz2-p.z3d)*0.075;
+      const sp=project(p.x3d,p.y3d,p.z3d,cx,cy);
+      if(sp.sc>0){
+        const fa=p.al*co*0.52*Math.min(1,sp.sc);
+        ctx.fillStyle=S.goldActive?`rgba(200,168,75,${fa})`:`rgba(126,200,240,${fa})`;
+        ctx.beginPath();ctx.arc(sp.x,sp.y,p.sz*sp.sc*0.88,0,Math.PI*2);ctx.fill();
+      }
+    }
+  }
+
+  // Spines + faces + heart glows
+  for(let bi=0;bi<bodies.length;bi++){
+    const spts=spines[bi].sort((a,b)=>a.y-b.y);
+    if(spts.length>3)drawSpine(spts,co,t);
+  }
+  for(const b of bodies){
+    const hp=project(b.x,-172,0,cx,cy);
+    if(hp.sc>0)drawFace(hp.x,hp.y,hp.sc,co,t);
+    const hc=project(b.x,-22,0,cx,cy);
+    if(hc.sc>0){
+      const pulse=0.55+0.45*Math.sin(t*7.5);
+      const gR=38*hc.sc*(0.8+0.2*co);
+      const gg=ctx.createRadialGradient(hc.x,hc.y,0,hc.x,hc.y,gR*(1+pulse*0.3));
+      gg.addColorStop(0,`rgba(255,255,255,${0.52*co*pulse})`);
+      gg.addColorStop(0.3,`rgba(180,220,255,${0.26*co})`);
+      gg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=gg;ctx.beginPath();ctx.arc(hc.x,hc.y,gR*1.5,0,Math.PI*2);ctx.fill();
+      if(S.goldActive){
+        const ggg=ctx.createRadialGradient(hc.x,hc.y,0,hc.x,hc.y,gR*2.6);
+        ggg.addColorStop(0,`rgba(200,168,75,${0.32*pulse})`);ggg.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.fillStyle=ggg;ctx.beginPath();ctx.arc(hc.x,hc.y,gR*2.6,0,Math.PI*2);ctx.fill();
+      }
+    }
+  }
+  requestAnimationFrame(render);
+}
+
+// ── COLLECTIVE FIELD CALCULATION ──────────────────────
+function calcField(){
+  const d=FC[S.activeKey];const n=S.proximityCount;
+  if(n===1){document.getElementById('field-calc-panel').style.display='none';document.getElementById('p-calc-box').style.display='none';return;}
+  document.getElementById('field-calc-panel').style.display='block';
+  document.getElementById('p-calc-box').style.display='block';
+  let base=parseFloat(d.coherence);
+  if(S.goldActive)base=Math.min(1,base+0.15);
+  if(S.phase==='after')base=Math.min(1,base+0.32);
+  if(S.phase==='before'&&base>0.5)base*=0.38;
+  const pol=d.polarity;
+  let cc,expl,badges='';
+  if(pol==='positive'){
+    cc=Math.min(1.0,base+(n-1)*base*0.45);
+    const pct=Math.round(cc*100);const delta=Math.round((cc-base)*100);
+    badges=`<span class="field-calc-badge pos">+${delta}% amplification</span><span class="field-calc-badge pos">${pct}% collective coherence</span>`;
+    if(d.domain==='ancient'){expl=`${n} individuals sharing the ${d.name.split('—')[0].trim()} field create constructive bio-electromagnetic interference. HeartMath research confirms synchronized heart fields between ${n} bodies produce a collective toroidal envelope ${Math.round(n*60)}× stronger than any single field. The combined HRV pattern entrains to a unified rhythm — this is the physics of group prayer, chanting, and ceremony across all traditions. Shared positive intention amplifies the coherent signal exponentially, reaching a collective coherence of ${pct}% with particle entanglement bridging the gap between all bodies in the shared space.`;}
+    else if(d.domain==='cardiac'||d.domain==='neural'){expl=`${n} individuals sharing the ${d.name.split('—')[0].trim()} field experience neural and cardiac entrainment via synchronized toroidal fields. The collective coherence rises to ${pct}% — each body's field phase-locks with its neighbors. This is the mechanism behind shared meditation experiences, group flow states, and the measurably enhanced focus of synchronized environments. The entangled particle bridge between bodies strengthens with each cycle of shared resonance.`;}
+    else{expl=`With ${n} bodies sharing this positive-polarity frequency field, collective coherence rises to ${pct}%. The toroidal envelopes partially merge into a unified standing wave significantly stronger than any single component. The shared field self-reinforces through entanglement — the more synchronized the participants, the greater the constructive interference and measurable physiological benefit.`;}
+  }else if(pol==='negative'){
+    const deg=(n-1)*0.28*(1-base);cc=Math.max(0.02,base-deg);
+    const pct=Math.round(cc*100);const delta=Math.round((base-cc)*100);
+    badges=`<span class="field-calc-badge neg">-${delta}% integrity loss</span><span class="field-calc-badge neg">${pct}% collective coherence</span>`;
+    if(d.name.includes('Horror')||d.name.includes('War')||d.name.includes('horror')||d.name.includes('Drum')){
+      expl=`${n} bodies in a shared field of ${d.name.split('—')[0].trim()} undergo synchronized autonomic collapse. Emotional contagion (Hatfield et al., 1993) and mirror neuron activation ensure each additional individual amplifies the collective stress response. What begins as personal HRV disruption propagates through the shared toroidal field, creating a feedback loop of sympathetic arousal. The group's aggregate cortisol rises, melatonin is suppressed, and collective coherence drops to ${pct}% — far below what any individual would experience alone. This is the biophysics of collective trauma, war psychology, and crowd panic — the dark physics of shared suffering.`;
+    }else{
+      expl=`${n} individuals sharing this degraded-polarity field experience amplified disruption through electromagnetic contagion. Collective toroidal coherence drops to ${pct}%. Each body's compromised field influences its neighbors through entangled particle bridges, compounding the disruptive effect. The longer the shared exposure, the more deeply the distortion propagates into the parasympathetic baseline of all participants. This is why environmental EMF fields in shared spaces are bioelectromagnetically more significant than isolated exposure.`;
+    }
+  }else{
+    cc=base*(1+(n-1)*0.10);const pct=Math.round(Math.min(1,cc)*100);
+    badges=`<span class="field-calc-badge">${pct}% collective coherence</span>`;
+    expl=`${n} individuals sharing this neutral-polarity field experience mild collective synchronization. The toroidal fields partially entangle, producing a modest coherence increase to ${pct}%. The effect is strongly contextual — the emotional state and conscious intent of each individual significantly modulates whether the shared field tips toward constructive or destructive interference.`;
+  }
+  document.getElementById('calc-result-line').innerHTML=`${n} bodies · ${d.name.split('—')[0].trim()} · ${badges}`;
+  document.getElementById('calc-explanation').innerText=expl;
+  document.getElementById('p-calc-text').innerText=expl;
+}
+
+// ── UI SHOW/HIDE ──────────────────────────────────────
+let uiTimer=null;
+function showUI(){
+  clearTimeout(uiTimer);
+  if(!S.uiVisible){S.uiVisible=true;document.getElementById('ui-overlay').classList.remove('hidden');document.getElementById('ui-restorer-btn').classList.remove('visible');document.getElementById('ui-hint-strip').style.opacity='0';}
+  uiTimer=setTimeout(()=>{S.uiVisible=false;document.getElementById('ui-overlay').classList.add('hidden');document.getElementById('ui-restorer-btn').classList.add('visible');document.getElementById('ui-hint-strip').style.opacity='1';},7000);
+}
+
+// ── UPDATE ALL UI ─────────────────────────────────────
+function updateUI(){
+  const d=FC[S.activeKey];
+  ['field-title','p-field-title'].forEach(id=>document.getElementById(id).innerText=d.name);
+  ['field-origin','p-field-origin'].forEach(id=>document.getElementById(id).innerText=d.origin);
+  ['field-desc','p-field-desc'].forEach(id=>document.getElementById(id).innerText=d.desc);
+  document.getElementById('field-photon-lbl').innerText=d.photonLbl;
+  document.getElementById('field-flow-desc').innerText=d.flowDesc;
+  const bar=document.getElementById('photon-metric-bar');
+  bar.style.width=d.photonWidth;bar.style.backgroundColor=d.color;bar.style.boxShadow=`0 0 14px ${d.color}`;
+  const co=parseFloat(d.coherence);
+  document.getElementById('coherence-arc').style.strokeDashoffset=113-co*113;
+  document.getElementById('coherence-arc').style.stroke=co>0.7?'#7eb8d4':co>0.4?'#c8a84b':'#ef4444';
+  document.getElementById('coherence-pct').textContent=Math.round(co*100)+'%';
+  const labs=['Critical Noise','Fragmented','Developing','Stabilizing','Coherent','Peak Resonance'];
+  document.getElementById('coherence-label-strong').textContent=labs[Math.min(5,Math.floor(co*6))];
+  calcField();
+}
+
+function syncDots(n){for(let i=1;i<=3;i++)document.getElementById(`dot-${i}`).classList.toggle('lit',i<=n);}
+
+// ── EVENT HANDLERS ────────────────────────────────────
+function handleDropdownShift(v){S.activeKey=v;updateUI();document.getElementById('vector-selector').value=v;document.getElementById('portrait-vector-select').value=v;}
+function setProximity(n){
+  S.proximityCount=n;document.getElementById('prox-range').value=n;syncDots(n);
+  for(let i=1;i<=3;i++)document.getElementById(`p-body-${i}`).classList.toggle('active',i===n);
+  calcField();showUI();
+}
+function togglePhaseState(state){
+  S.phase=state;
+  ['phase-before','phase-after','p-phase-before','p-phase-after'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.classList.toggle('active',id.includes(state.slice(0,5)));
+  });
+  calcField();showUI();
+}
+function toggleGoldAmplifier(){
+  S.goldActive=!S.goldActive;
+  document.getElementById('gold-amp').classList.toggle('active',S.goldActive);
+  document.getElementById('p-gold-btn').classList.toggle('active',S.goldActive);
+  calcField();showUI();
+}
+
+// ── DRAG / ZOOM / PAN ─────────────────────────────────
+canvas.addEventListener('mousedown',e=>{S.isDragging=true;S.lastX=e.clientX;S.lastY=e.clientY;});
+window.addEventListener('mousemove',e=>{
+  if(S.isDragging){
+    const dx=e.clientX-S.lastX,dy=e.clientY-S.lastY;
+    if(e.shiftKey){S.panX+=dx;S.panY+=dy;}else{S.camRotY+=dx*0.008;S.camRotX+=dy*0.008;}
+    S.lastX=e.clientX;S.lastY=e.clientY;
+  }
+  if(e.clientY<100||e.clientY>window.innerHeight-100)showUI();
+});
+window.addEventListener('mouseup',()=>S.isDragging=false);
+canvas.addEventListener('wheel',e=>{e.preventDefault();S.zoom=Math.max(0.25,Math.min(4.0,S.zoom-e.deltaY*0.001));},{passive:false});
+canvas.addEventListener('dblclick',()=>{S.camRotX=0;S.camRotY=0;S.zoom=1;S.panX=0;S.panY=0;});
+canvas.addEventListener('touchstart',e=>{
+  if(e.touches.length===1){S.isDragging=true;S.lastX=e.touches[0].clientX;S.lastY=e.touches[0].clientY;S.touchStart=Date.now();}
+  else if(e.touches.length===2){S.isDragging=false;const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;S.pinchDist=Math.sqrt(dx*dx+dy*dy);}
+  showUI();
+},{passive:true});
+canvas.addEventListener('touchmove',e=>{
+  e.preventDefault();
+  if(e.touches.length===1&&S.isDragging){
+    const dx=e.touches[0].clientX-S.lastX,dy=e.touches[0].clientY-S.lastY;
+    if(Date.now()-S.touchStart>600){S.panX+=dx;S.panY+=dy;}else{S.camRotY+=dx*0.008;S.camRotX+=dy*0.008;}
+    S.lastX=e.touches[0].clientX;S.lastY=e.touches[0].clientY;
+  }else if(e.touches.length===2){
+    const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;
+    const dist=Math.sqrt(dx*dx+dy*dy);S.zoom=Math.max(0.25,Math.min(4.0,S.zoom*dist/S.pinchDist));S.pinchDist=dist;
+  }
+},{passive:false});
+canvas.addEventListener('touchend',()=>S.isDragging=false);
+let lastTap=0;canvas.addEventListener('touchend',()=>{const now=Date.now();if(now-lastTap<300){S.camRotX=0;S.camRotY=0;S.zoom=1;S.panX=0;S.panY=0;}lastTap=now;});
+document.getElementById('hover-trigger-zone').addEventListener('mouseenter',showUI);
+document.getElementById('hover-trigger-top').addEventListener('mouseenter',showUI);
+document.getElementById('hover-trigger-zone').addEventListener('touchstart',showUI,{passive:true});
+document.getElementById('hover-trigger-top').addEventListener('touchstart',showUI,{passive:true});
+document.getElementById('ui-restorer-btn').addEventListener('click',e=>{e.stopPropagation();showUI();});
+
+// ── PORTRAIT CHECK ────────────────────────────────────
+function checkOrientation(){
+  const mob=/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const port=window.innerHeight>window.innerWidth;
+  const po=document.getElementById('portrait-overlay');
+  if(mob&&port){po.classList.add('active');document.getElementById('ui-overlay').style.display='none';}
+  else{po.classList.remove('active');document.getElementById('ui-overlay').style.display='';}
+}
+
+// ── DROPDOWN POPULATE ─────────────────────────────────
+function populateDd(id){
+  const dd=document.getElementById(id);dd.innerHTML='';
+  const groups={
+    "CARDIAC & AUTONOMIC":["heart-baseline","vagus-nerve"],
+    "BIO-ENERGETICS & NEURAL":["bio-delta","bio-theta","bio-schumann","bio-alpha","bio-sensory","bio-beta","bio-gamma","bio-hyper"],
+    "SOLFEGGIO":["sol-396","sol-417","sol-432","sol-528","sol-639","sol-741","sol-852","sol-963"],
+    "ANCIENT & SACRED ACOUSTICS":["anc-om","anc-prayer","anc-tibetan","anc-egypt","anc-david","anc-jericho","anc-war"],
+    "MEDIA & CULTURAL FIELDS":["media-horror","media-pop"],
+    "TECHNICAL INFRASTRUCTURE & EMF":["tech-60hz","tech-wifi","tech-5g","tech-bluetooth","tech-led","tech-smart","tech-haarp","tech-6g","tech-satellite","tech-ev"],
+    "QUANTUM FIELD ARRAY ARCHIVE":[]
+  };
+  for(let i=1;i<=60;i++)groups["QUANTUM FIELD ARRAY ARCHIVE"].push(`gen-slot-${i}`);
+  for(const[g,keys]of Object.entries(groups)){
+    const grp=document.createElement('optgroup');grp.label=g;
+    keys.forEach(k=>{const opt=document.createElement('option');opt.value=k;opt.innerText=FC[k].name;if(k===S.activeKey)opt.selected=true;grp.appendChild(opt);});
+    dd.appendChild(grp);
+  }
+}
+
+// ── BOOT ──────────────────────────────────────────────
+window.addEventListener('resize',()=>{resize();checkOrientation();});
+window.addEventListener('orientationchange',()=>setTimeout(()=>{resize();checkOrientation();},250));
+window.addEventListener('DOMContentLoaded',()=>{
+  populateDd('vector-selector');populateDd('portrait-vector-select');
+  resize();updateUI();checkOrientation();render();
+  setTimeout(showUI,500);
+});
 </script>
 </body>
 </html>
+HTMLEOF
+echo "Done: $?"
