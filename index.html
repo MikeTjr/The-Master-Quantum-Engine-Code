@@ -1,956 +1,114 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Resonance: Heart Toroidal Field Matrix Engine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Sandbox Engine V2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg-deep: #020409;
-  --gold-pure: #c8a84b;
-  --gold-glow: rgba(200,168,75,0.30);
-  --gold-dim: #8a6e2f;
-  --ice-blue: #7eb8d4;
-  --ice-glow: rgba(126,184,212,0.25);
-  --text-light: #eef4f8;
-  --text-muted: #4a6070;
-  --panel-bg: rgba(3,8,18,0.88);
-  --border-subtle: rgba(255,255,255,0.06);
-  --border-gold: rgba(200,168,75,0.35);
+body {
+    margin: 0;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #08111f 0%, #010409 100%);
+    color: white;
+    font-family: Inter, sans-serif;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-body,html{background:var(--bg-deep);color:var(--text-light);font-family:'Space Mono',monospace;overflow:hidden;height:100vh;width:100vw;-webkit-user-select:none;user-select:none;}
-
-/* CANVAS */
-#quantum-stage{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;touch-action:none;}
-
-/* UI OVERLAY */
-.immersive-ui{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:20px;transition:opacity 0.8s ease,visibility 0.8s ease;}
-.immersive-ui.hidden{opacity:0;visibility:hidden;}
-.immersive-ui *{pointer-events:auto;}
-
-/* HOVER REVEAL ZONE */
-#hover-trigger-zone{position:fixed;bottom:0;left:0;right:0;height:80px;z-index:9;cursor:pointer;}
-#hover-trigger-top{position:fixed;top:0;left:0;right:0;height:80px;z-index:9;cursor:pointer;}
-
-/* HEADER */
-header{display:flex;justify-content:space-between;align-items:flex-start;width:100%;gap:14px;flex-wrap:wrap;}
-.brand-block h1{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;letter-spacing:6px;text-transform:uppercase;color:#fff;text-shadow:0 0 30px rgba(126,184,212,0.5),0 0 60px rgba(126,184,212,0.2);}
-.brand-block p{font-size:0.56rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold-pure);margin-top:4px;opacity:0.85;}
-.header-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
-
-/* PROXIMITY DOCK */
-.proximity-dock{display:flex;flex-direction:column;gap:5px;background:var(--panel-bg);border:1px solid var(--border-subtle);padding:9px 13px;border-radius:14px;backdrop-filter:blur(16px);}
-.proximity-dock label{font-size:0.56rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold-pure);}
-.proximity-slider{-webkit-appearance:none;appearance:none;width:90px;height:2px;background:rgba(255,255,255,0.08);border-radius:2px;outline:none;}
-.proximity-slider::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--ice-blue);cursor:pointer;box-shadow:0 0 10px var(--ice-blue),0 0 20px rgba(126,184,212,0.4);}
-
-/* DROPDOWN */
-.quantum-dropdown{background:var(--panel-bg);border:1px solid var(--border-subtle);color:#fff;padding:9px 16px;border-radius:28px;font-family:'Space Mono',monospace;font-size:0.70rem;letter-spacing:0.3px;outline:none;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,0.6);max-width:380px;transition:border-color 0.3s;}
-.quantum-dropdown:hover{border-color:var(--border-gold);}
-.quantum-dropdown optgroup{background:#050c1a;color:#4a6070;font-size:0.7rem;}
-.quantum-dropdown option{background:#070f20;color:#fff;}
-
-/* GOLD AMPLIFIER */
-.gold-amplifier-btn{background:rgba(0,0,0,0.6);border:1px solid var(--gold-dim);padding:9px 14px;border-radius:36px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.35s ease;}
-.gold-amplifier-btn.active{background:linear-gradient(135deg,rgba(200,168,75,0.22),rgba(0,0,0,0.85));border-color:var(--gold-pure);box-shadow:0 0 22px var(--gold-glow),inset 0 0 12px rgba(200,168,75,0.1);}
-.gold-amplifier-btn .indicator{width:7px;height:7px;background:var(--text-muted);border-radius:50%;transition:all 0.3s;}
-.gold-amplifier-btn.active .indicator{background:var(--gold-pure);box-shadow:0 0 12px var(--gold-pure);}
-.gold-amplifier-btn span{font-size:0.63rem;text-transform:uppercase;letter-spacing:1.8px;color:var(--text-light);}
-
-/* ENTANGLEMENT BADGE */
-.entanglement-badge{display:flex;align-items:center;gap:8px;background:var(--panel-bg);border:1px solid var(--border-subtle);padding:9px 13px;border-radius:28px;backdrop-filter:blur(16px);}
-.entanglement-badge label{font-size:0.56rem;text-transform:uppercase;letter-spacing:2px;color:var(--ice-blue);}
-.entanglement-dots{display:flex;gap:5px;}
-.entanglement-dot{width:8px;height:8px;border-radius:50%;border:1px solid rgba(126,184,212,0.3);background:transparent;transition:all 0.4s ease;}
-.entanglement-dot.lit{background:var(--ice-blue);box-shadow:0 0 8px var(--ice-blue),0 0 16px rgba(126,184,212,0.4);}
-
-/* PHASE TOGGLES */
-.state-shifter-belt{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
-.phase-toggle{background:rgba(3,8,18,0.65);border:1px solid var(--border-subtle);color:var(--text-muted);padding:8px 14px;border-radius:28px;font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:1.8px;cursor:pointer;transition:all 0.3s ease;}
-.phase-toggle.active{background:rgba(255,255,255,0.07);color:#fff;border-color:var(--gold-pure);text-shadow:0 0 12px rgba(200,168,75,0.6);}
-
-/* INSIGHT DOCK */
-.insight-dock{display:grid;grid-template-columns:1fr 340px;gap:20px;width:100%;background:var(--panel-bg);border:1px solid var(--border-subtle);border-radius:18px;padding:18px;backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);box-shadow:0 20px 60px rgba(0,0,0,0.85),inset 0 1px 0 rgba(255,255,255,0.04);}
-.analysis-text h2{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;letter-spacing:1.5px;margin-bottom:3px;color:#fff;}
-.analysis-text .origin-tag{font-size:0.56rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold-pure);margin-bottom:8px;display:block;}
-.analysis-text p{font-family:'Cormorant Garamond',serif;font-size:0.86rem;line-height:1.65;color:#94aab8;}
-.atomic-panel{border-left:1px solid var(--border-subtle);padding-left:18px;display:flex;flex-direction:column;gap:12px;}
-.atomic-group h4{font-size:0.54rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-muted);margin-bottom:4px;}
-.atomic-stat-lbl{font-size:0.76rem;color:#c8d8e4;margin-bottom:6px;}
-.biophoton-bar-container{width:100%;height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;}
-.biophoton-bar{height:100%;width:50%;transition:all 0.7s cubic-bezier(0.16,1,0.3,1);}
-
-/* COHERENCE RING */
-.coherence-ring-wrap{display:flex;align-items:center;gap:10px;}
-.coherence-ring-svg{flex-shrink:0;}
-.coherence-ring-label{font-size:0.60rem;color:#94aab8;line-height:1.5;}
-.coherence-ring-label strong{display:block;color:#fff;font-size:0.73rem;margin-bottom:2px;}
-
-/* FIELD ENTANGLEMENT CALCULATION PANEL */
-.field-calc-panel{background:rgba(200,168,75,0.04);border:1px solid var(--border-gold);border-radius:14px;padding:14px;margin-top:10px;}
-.field-calc-panel h4{font-size:0.56rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold-pure);margin-bottom:8px;}
-.field-calc-panel .calc-result{font-size:0.78rem;color:#c8d8e4;line-height:1.6;margin-bottom:6px;}
-.field-calc-panel .calc-explanation{font-family:'Cormorant Garamond',serif;font-size:0.82rem;color:#94aab8;line-height:1.5;}
-.field-calc-badge{display:inline-block;background:rgba(200,168,75,0.12);border:1px solid var(--border-gold);border-radius:20px;padding:3px 10px;font-size:0.62rem;color:var(--gold-pure);margin-right:6px;margin-bottom:4px;}
-.field-calc-badge.negative{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.35);color:#ef4444;}
-.field-calc-badge.positive{background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.35);color:#10b981;}
-
-/* RESTORER BTN */
-#ui-restorer-btn{position:fixed;bottom:20px;right:20px;background:rgba(200,168,75,0.15);border:1px solid var(--border-gold);border-radius:50%;cursor:pointer;z-index:100;display:flex;align-items:center;justify-content:center;width:36px;height:36px;transition:opacity 0.5s,visibility 0.5s;opacity:0;visibility:hidden;pointer-events:none;box-shadow:0 4px 20px rgba(200,168,75,0.2);}
-#ui-restorer-btn.visible{opacity:1;visibility:visible;pointer-events:auto;}
-#ui-restorer-btn svg{width:16px;height:16px;}
-
-/* UI HINT STRIP */
-.ui-hint-strip{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);font-size:0.52rem;letter-spacing:2px;text-transform:uppercase;color:rgba(200,168,75,0.35);z-index:8;pointer-events:none;transition:opacity 0.5s;}
-
-/* PORTRAIT OVERLAY (mobile portrait) */
-.portrait-overlay{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#020409;z-index:20000;flex-direction:column;align-items:center;justify-content:flex-start;padding:20px;overflow-y:auto;}
-.portrait-overlay.show-portrait{display:flex;}
-.portrait-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:4px;text-transform:uppercase;color:#fff;margin:16px 0 4px;text-align:center;}
-.portrait-sub{font-size:0.54rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold-pure);margin-bottom:20px;text-align:center;}
-.portrait-rotate-hint{display:flex;align-items:center;gap:10px;background:var(--panel-bg);border:1px solid var(--border-gold);border-radius:14px;padding:12px 18px;margin-bottom:18px;font-size:0.62rem;letter-spacing:1px;color:var(--gold-pure);}
-.portrait-controls{display:flex;flex-direction:column;gap:12px;width:100%;}
-.portrait-select-label{font-size:0.54rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;}
-.portrait-select{width:100%;background:var(--panel-bg);border:1px solid var(--border-subtle);color:#fff;padding:11px 14px;border-radius:14px;font-family:'Space Mono',monospace;font-size:0.68rem;outline:none;}
-.portrait-select optgroup{background:#050c1a;color:#4a6070;}
-.portrait-select option{background:#070f20;color:#fff;}
-.portrait-phase-row{display:flex;gap:8px;}
-.portrait-phase-btn{flex:1;background:rgba(3,8,18,0.65);border:1px solid var(--border-subtle);color:var(--text-muted);padding:10px;border-radius:14px;font-family:'Space Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:1.5px;cursor:pointer;transition:all 0.3s;}
-.portrait-phase-btn.active{background:rgba(255,255,255,0.07);color:#fff;border-color:var(--gold-pure);}
-.portrait-bodies-row{display:flex;gap:8px;}
-.portrait-body-btn{flex:1;background:rgba(3,8,18,0.65);border:1px solid var(--border-subtle);color:var(--text-muted);padding:10px;border-radius:14px;font-family:'Space Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all 0.3s;text-align:center;}
-.portrait-body-btn.active{background:rgba(126,184,212,0.1);color:var(--ice-blue);border-color:rgba(126,184,212,0.4);}
-.portrait-gold-btn{width:100%;background:rgba(200,168,75,0.08);border:1px solid var(--border-gold);color:var(--gold-pure);padding:11px;border-radius:14px;font-family:'Space Mono',monospace;font-size:0.62rem;text-transform:uppercase;letter-spacing:1.8px;cursor:pointer;transition:all 0.3s;}
-.portrait-gold-btn.active{background:rgba(200,168,75,0.18);box-shadow:0 0 16px var(--gold-glow);}
-.portrait-field-info{background:var(--panel-bg);border:1px solid var(--border-subtle);border-radius:14px;padding:14px;margin-top:4px;}
-.portrait-field-info h3{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:300;color:#fff;margin-bottom:4px;}
-.portrait-field-info .po-tag{font-size:0.52rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold-pure);margin-bottom:8px;display:block;}
-.portrait-field-info p{font-family:'Cormorant Garamond',serif;font-size:0.82rem;line-height:1.6;color:#94aab8;}
-.portrait-calc{background:rgba(200,168,75,0.04);border:1px solid var(--border-gold);border-radius:12px;padding:12px;margin-top:4px;}
-.portrait-calc h4{font-size:0.54rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold-pure);margin-bottom:6px;}
-.portrait-calc p{font-family:'Cormorant Garamond',serif;font-size:0.80rem;line-height:1.55;color:#94aab8;}
-
-/* SCANLINE + VIGNETTE */
-body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.035) 2px,rgba(0,0,0,0.035) 4px);}
-body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:4;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,0.72) 100%);}
-
-/* DRAG INDICATOR */
-.drag-indicator{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:0.52rem;letter-spacing:2px;text-transform:uppercase;color:rgba(126,184,212,0.18);z-index:6;pointer-events:none;opacity:1;transition:opacity 1s;animation:fadeIndicator 4s ease forwards;}
-@keyframes fadeIndicator{0%{opacity:0;}1s{opacity:1;}70%{opacity:1;}100%{opacity:0;}display:none;}
-
-@media(max-width:960px){
-  .insight-dock{grid-template-columns:1fr;gap:12px;padding:12px;}
-  .atomic-panel{border-left:none;border-top:1px solid var(--border-subtle);padding-left:0;padding-top:12px;}
-  .immersive-ui{padding:12px;overflow-y:auto;}
-  header{flex-direction:column;gap:8px;align-items:flex-start;}
-  .header-controls{width:100%;justify-content:flex-start;flex-wrap:wrap;}
-  .quantum-dropdown{max-width:100%;width:100%;}
+canvas {
+    display:block;
+}
+#overlay {
+    position:absolute;
+    top:20px;
+    left:20px;
+    width:360px;
+    background:rgba(0,0,0,0.55);
+    border:1px solid rgba(255,255,255,0.1);
+    padding:20px;
+    border-radius:16px;
+    backdrop-filter: blur(10px);
+}
+#overlay h1 {
+    margin-top:0;
+    font-size:28px;
+}
+#tooltip {
+    margin-top:12px;
+    line-height:1.5;
+    font-size:15px;
+    color:#d8e7ff;
+}
+#controls {
+    margin-top:20px;
+}
+button {
+    background:#0f203d;
+    border:1px solid rgba(255,255,255,0.15);
+    color:white;
+    padding:10px 14px;
+    border-radius:10px;
+    cursor:pointer;
 }
 </style>
 </head>
 <body>
-
-<!-- PORTRAIT MOBILE UI -->
-<div class="portrait-overlay" id="portrait-overlay">
-  <div style="display:flex;align-items:center;gap:10px;margin-top:8px;">
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold-pure)" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-    <span class="portrait-title">Resonance</span>
-  </div>
-  <div class="portrait-sub">Heart Toroidal Field Matrix</div>
-  <div class="portrait-rotate-hint">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold-pure)" stroke-width="1.5"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
-    Rotate to landscape for full 4K field rendering
-  </div>
-  <div class="portrait-controls">
-    <div>
-      <div class="portrait-select-label">Frequency Vector</div>
-      <select class="portrait-select" id="portrait-vector-select" onchange="handleDropdownShift(this.value);syncPortraitUI();"></select>
+<div id="overlay">
+    <h1>Quantum Sandbox Engine</h1>
+    <p>Educational symbolic simulation environment exploring resonance, interaction, and collective field dynamics.</p>
+    <div id="tooltip">
+        Hover explanations and simulation overlays will appear here in future updates.
     </div>
-    <div>
-      <div class="portrait-select-label">Phase State</div>
-      <div class="portrait-phase-row">
-        <button class="portrait-phase-btn active" id="p-phase-before" onclick="togglePhaseState('before');syncPortraitUI();">Interfered</button>
-        <button class="portrait-phase-btn" id="p-phase-after" onclick="togglePhaseState('after');syncPortraitUI();">Coherent</button>
-      </div>
+    <div id="controls">
+        <button id="simulationBtn">Activate Simulation</button>
     </div>
-    <div>
-      <div class="portrait-select-label">Bodies / Entanglement</div>
-      <div class="portrait-bodies-row">
-        <button class="portrait-body-btn active" id="p-body-1" onclick="setProximity(1);">1</button>
-        <button class="portrait-body-btn" id="p-body-2" onclick="setProximity(2);">2</button>
-        <button class="portrait-body-btn" id="p-body-3" onclick="setProximity(3);">3</button>
-      </div>
-    </div>
-    <button class="portrait-gold-btn" id="p-gold-btn" onclick="toggleGoldAmplifier();syncPortraitUI();">⬡ Gold Amplifier</button>
-    <div class="portrait-field-info" id="p-field-info">
-      <h3 id="p-field-title">—</h3>
-      <span class="po-tag" id="p-field-origin">—</span>
-      <p id="p-field-desc">—</p>
-    </div>
-    <div class="portrait-calc" id="p-calc-panel">
-      <h4>Field Entanglement Calculation</h4>
-      <p id="p-calc-text">Select a frequency and body count to calculate collective field state.</p>
-    </div>
-  </div>
 </div>
 
-<!-- CANVAS -->
-<canvas id="quantum-stage"></canvas>
+<canvas id="scene"></canvas>
 
-<!-- HOVER TRIGGER ZONES -->
-<div id="hover-trigger-zone"></div>
-<div id="hover-trigger-top"></div>
+<script type="module">
+import { HumanRenderer } from './renderers/humanRenderer.js';
+import { SimulationEngine } from './engine/simulationEngine.js';
+import { TooltipSystem } from './ui/tooltipSystem.js';
 
-<!-- MAIN LANDSCAPE UI -->
-<div class="immersive-ui hidden" id="ui-overlay">
-  <header>
-    <div class="brand-block">
-      <h1>Resonance</h1>
-      <p>Heart Toroidal Field Matrix Engine · 4K</p>
-    </div>
-    <div class="header-controls">
-      <div class="proximity-dock">
-        <label for="prox-range">Field Entanglement</label>
-        <input type="range" id="prox-range" class="proximity-slider" min="1" max="3" value="1" oninput="setProximity(parseInt(this.value))">
-      </div>
-      <div class="entanglement-badge">
-        <label>Bodies</label>
-        <div class="entanglement-dots" id="entanglement-dots">
-          <div class="entanglement-dot lit" id="dot-1"></div>
-          <div class="entanglement-dot" id="dot-2"></div>
-          <div class="entanglement-dot" id="dot-3"></div>
-        </div>
-      </div>
-      <select class="quantum-dropdown" id="vector-selector" onchange="handleDropdownShift(this.value)"></select>
-      <button class="gold-amplifier-btn" id="gold-amp" onclick="toggleGoldAmplifier()">
-        <div class="indicator"></div>
-        <span>⬡ Gold Amplifier</span>
-      </button>
-    </div>
-  </header>
+const canvas = document.getElementById('scene');
+const ctx = canvas.getContext('2d');
 
-  <div>
-    <div class="state-shifter-belt">
-      <button class="phase-toggle active" id="phase-before" onclick="togglePhaseState('before')">Interfered Envelope</button>
-      <button class="phase-toggle" id="phase-after" onclick="togglePhaseState('after')">Coherent Realized Field</button>
-    </div>
-    <div class="insight-dock">
-      <div class="analysis-text">
-        <h2 id="field-title">Heart Toroidal Field Active</h2>
-        <span class="origin-tag" id="field-origin">Quantum Library Database</span>
-        <p id="field-desc">Synchronizing with cardiac toroidal axis...</p>
-        <div class="field-calc-panel" id="field-calc-panel" style="display:none;">
-          <h4>⬡ Collective Field Entanglement Calculation</h4>
-          <div class="calc-result" id="calc-result-line">—</div>
-          <div class="calc-explanation" id="calc-explanation">—</div>
-        </div>
-      </div>
-      <div class="atomic-panel">
-        <div class="atomic-group">
-          <h4>Toroidal Field Luminescence</h4>
-          <div class="atomic-stat-lbl" id="field-photon-lbl">Emissions stable</div>
-          <div class="biophoton-bar-container">
-            <div class="biophoton-bar" id="photon-metric-bar"></div>
-          </div>
-        </div>
-        <div class="atomic-group">
-          <h4>Coherence Index</h4>
-          <div class="coherence-ring-wrap">
-            <svg class="coherence-ring-svg" width="44" height="44" viewBox="0 0 44 44">
-              <circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
-              <circle id="coherence-arc" cx="22" cy="22" r="18" fill="none" stroke="#7eb8d4" stroke-width="3" stroke-dasharray="113" stroke-dashoffset="113" stroke-linecap="round" transform="rotate(-90 22 22)" style="transition:stroke-dashoffset 0.8s ease,stroke 0.5s ease;"/>
-              <text id="coherence-pct" x="22" y="26" text-anchor="middle" fill="#fff" style="font-family:'Space Mono',monospace;font-size:9px;">0%</text>
-            </svg>
-            <div class="coherence-ring-label">
-              <strong id="coherence-label-strong">Initializing</strong>
-              <span id="field-flow-desc">Standing by...</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<button id="ui-restorer-btn" title="Restore UI">
-  <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-pure)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
-</button>
-
-<div class="ui-hint-strip" id="ui-hint-strip">HOVER EDGE OR TAP TO REVEAL CONTROLS</div>
-
-<script>
-
-// ── FREQUENCY DATABASE LOADER ───────────────────────────────────
-let frequencyCatalog = {};
-
-async function loadFrequencyCatalog(){
-  try{
-    const response = await fetch('./frequencyCatalog.json');
-    frequencyCatalog = await response.json();
-    console.log(`Loaded ${Object.keys(frequencyCatalog).length} resonance vectors.`);
-  }catch(err){
-    console.error('Failed to load frequency catalog:', err);
-  }
+function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 }
+window.addEventListener('resize', resize);
+resize();
 
+const humans = [
+    new HumanRenderer(canvas.width * 0.35, canvas.height * 0.55),
+    new HumanRenderer(canvas.width * 0.65, canvas.height * 0.55)
+];
 
-// Programmatically populate calculated dynamic quantum structural slots
-for(let i=1;i<=60;i++){
-  const hz=(i*13.7).toFixed(1);
-  const co=parseFloat((0.35+Math.random()*0.55).toFixed(2));
-  const pw=Math.floor(42+Math.random()*48);
-  frequencyCatalog[`gen-slot-${i}`]={
-    name:`${hz} Hz — Quantum Matrix Parameter #${i+30}`,
-    origin:"THEORETICAL / QUANTUM FIELD PARAMETER DATABASE",
-    desc:`At ${hz} Hz, the engine samples an experimental parameter node. Structural analysis reveals multiple overtone paths with waves spanning ${(343/(i*13.7)).toFixed(2)} meters inside basic gaseous mediums.`,
-    photonLbl:`Calculated Density Parameter (${pw}%)`,
-    flowDesc:`Slot sequence #${i} stabilization holding steady`,
-    photonWidth:`${pw}%`,
-    complexity:Math.floor(4+(i%24)),
-    coherence:co,
-    color:`hsl(${(i*19)%360},70%,58%)`,
-    polarity:co>0.6?"positive":co>0.4?"neutral":"negative",
-    domain:"quantum"
-  };
-}
+const engine = new SimulationEngine(humans);
+const tooltip = new TooltipSystem(document.getElementById('tooltip'));
 
-// ── APP STATE ────────────────────────────────────────────────────
-const appState={
-  activeKey:"heart-baseline",
-  phaseState:"before",
-  goldActive:false,
-  proximityCount:1,
-  timeVector:0,
-  uiVisible:false,
-  uiTimer:null,
-  isDragging:false,
-  lastX:0,lastY:0,
-  camRotX:-0.05,camRotY:0,
-  zoom:1.0,
-  pinchDist:0,
-  panX:0,panY:0
-};
+document.getElementById('simulationBtn').addEventListener('click', () => {
+    engine.toggleSimulation();
+});
 
-const interactionLatches = {
-  frequencyShift:false,
-  uiTransition:false
-};
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
-function engageLatch(key, duration=180){
-  if(interactionLatches[key]) return false;
-  interactionLatches[key]=true;
-  setTimeout(()=>interactionLatches[key]=false,duration);
-  return true;
-}
+    engine.update();
 
-function safeFrequencyShift(nextKey){
-  if(!frequencyCatalog[nextKey]) return;
-  if(!engageLatch('frequencyShift',220)) return;
-  handleDropdownShift(nextKey);
-}
-
-
-// ── CANVAS SETUP ─────────────────────────────────────────────────
-const canvas=document.getElementById('quantum-stage');
-const ctx=canvas.getContext('2d');
-let globalParticlePool=[];
-const TOTAL_NODES=6500; // Optimized for rendering stability across desktop/mobile
-
-// ── PARTICLE INIT ────────────────────────────────────────────────
-function initUnifiedMatrix(){
-  globalParticlePool=[];
-  for(let i=0;i<TOTAL_NODES;i++){
-    globalParticlePool.push({
-      x3d:(Math.random()-0.5)*1000,
-      y3d:(Math.random()-0.5)*1000,
-      z3d:(Math.random()-0.5)*1000,
-      seed:Math.random()*Math.PI*2,
-      seed2:Math.random()*Math.PI*2,
-      speedFactor:Math.random()*0.022+0.004,
-      size:Math.random()*1.8+0.4,
-      alpha:Math.random()*0.55+0.25,
-      meridian:Math.floor(Math.random()*24),
-      latitude:Math.random()
-    });
-  }
-}
-
-function resizeStage(){
-  const dpr=window.devicePixelRatio||1;
-  canvas.width=window.innerWidth*dpr;
-  canvas.height=window.innerHeight*dpr;
-  ctx.scale(dpr,dpr);
-  initUnifiedMatrix();
-}
-
-function isPortrait(){return window.innerHeight>window.innerWidth;}
-
-function checkOrientation(){
-  const po=document.getElementById('portrait-overlay');
-  if(isPortrait()&&/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)){
-    po.classList.add('show-portrait');
-    document.getElementById('ui-overlay').style.display='none';
-  } else {
-    po.classList.remove('show-portrait');
-    document.getElementById('ui-overlay').style.display='';
-  }
-}
-
-// ── 3D PROJECTION ─────────────────────────────────────────────────
-function project(x3d,y3d,z3d,cx,cy){
-  const cosY=Math.cos(appState.camRotY),sinY=Math.sin(appState.camRotY);
-  const rx=x3d*cosY-z3d*sinY;
-  const rz=x3d*sinY+z3d*cosY;
-  const cosX=Math.cos(appState.camRotX),sinX=Math.sin(appState.camRotX);
-  const ry=y3d*cosX-rz*sinX;
-  const rz2=y3d*sinX+rz*cosX;
-
-  const fl=520,cd=600;
-  const sc=(fl/(cd+rz2))*appState.zoom;
-  return{x:cx+rx*sc+appState.panX,y:cy+ry*sc+appState.panY,scale:sc,depth:rz2};
-}
-
-function getBodyRadius(pct){
-  if(pct<0.07){const hp=pct/0.07;return 22*Math.sqrt(Math.max(0,1-Math.pow((hp-0.45)/0.55,2)));}
-  if(pct<0.12){return 9+Math.sin((pct-0.07)/(0.12-0.07)*Math.PI)*3;}
-  if(pct<0.20){const sp=(pct-0.12)/(0.20-0.12);return 14+30*Math.sin(sp*Math.PI)*0.9;}
-  if(pct<0.30){const cp=(pct-0.20)/(0.30-0.20);return 44-4*cp;}
-  if(pct<0.42){const wp=(pct-0.30)/(0.42-0.30);return 40-12*wp;}
-  if(pct<0.52){const hp=(pct-0.42)/(0.52-0.42);return 28+14*Math.sin(hp*Math.PI)*0.8;}
-  if(pct<0.62){return 32-4*(pct-0.52)/(0.10);}
-  if(pct<0.68){return 26-6*(pct-0.62)/(0.06);}
-  if(pct<0.80){return 20+Math.sin((pct-0.68)/(0.12)*Math.PI)*8;}
-  if(pct<0.88){return 12-2*(pct-0.80)/(0.08);}
-  return 10*(1-(pct-0.88)/0.12);
-}
-
-function drawHolographicFace(cx2d,cy2d,scale,coherence,t){
-  const R=22*scale;
-  if(R<4)return;
-
-  const grad=ctx.createRadialGradient(cx2d,cy2d,R*0.1,cx2d,cy2d,R*1.6);
-  const ac=Math.min(0.5,0.22*coherence);
-  grad.addColorStop(0,`rgba(180,220,255,${ac})`);
-  grad.addColorStop(0.5,`rgba(100,160,220,${ac*0.5})`);
-  grad.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=grad;
-  ctx.beginPath();ctx.arc(cx2d,cy2d,R*1.6,0,Math.PI*2);ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(cx2d,cy2d,R,0,Math.PI*2);
-  ctx.strokeStyle=`rgba(180,220,255,${0.25*coherence})`;
-  ctx.lineWidth=0.8*scale;
-  ctx.stroke();
-
-  const eyeY=cy2d-R*0.08;
-  const eyeOffset=R*0.32;
-  const eyePulse=0.5+0.5*Math.sin(t*2.5);
-  for(let side=-1;side<=1;side+=2){
-    const ex=cx2d+side*eyeOffset;
-    ctx.beginPath();
-    ctx.ellipse(ex,eyeY,R*0.18,R*0.12,0,0,Math.PI*2);
-    ctx.strokeStyle=`rgba(180,220,255,${0.18*coherence})`;
-    ctx.lineWidth=0.6;ctx.stroke();
-    ctx.fillStyle=`rgba(255,255,255,${0.9*coherence*eyePulse})`;
-    ctx.beginPath();ctx.arc(ex,eyeY,R*0.04,0,Math.PI*2);ctx.fill();
-  }
-
-  ctx.beginPath();
-  ctx.arc(cx2d,eyeY+R*0.42,R*0.22,0.2,Math.PI-0.2);
-  ctx.strokeStyle=`rgba(180,220,255,${0.15*coherence})`;
-  ctx.lineWidth=0.7;ctx.stroke();
-}
-
-function drawSpineColumn(pts,coherence,t){
-  if(pts.length<2)return;
-  for(let i=0;i<pts.length-1;i++){
-    const alpha=0.12*coherence*pts[i].scale;
-    ctx.beginPath();
-    ctx.moveTo(pts[i].x,pts[i].y);
-    ctx.lineTo(pts[i+1].x,pts[i+1].y);
-    ctx.strokeStyle=`rgba(180,220,255,${alpha})`;
-    ctx.lineWidth=1.2;ctx.stroke();
-  }
-  const chakraColors=['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#6366f1','#a855f7'];
-  const chakraPositions=[0.85,0.72,0.55,0.42,0.28,0.16,0.06];
-  chakraPositions.forEach((pos,ci)=>{
-    const idx=Math.floor(pos*(pts.length-1));
-    if(idx<0||idx>=pts.length)return;
-    const pt=pts[idx];
-    const pulse=0.5+0.5*Math.sin(t*3+ci*0.9);
-    const cr=3.5*pt.scale*(0.7+0.3*coherence*pulse);
-    if(cr<1)return;
-    ctx.fillStyle=chakraColors[ci];
-    ctx.beginPath();ctx.arc(pt.x,pt.y,cr*0.4,0,Math.PI*2);ctx.fill();
-  });
-}
-
-// ── UTILITY: HEX/HSL TO RGBA CONVERTER ────────────────────────────
-function hexToRgba(hex, alpha) {
-  if(hex.startsWith('hsl')) {
-    return hex.replace(')', `, ${alpha})`).replace('hsl', 'hsla');
-  }
-  let c;
-  if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-    c= hex.substring(1).split('');
-    if(c.length== 3){ c= [c[0], c[0], c[1], c[1], c[2], c[2]]; }
-    c= '0x' + c.join('');
-    return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
-  }
-  return `rgba(126,184,212,${alpha})`;
-}
-
-// ── MAIN RENDER PIPELINE ──────────────────────────────────────────
-function runUniversePipeline(){
-  const W=window.innerWidth,H=window.innerHeight;
-  ctx.fillStyle='rgba(2,4,9,0.15)';
-  ctx.fillRect(0,0,W,H);
-
-  appState.timeVector+=0.012;
-  const t=appState.timeVector;
-  const data=frequencyCatalog[appState.activeKey];
-
-  let coherence=appState.goldActive?1.0:parseFloat(data.coherence);
-  if(appState.phaseState==='after')coherence=Math.min(1.0,coherence+0.32);
-  if(appState.phaseState==='before'&&coherence>0.5)coherence*=0.38;
-
-  const cx=W/2,cy=H*0.48;
-
-  let bodies=[];
-  if(appState.proximityCount===1)bodies=[{xOff:0}];
-  else if(appState.proximityCount===2)bodies=[{xOff:-190},{xOff:190}];
-  else bodies=[{xOff:-250},{xOff:0},{xOff:250}];
-
-  const spinePoints=bodies.map(()=>[]);
-
-  for(let i=0;i<globalParticlePool.length;i++){
-    const p=globalParticlePool[i];
-    const fi=i%5;
-    const bodyIdx=i%bodies.length;
-    const bodyRef=bodies[bodyIdx];
-
-    if(fi===0){
-      // Wireframe Lattice Matrix
-      const pct=p.latitude;
-      const baseY=-160+pct*320;
-      const radius=getBodyRadius(pct);
-      const meridianAngle=(p.meridian*(Math.PI*2/24))+t*0.25*p.speedFactor;
-      let tx=bodyRef.xOff+Math.cos(meridianAngle)*radius;
-      let tz=Math.sin(meridianAngle)*radius*0.55;
-      let ty=baseY;
-
-      if(pct>0.62){
-        const legSide=(p.meridian%2===0)?-1:1;
-        tx+=legSide*16*(pct-0.62)/0.38;
-      }
-      if(appState.goldActive){
-        tx+=Math.sin(p.seed+t*5)*2;
-        ty+=Math.cos(p.seed2+t*4.5)*2;
-      }
-
-      p.x3d+=(tx-p.x3d)*0.15;p.y3d+=(ty-p.y3d)*0.15;p.z3d+=(tz-p.z3d)*0.15;
-
-      const sp=project(p.x3d,p.y3d,p.z3d,cx,cy);
-      if(sp.scale>0){
-        if(p.meridian===0&&pct>0.05&&pct<0.95){
-          spinePoints[bodyIdx].push(sp);
-        }
-        const na=p.alpha*(0.5+0.5*coherence)*Math.min(1,sp.scale*1.3);
-        ctx.fillStyle=`rgba(180,220,255,${na*0.75})`;
-        ctx.beginPath();ctx.arc(sp.x,sp.y,p.size*sp.scale*0.8,0,Math.PI*2);ctx.fill();
-      }
-
-    }else if(fi===1){
-      // Cardiac Toroidal Envelope Loop
-      const ringIdx=i%18;
-      const loopAngle=((i*0.046)+t*0.8)%(Math.PI*2);
-      const shellAngle=(ringIdx*Math.PI)/18;
-      const heartY=-22;
-
-      let majorR=140+Math.sin(t*1.7+ringIdx*0.35)*18*coherence;
-      let minorR=50+Math.cos(t*2.1+i*0.011)*10*coherence;
-
-      if(coherence<0.45){
-        majorR+=Math.sin(i*0.3+t*4.5)*50*(1-coherence);
-        minorR+=Math.cos(i*0.2-t*4.5)*24*(1-coherence);
-      }
-
-      let tx=bodyRef.xOff+(majorR+minorR*Math.cos(loopAngle))*Math.cos(shellAngle);
-      let ty=heartY+minorR*Math.sin(loopAngle);
-      let tz=(majorR+minorR*Math.cos(loopAngle))*Math.sin(shellAngle);
-
-      p.x3d+=(tx-p.x3d)*0.08;p.y3d+=(ty-p.y3d)*0.08;p.z3d+=(tz-p.z3d)*0.08;
-
-      const sp=project(p.x3d,p.y3d,p.z3d,cx,cy);
-      if(sp.scale>0){
-        let col=appState.goldActive?`rgba(200,168,75,${p.alpha*coherence})`:hexToRgba(data.color,p.alpha*coherence);
-        ctx.fillStyle=col;
-        ctx.beginPath();ctx.arc(sp.x,sp.y,p.size*sp.scale,0,Math.PI*2);ctx.fill();
-      }
-
-    }else if(fi===2){
-      // Outer Shield Boundary Ring
-      const coronaAngle=(i*0.040+t*0.50)%(Math.PI*2);
-      const coronaR=190+Math.sin(t*1.1+i*0.05)*15*coherence;
-      let tx=bodyRef.xOff+Math.cos(coronaAngle)*coronaR;
-      let ty=Math.sin(coronaAngle)*coronaR*0.25;
-      let tz=Math.sin(coronaAngle*0.75+t*0.28)*25;
-
-      p.x3d+=(tx-p.x3d)*0.09;p.y3d+=(ty-p.y3d)*0.09;p.z3d+=(tz-p.z3d)*0.09;
-
-      const sp=project(p.x3d,p.y3d,p.z3d,cx,cy);
-      if(sp.scale>0){
-        ctx.fillStyle=`rgba(126,200,240,${p.alpha*coherence*0.5})`;
-        ctx.beginPath();ctx.arc(sp.x,sp.y,p.size*sp.scale*1.1,0,Math.PI*2);ctx.fill();
-      }
-
-    }else if(fi===3){
-      // Ground Wave Grid
-      const gx=((i*17)%1400)-700;
-      const gz=((i*31)%1400)-700;
-      let gy=170;
-      const dist=Math.sqrt(gx*gx+gz*gz);
-      gy+=Math.sin(dist*0.018-t*3.0)*25*coherence;
-
-      p.x3d+=(gx-p.x3d)*0.1;p.y3d+=(gy-p.y3d)*0.1;p.z3d+=(gz-p.z3d)*0.1;
-
-      const sp=project(p.x3d,p.y3d,p.z3d,cx,cy);
-      if(sp.scale>0&&sp.scale<1.5){
-        ctx.fillStyle=hexToRgba(data.color,p.alpha*coherence*0.35);
-        ctx.beginPath();ctx.arc(sp.x,sp.y,p.size*sp.scale*0.7,0,Math.PI*2);ctx.fill();
-      }
-
-    }else{
-      // Inter-body Cross Flux Particles
-      if(bodies.length===1){ p.x3d*=0.95;p.y3d*=0.95;continue; }
-      const b0=bodies[0],b1=bodies[bodies.length-1];
-      const lerpT=(Math.sin(p.seed+t*p.speedFactor)+1)*0.5;
-      const midX=b0.xOff+(b1.xOff-b0.xOff)*lerpT;
-      const ty2=(-40+Math.sin(p.seed2+t*1.2)*110);
-      const tz2=Math.cos(p.seed+t*0.8)*60;
-
-      p.x3d+=(midX-p.x3d)*0.08;p.y3d+=(ty2-p.y3d)*0.08;p.z3d+=(tz2-p.z3d)*0.08;
-
-      const sp=project(p.x3d,p.y3d,p.z3d,cx,cy);
-      if(sp.scale>0){
-        ctx.fillStyle=appState.goldActive?`rgba(200,168,75,${p.alpha*0.4})`:`rgba(126,200,240,${p.alpha*0.4})`;
-        ctx.beginPath();ctx.arc(sp.x,sp.y,p.size*sp.scale*0.8,0,Math.PI*2);ctx.fill();
-      }
-    }
-  }
-
-  // Structural Anatomy Overlays
-  for(let bi=0;bi<bodies.length;bi++){
-    const spts=spinePoints[bi].sort((a,b)=>a.y-b.y);
-    if(spts.length>3)drawSpineColumn(spts,coherence,t);
-  }
-
-  for(const b of bodies){
-    const headPos=project(b.xOff,-160,0,cx,cy);
-    if(headPos.scale>0)drawHolographicFace(headPos.x,headPos.y,headPos.scale,coherence,t);
-    
-    // Heart focal glow node
-    const hc=project(b.xOff,-22,0,cx,cy);
-    if(hc.scale>0){
-      const pulse=0.6+0.4*Math.sin(t*7.5);
-      const glowR=32*hc.scale*(0.8+0.2*coherence);
-      const grad=ctx.createRadialGradient(hc.x,hc.y,0,hc.x,hc.y,glowR*(1+pulse*0.3));
-      grad.addColorStop(0,`rgba(255,255,255,${0.6*coherence*pulse})`);
-      grad.addColorStop(0.4,`rgba(180,220,255,${0.3*coherence})`);
-      grad.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=grad;
-      ctx.beginPath();ctx.arc(hc.x,hc.y,glowR*1.6,0,Math.PI*2);ctx.fill();
-    }
-  }
-
-  requestAnimationFrame(runUniversePipeline);
-}
-
-// ── FIELD ENTANGLEMENT CALCULATION SYSTEM ─────────────────────────
-function calculateCollectiveField(){
-  const data=frequencyCatalog[appState.activeKey];
-  const n=appState.proximityCount;
-  
-  let baseCoherence=parseFloat(data.coherence);
-  if(appState.goldActive)baseCoherence=Math.min(1.0,baseCoherence+0.15);
-  if(appState.phaseState==='after')baseCoherence=Math.min(1.0,baseCoherence+0.32);
-  if(appState.phaseState==='before'&&baseCoherence>0.5)baseCoherence*=0.38;
-
-  if(n===1){
-    document.getElementById('field-calc-panel').style.display='none';
-    return;
-  }
-
-  document.getElementById('field-calc-panel').style.display='block';
-  let collectiveCoherence=baseCoherence;
-  let explanation="";
-  let badgesHtml="";
-
-  if(data.polarity==='positive'){
-    collectiveCoherence=Math.min(1.0,baseCoherence+(n-1)*(1-baseCoherence)*0.45);
-    const gain=Math.round((collectiveCoherence-baseCoherence)*100);
-    badgesHtml=`<span class="field-calc-badge positive">Constructive Alignment</span>`;
-    explanation=`With ${n} fields combined at this frequency, the environment undergoes constructive alignment. Collective harmonic synchronization amplifies systemic wave amplitude by +${gain}%.`;
-  } else if(data.polarity==='negative'){
-    collectiveCoherence=Math.max(0.04,baseCoherence-(n-1)*baseCoherence*0.4);
-    badgesHtml=`<span class="field-calc-badge negative">Destructive Resonance</span>`;
-    explanation=`Combining ${n} entities within this toxic framework forces destructive resonance. Parasitic field waveforms collapse protective grids, fragmenting general wave vectors.`;
-  } else {
-    collectiveCoherence=baseCoherence*(1-(n-1)*0.08);
-    badgesHtml=`<span class="field-calc-badge">Coupled Mesh</span>`;
-    explanation=`Multi-body interaction across a neutral spectrum locks profiles into a highly complex structural array with minimal total net expansion.`;
-  }
-
-  const totalPct=Math.round(collectiveCoherence*100);
-  document.getElementById('calc-result-line').innerHTML=`${badgesHtml} Collective Engine Coherence: <strong>${totalPct}%</strong>`;
-  document.getElementById('calc-explanation').textContent=explanation;
-  document.getElementById('p-calc-text').innerHTML=`<strong>Coherence: ${totalPct}%</strong><br>${explanation}`;
-}
-
-// ── INTERFACE MANAGER / STATE UPDATE SYNC ─────────────────────────
-function updateUIElements(){
-  const data=frequencyCatalog[appState.activeKey];
-  let coherence=appState.goldActive?1.0:parseFloat(data.coherence);
-  if(appState.phaseState==='after')coherence=Math.min(1.0,coherence+0.32);
-  if(appState.phaseState==='before'&&coherence>0.5)coherence*=0.38;
-  
-  const displayPct=Math.round(coherence*100);
-
-  // Sync structural bar metrics
-  const bar=document.getElementById('photon-metric-bar');
-  if(bar){
-    bar.style.width=data.photonWidth;
-    bar.style.backgroundColor=data.color;
-  }
-  document.getElementById('field-photon-lbl').textContent=data.photonLbl;
-
-  // Sync Circular Ring SVG parameters
-  const arc=document.getElementById('coherence-arc');
-  if(arc){
-    const perimeter=113; // 2 * Math.PI * 18
-    arc.style.strokeDashoffset=perimeter*(1-coherence);
-    arc.style.stroke=data.color;
-  }
-  document.getElementById('coherence-pct').textContent=`${displayPct}%`;
-
-  let strongLbl="Initializing";
-  if(coherence>0.9)strongLbl="Hyper-Coherent Matrix";
-  else if(coherence>0.7)strongLbl="High Unified Order";
-  else if(coherence>0.4)strongLbl="Entrained Mesh State";
-  else if(coherence>0.18)strongLbl="Degraded Amplitude";
-  else strongLbl="Chaotic Field Fracture";
-
-  document.getElementById('coherence-label-strong').textContent=strongLbl;
-  document.getElementById('field-flow-desc').textContent=data.flowDesc;
-}
-
-function handleDropdownShift(val){
-  appState.activeKey=val;
-  document.getElementById('vector-selector').value=val;
-  document.getElementById('portrait-vector-select').value=val;
-
-  const data=frequencyCatalog[val];
-  if(!data)return;
-
-  document.getElementById('field-title').textContent=data.name;
-  document.getElementById('field-origin').textContent=data.origin;
-  document.getElementById('field-desc').textContent=data.desc;
-
-  document.getElementById('p-field-title').textContent=data.name.split(' — ')[0];
-  document.getElementById('p-field-origin').textContent=data.origin;
-  document.getElementById('p-field-desc').textContent=data.desc;
-
-  calculateCollectiveField();
-  updateUIElements();
-}
-
-function togglePhaseState(state){
-  appState.phaseState=state;
-  document.getElementById('phase-before').classList.toggle('active',state==='before');
-  document.getElementById('phase-after').classList.toggle('active',state==='after');
-  document.getElementById('p-phase-before').classList.toggle('active',state==='before');
-  document.getElementById('p-phase-after').classList.toggle('active',state==='after');
-
-  calculateCollectiveField();
-  updateUIElements();
-}
-
-function setProximity(val){
-  appState.proximityCount=val;
-  document.getElementById('prox-range').value=val;
-
-  for(let i=1;i<=3;i++){
-    document.getElementById(`dot-${i}`).classList.toggle('lit',i<=val);
-    const pBtn=document.getElementById(`p-body-${i}`);
-    if(pBtn)pBtn.classList.toggle('active',i===val);
-  }
-
-  calculateCollectiveField();
-  updateUIElements();
-}
-
-function toggleGoldAmplifier(){
-  appState.goldActive=!appState.goldActive;
-  document.getElementById('gold-amp').classList.toggle('active',appState.goldActive);
-  document.getElementById('p-gold-btn').classList.toggle('active',appState.goldActive);
-
-  calculateCollectiveField();
-  updateUIElements();
-}
-
-function syncPortraitUI(){}
-
-// ── UI INTERACTION & REVEAL SYSTEM ────────────────────────────────
-function setupUIRevealHandlers(){
-  const overlay=document.getElementById('ui-overlay');
-  const restorer=document.getElementById('ui-restorer-btn');
-
-  function showUI(){
-    overlay.classList.remove('hidden');
-    appState.uiVisible=true;
-    clearTimeout(appState.uiTimer);
-    restorer.classList.remove('visible');
-    appState.uiTimer=setTimeout(hideUI,7000);
-  }
-
-  function hideUI(){
-    if(!isPortrait()){
-      overlay.classList.add('hidden');
-      appState.uiVisible=false;
-      restorer.classList.add('visible');
-    }
-  }
-
-  document.getElementById('hover-trigger-zone').addEventListener('mouseenter',showUI);
-  document.getElementById('hover-trigger-top').addEventListener('mouseenter',showUI);
-  canvas.addEventListener('click',showUI);
-  
-  overlay.addEventListener('mousemove',()=>{
-    clearTimeout(appState.uiTimer);
-    appState.uiTimer=setTimeout(hideUI,7000);
-  });
-
-  restorer.addEventListener('click',(e)=>{
-    e.stopPropagation();
-    showUI();
-  });
-
-  showUI();
-}
-
-// ── 3D CAMERA INTERACTION LISTENERS ───────────────────────────────
-function setupCameraControls(){
-  window.addEventListener('mousedown',(e)=>{
-    if(e.target.closest('.immersive-ui')||e.target.closest('#portrait-overlay')||e.target.closest('#ui-restorer-btn'))return;
-    appState.isDragging=true;
-    appState.lastX=e.clientX;
-    appState.lastY=e.clientY;
-  });
-
-  window.addEventListener('mousemove',(e)=>{
-    if(!appState.isDragging)return;
-    const dx=e.clientX-appState.lastX;
-    const dy=e.clientY-appState.lastY;
-    appState.camRotY+=dx*0.005;
-    appState.camRotX+=dy*0.005;
-    appState.lastX=e.clientX;
-    appState.lastY=e.clientY;
-  });
-
-  window.addEventListener('mouseup',()=>{appState.isDragging=false;});
-
-  window.addEventListener('wheel',(e)=>{
-    if(e.target.closest('.immersive-ui')||e.target.closest('#portrait-overlay'))return;
-    appState.zoom+=e.deltaY*-0.0008;
-    appState.zoom=Math.max(0.4,Math.min(appState.zoom,3.5));
-  },{passive:true});
-
-  // Touch Controls
-  window.addEventListener('touchstart',(e)=>{
-    if(e.target.closest('.immersive-ui')||e.target.closest('#portrait-overlay'))return;
-    if(e.touches.length===1){
-      appState.isDragging=true;
-      appState.lastX=e.touches[0].clientX;
-      appState.lastY=e.touches[0].clientY;
-    }else if(e.touches.length===2){
-      appState.pinchDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
-    }
-  });
-
-  window.addEventListener('touchmove',(e)=>{
-    if(e.touches.length===1&&appState.isDragging){
-      const dx=e.touches[0].clientX-appState.lastX;
-      const dy=e.touches[0].clientX-appState.lastY;
-      appState.camRotY+=dx*0.006;
-      appState.camRotX+=dy*0.006;
-      appState.lastX=e.touches[0].clientX;
-      appState.lastY=e.touches[0].clientY;
-    }else if(e.touches.length===2){
-      const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
-      const factor=d/appState.pinchDist;
-      appState.zoom=Math.max(0.4,Math.min(appState.zoom*factor,3.5));
-      appState.pinchDist=d;
-    }
-  });
-
-  window.addEventListener('touchend',()=>{appState.isDragging=false;});
-}
-
-// ── ENGINE RUNTIME INITIALIZATION ─────────────────────────────────
-window.onload=async function(){
-  await loadFrequencyCatalog();
-  const selector=document.getElementById('vector-selector');
-  const pSelector=document.getElementById('portrait-vector-select');
-
-  const domainLabels={
-    cardiac:"Cardiac Resonances",
-    neural:"Neural Coherence Bands",
-    planetary:"Planetary Waveforms",
-    solfeggio:"Solfeggio Frequencies",
-    ancient:"Ancient Tonal Soundscapes",
-    tech:"Artificial EMF Grid Noise",
-    media:"Psychoacoustic Profiles",
-    quantum:"Quantum Parameter Slots"
-  };
-
-  Object.keys(domainLabels).forEach(dom=>{
-    const group=document.createElement('optgroup');
-    group.label=domainLabels[dom];
-    const pGroup=document.createElement('optgroup');
-    pGroup.label=domainLabels[dom];
-
-    Object.keys(frequencyCatalog).forEach(k=>{
-      if(frequencyCatalog[k].domain===dom){
-        const opt=document.createElement('option');
-        opt.value=k;
-        opt.textContent=frequencyCatalog[k].name.split(' — ')[0];
-        group.appendChild(opt);
-        pGroup.appendChild(opt.cloneNode(true));
-      }
+    humans.forEach(human => {
+        human.update();
+        human.draw(ctx);
     });
 
-    if(group.children.length>0){
-      selector.appendChild(group);
-      pSelector.appendChild(pGroup);
-    }
-  });
+    tooltip.update(engine);
 
-  window.addEventListener('resize',()=>{resizeStage();checkOrientation();});
-  
-  setupUIRevealHandlers();
-  setupCameraControls();
-  resizeStage();
-  checkOrientation();
-  
-  // Set default initial field
-  safeFrequencyShift(appState.activeKey);
-  
-  // Kick off frame loop
-  runUniversePipeline();
-};
+    requestAnimationFrame(animate);
+}
+
+animate();
 </script>
 </body>
 </html>
